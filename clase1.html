@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 1</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/egg.css">
+</head>
+
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SECCIÓN 1: PORTADA Y TEMAS -->
+            <section>
+                <section id="inicio" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+
+                    <h3>Administración de servidores GNU/Linux</h3>
+                    <h4>Clase 1: Introducción a Linux y Entorno Virtualizado</h4>
+                    <small>
+                        <p>Módulo 1 — Virtualización, Entorno de Trabajo y Fundamentos de Linux</p>
+                    </small>
+
+                </section>
+
+                <section id="index" data-state="no_footer">
+                    <h3>Temas de clase 1</h3>
+                    <h4>Introducción a Linux y Entorno Virtual</h4>
+                    <small>
+                        <ul>
+                            <li><a href="#/origenes1">Historia y Orígenes de Linux</a></li>
+                            <li><a href="#/licencias1">Licencias de Software</a></li>
+                            <li><a href="#/distros1">Arquitectura y Distribuciones</a></li>
+                            <li><a href="#/mercado1">Cuota de Mercado y Linux Desktop</a></li>
+                            <li><a href="#/virtualizacion1">Virtualización (VirtualBox y WSL2)</a></li>
+                            <li><a href="#/labs_clase">Laboratorio de la Clase</a></li>
+                        </ul>
+
+                        <p><a href="?print-pdf">Exportar clase</a></p>
+                    </small>
+                </section>
+
+                <section id="objetivos" data-state="no_footer">
+                    <h3>Objetivos de la clase</h3>
+                    <small>
+                        <p>Al finalizar esta clase vas a poder:</p>
+                        <ul>
+                            <li>Explicar de dónde viene Linux y por qué existe.</li>
+                            <li>Diferenciar <strong>kernel</strong>, <strong>shell</strong> y
+                                <strong>distribución</strong>.
+                            </li>
+                            <li>Entender qué es el <strong>Software Libre</strong> y por qué importa la licencia que
+                                elijas.</li>
+                            <li>Distinguir entre las principales <strong>familias de distros</strong> y para qué sirve
+                                cada una.</li>
+                            <li>Tener un panorama real de cuánto se usa Linux hoy (servidor y escritorio).</li>
+                        </ul>
+                        <br>
+                        <p><em>(El laboratorio de hoy es sobre VirtualBox y WSL2 — eso lo vemos después de esta parte
+                                teórica)</em></p>
+                    </small>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 2: HISTORIA Y ORÍGENES -->
+            <section>
+                <section id="origenes1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Historia y Conceptos:</h3>
+                    <h4>De Unix al Proyecto GNU y el Kernel Linux</h4>
+                </section>
+
+                <section id="que_es_so" data-state="no_footer">
+                    <h3>¿Qué es un Sistema Operativo?</h3>
+                    <small>
+                        <ul>
+                            <li>Es el software que administra el <strong>hardware</strong> (CPU, memoria, disco, red) y
+                                ofrece una interfaz para que las aplicaciones y el usuario trabajen.</li>
+                            <li><strong>Tareas centrales:</strong> gestión de procesos, memoria, archivos, dispositivos
+                                y permisos.</li>
+                            <li>En este curso el foco va a estar en <strong>entornos sin interfaz gráfica</strong>
+                                (servidores), porque es el escenario más común en la administración de Linux.</li>
+                        </ul>
+                        <br>
+                        <blockquote>Windows, macOS, Linux y Android son todos sistemas operativos, pero con historias,
+                            filosofías y modelos de negocio muy distintos.</blockquote>
+                    </small>
+                </section>
+
+                <section id="orig_unix" data-state="no_footer">
+                    <h3>Los orígenes: Unix (1969)</h3>
+                    <small>
+                        <ul>
+                            <li>Nace en los <strong>Bell Labs (AT&T)</strong>, creado por Ken Thompson y Dennis Ritchie.
+                            </li>
+                            <li>Introduce ideas que siguen vigentes: <em>"todo es un archivo"</em>, programas pequeños
+                                que se combinan (<code>|</code>), sistema multiusuario y multitarea.</li>
+                            <li>Era un software <strong>propietario y costoso</strong>: cada universidad o empresa
+                                pagaba licencia para usarlo.</li>
+                            <li>Esa restricción generó tensión en la comunidad académica, que quería compartir y
+                                modificar el código libremente.</li>
+                        </ul>
+                        <br>
+                        <p><strong>Este conflicto es el que da origen al movimiento del software libre.</strong></p>
+                    </small>
+                </section>
+
+                <section id="gnu_1983" data-state="no_footer">
+                    <h3>Software Libre</h3>
+                    <h4>el Proyecto GNU (1983)</h4>
+                    <small>
+                        <ul>
+                            <li><strong>Richard Stallman</strong>, investigador del MIT, funda el <a
+                                    href="https://www.gnu.org/" target="_blank"
+                                    rel="noopener noreferrer"><strong>Proyecto
+                                        GNU</strong></a> (<em>"GNU's Not Unix"</em>) en 1983.</li>
+                            <li><strong>Objetivo:</strong> crear un sistema operativo completo, compatible con Unix,
+                                pero <strong>100% libre</strong>.</li>
+                            <li>En 1985 crea la <a href="https://www.fsf.org/" target="_blank"
+                                    rel="noopener noreferrer"><strong>Free Software Foundation (FSF)</strong></a>.</li>
+                            <li>Para 1991, GNU ya tenía casi todas las herramientas de un sistema Unix (compilador,
+                                editor, shell, utilidades)...</li>
+                        </ul>
+                        <br>
+                        <p><strong>...pero le faltaba una pieza clave: el kernel.</strong></p>
+                    </small>
+                </section>
+
+                <section id="linux_1991" data-state="no_footer">
+                    <h3>Linux: el kernel que faltaba (1991)</h3>
+                    <small>
+                        <ul>
+                            <li><strong>Linus Torvalds</strong>, estudiante de la Universidad de Helsinki, Finlandia,
+                                comienza como
+                                proyecto personal un kernel tipo Unix.</li>
+                            <li>Lo anuncia en <a
+                                    href="https://groups.google.com/g/comp.os.minix/c/dlNtH7RRrGA/m/_RlNkTuHGJ0J"
+                                    target="_blank" rel="noopener noreferrer">Usenet</a> en agosto de 1991,
+                                describiéndolo como <em>"un hobby, no será
+                                    grande ni profesional como GNU"</em>.</li>
+                            <li>Lo licencia bajo <strong>GPL</strong>, lo que permite que se combine con las
+                                herramientas de GNU.</li>
+                            <li><strong>Resultado:</strong> el <a href="https://kernel.org/" target="_blank"
+                                    rel="noopener noreferrer">kernel Linux</a> + las herramientas GNU = un sistema
+                                operativo libre y completo.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="gnulinux_completo" data-state="no_footer">
+                    <h3>GNU/Linux: un sistema completo</h3>
+                    <small>
+                        <!-- <pre class="codigo_shadow" data-id="code-animation"><code class="text codigo-redondo" data-trim>
+Aplicaciones de usuario
+        │
+Herramientas GNU (bash, coreutils, gcc, etc.)
+        │
+     Kernel Linux
+        │
+      Hardware
+                        </code></pre> -->
+                        <ul>
+                            <li>Por eso técnicamente se llama <strong>GNU/Linux</strong>, aunque coloquialmente se dice
+                                solo "Linux".</li>
+                            <li>El kernel es el corazón: gestiona procesos, memoria, drivers y el acceso al hardware.
+                            </li>
+                            <li>Todo lo demás (shell, comandos, gestor de paquetes, entorno gráfico) se arma
+                                <strong>alrededor</strong> de ese kernel.
+                            </li>
+                        </ul>
+                        <img src="img/c1/so_layers.png" style="width: 50%;" alt="GNU/Linux">
+
+                    </small>
+                </section>
+
+
+
+
+                <section id="ipreguntas1" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(Unix → Proyecto GNU → Kernel Linux → GNU/Linux)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 3: LICENCIAS -->
+            <section>
+                <section id="licencias1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Licencias de Software:</h3>
+                    <h4>Modelos y Diferencias (GPL vs Permisivas)</h4>
+                </section>
+
+                <section id="licencias_esencial" data-state="no_footer">
+                    <h3>Licencias de software: lo esencial</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 80%; border-collapse: collapse; margin-bottom: 20px;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 8px;">Licencia</th>
+                                    <th style="padding: 8px;">Modifico y redistribuyo</th>
+                                    <th style="padding: 8px;">¿Debo compartir cambios?</th>
+                                    <th style="padding: 8px;">Ejemplos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>GPL (v2/v3)</strong></td>
+                                    <td style="padding: 8px;">Sí</td>
+                                    <td style="padding: 8px;"><strong>Sí</strong>, obligatorio (copyleft)</td>
+                                    <td style="padding: 8px;">Kernel Linux, bash</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>MIT / BSD</strong></td>
+                                    <td style="padding: 8px;">Sí</td>
+                                    <td style="padding: 8px;">No, es opcional</td>
+                                    <td style="padding: 8px;">Librerías, X11</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>Apache 2.0</strong></td>
+                                    <td style="padding: 8px;">Sí</td>
+                                    <td style="padding: 8px;">No, pero protege patentes</td>
+                                    <td style="padding: 8px;">Android (parte), Kubernetes</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <ul>
+                            <li><strong>GPL</strong> es "viral": si tomás código GPL y lo modificás, tu resultado
+                                también debe ser GPL.</li>
+                            <li><strong>MIT/BSD/Apache</strong> son "permisivas": una empresa puede tomarlas y hacer
+                                software cerrado con ellas.</li>
+                            <li>Esto explica por qué empresas como Google o Apple prefieren licencias permisivas en
+                                ciertos proyectos.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="ipreguntas2" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(GPL vs MIT/BSD vs Apache — Copyleft vs Permisivas)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 4: ARQUITECTURA Y DISTRIBUCIONES -->
+            <section>
+                <section id="distros1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Arquitectura y Distribuciones:</h3>
+                    <h4>Kernel, Shell y Familias de Distros</h4>
+                </section>
+
+                <section id="arq_base" data-state="no_footer">
+                    <h3>Arquitectura: Kernel, Shell y Distribución</h3>
+                    <small>
+                        <ul>
+                            <li><strong>Kernel:</strong> El núcleo. Solo uno: <em>Linux</em>. Gestiona hardware,
+                                procesos y memoria.</li>
+                            <li><strong>Shell:</strong> El intérprete de comandos (<code>bash</code>, <code>zsh</code>).
+                                Es la interfaz que vamos a usar todo el curso.</li>
+                            <li><strong>Distribución (distro):</strong> Kernel + herramientas GNU + gestor de paquetes +
+                                configuraciones + (a veces) entorno gráfico, empaquetado por un proyecto u organización.
+                            </li>
+                        </ul>
+                        <br>
+                        <blockquote>El kernel es el mismo en (casi) todas las distros. Lo que cambia es <strong>todo lo
+                                que lo rodea</strong>.</blockquote>
+                    </small>
+                </section>
+
+                <section id="que_es_distro" data-state="no_footer">
+                    <h3>¿Qué es una distro y por qué importa?</h3>
+                    <small>
+                        <p>Elegir distro <strong>no es un detalle menor</strong>, define:</p>
+                        <ul>
+                            <li>Qué <strong>gestor de paquetes</strong> vas a usar (<code>apt</code>, <code>dnf</code>,
+                                <code>pacman</code>, <code>apk</code>).
+                            </li>
+                            <li>Cuánto tiempo de <strong>soporte y actualizaciones</strong> vas a tener.</li>
+                            <li>Si hay <strong>soporte comercial</strong> disponible (crítico en empresas).</li>
+                            <li>La <strong>estabilidad</strong> vs. la <strong>actualidad</strong> del software
+                                (versiones nuevas vs. probadas).</li>
+                            <li>La <strong>comunidad y documentación</strong> disponible ante un problema.</li>
+                        </ul>
+                        <br>
+                        <p>En el mundo profesional, la distro que uses en producción va a depender del contexto del
+                            cliente/empresa, no de tu gusto personal.</p>
+                    </small>
+                </section>
+
+                <section id="familias_distros" data-state="no_footer">
+                    <h3>Familias de distribuciones</h3>
+                    <small>
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="text codigo-redondo" data-trim>
+                    Linux (kernel)
+                         │
+        ┌────────────────┼─────────────────┐
+   Debian family     RHEL family       Independientes
+        │                 │                  │
+   Debian, Ubuntu,   RHEL, CentOS,      Arch, Alpine,
+   Mint, Kali...      Rocky, Alma,       Slackware,
+                       Oracle Linux,      Gentoo...
+                       Fedora, SUSE*
+                        </code></pre>
+                        <p><small>*SUSE tiene su propia familia (openSUSE/SLES), no deriva de RHEL.</small></p>
+                        <p>Casi todas las distros derivan de otra o comparten herramientas base — aprender "Debian bien"
+                            sirve también en Ubuntu, Mint, Kali, etc.</p>
+                    </small>
+                </section>
+
+                <section id="distros" data-state="no_footer">
+
+                    <img src="img/c1/distros_1.png" style="width: 80%;" alt="Familias de distribuciones">
+                </section>
+
+                <section id="debian_ubuntu" data-state="no_footer">
+                    <h3>Debian y Ubuntu</h3>
+                    <small>
+                        <h3>Debian</h3>
+                        <ul>
+                            <li>Uno de los proyectos libres más antiguos (1993). 100% comunitario, sin empresa detrás.
+                            </li>
+                            <li>Extremadamente estable: prioriza que "todo funcione" sobre tener la última versión.</li>
+                            <li>Gestor de paquetes: <code>apt</code> / <code>dpkg</code> (formato <code>.deb</code>).
+                            </li>
+                        </ul>
+                        <br>
+                        <br>
+                        <h3>Ubuntu</h3>
+                        <ul>
+                            <li>Creado por <strong>Canonical</strong> (2004), basado en Debian.</li>
+                            <li>Pensado para ser más amigable y con ciclos de soporte claros (LTS = 5 años).</li>
+                            <li>El más usado en la nube y en tutoriales.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="debian_arquitecturas" data-state="no_footer">
+                    <h4>Arquitecturas soportadas por Debian</h4>
+                    <small>
+                        <p>Debian se caracteriza por su gran versatilidad y soporte multiplataforma ("el sistema
+                            operativo universal"), estando disponible para diversas arquitecturas de hardware:</p>
+                        <table style="width: 100%; font-size: 70%; border-collapse: collapse; margin-top: 10px;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Arquitectura</th>
+                                    <th style="padding: 6px;">Nombre / Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>amd64</code></td>
+                                    <td style="padding: 6px;">PC 64-bit (Intel / AMD x86-64)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>arm64</code></td>
+                                    <td style="padding: 6px;">ARM 64-bit (AArch64 - Servidores, Raspberry Pi 3+, Apple
+                                        Silicon)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>armhf</code></td>
+                                    <td style="padding: 6px;">ARM 32-bit Hardware Float (Raspberry Pi, sistemas
+                                        embebidos)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>hurd-i386</code></td>
+                                    <td style="padding: 6px;">GNU/Hurd 32-bit (Kernel GNU Hurd en procesadores x86
+                                        32-bit)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>mips64el</code></td>
+                                    <td style="padding: 6px;">MIPS 64-bit Little-Endian (Sistemas MIPS)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>ppc64el</code></td>
+                                    <td style="padding: 6px;">PowerPC 64-bit Little-Endian (Servidores IBM POWER)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>riscv64</code></td>
+                                    <td style="padding: 6px;">RISC-V 64-bit (Arquitectura abierta de 64 bits)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>s390x</code></td>
+                                    <td style="padding: 6px;">IBM System z / Mainframes 64-bit</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                </section>
+
+                <section id="rhel_oracle" data-state="no_footer">
+                    <h3>RHEL y Oracle Linux </h3>
+
+
+                    <small>
+                        <h3>Red Hat Enterprise Linux (RHEL)</h3>
+                        <ul>
+                            <li>Modelo de negocio basado en <strong>soporte pago</strong>, no en licencia de uso.</li>
+                            <li>Estándar de facto en empresas grandes y gobiernos. Certificaciones (RHCSA/RHCE) muy
+                                valoradas.</li>
+                            <li>Gestor de paquetes: <code>dnf</code> (antes <code>yum</code>), formato
+                                <code>.rpm</code>.
+                            </li>
+                        </ul>
+                        <br>
+                        <h3>Oracle Linux</h3>
+                        <ul>
+                            <li>Recompilación binaria de RHEL, mantenida por Oracle, con soporte propio más económico.
+                            </li>
+                            <li>Muy usada en infraestructura Oracle (bases de datos, middleware).</li>
+                            <li><em>(Otra mencionable: <strong>SUSE Linux Enterprise</strong>, fuerte en Europa y
+                                    SAP)</em></li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="rocky_alma" data-state="no_footer">
+                    <h3>Rocky Linux / AlmaLinux: la herencia de CentOS</h3>
+                    <small>
+                        <ul>
+                            <li><strong>CentOS</strong> era la versión gratuita y comunitaria de RHEL (recompilada desde
+                                el código fuente).</li>
+                            <li>En 2020, Red Hat anunció el fin de CentOS tradicional, reemplazándolo por <strong>CentOS
+                                    Stream</strong> (versión rolling/preview).</li>
+                            <li>La comunidad necesitó un reemplazo 1:1 y gratuito de RHEL, dando origen a:
+                                <ul>
+                                    <li><strong>Rocky Linux:</strong> liderado por Gregory Kurtzer (cofundador de
+                                        CentOS).</li>
+                                    <li><strong>AlmaLinux:</strong> impulsado por CloudLinux.</li>
+                                </ul>
+                            </li>
+                            <li>Hoy ambas son las opciones estándar cuando se necesita "RHEL sin pagar licencia".</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="alpine_distro" data-state="no_footer">
+                    <h3>Alpine Linux: la distro en contenedores</h3>
+                    <small>
+                        <ul>
+                            <li>Distribución <strong>minimalista</strong>, pensada para seguridad y bajo consumo de
+                                recursos.</li>
+                            <li>No usa <code>glibc</code> sino <strong>musl libc</strong>, y <code>busybox</code> en
+                                lugar de las herramientas GNU tradicionales.</li>
+                            <li>Su imagen base puede pesar <strong>~5 MB</strong>, contra cientos de MB de otras
+                                distros.</li>
+                            <li>Estándar de facto como imagen base en <strong>Docker</strong>
+                                (<code>FROM alpine</code>).</li>
+                            <li>Lo veremos en profundidad en el módulo de contenedores (Clases 19-20).</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="arch_linux" data-state="no_footer">
+                    <h3>Arch Linux y sus derivados</h3>
+                    <small>
+                        <ul>
+                            <li><strong>Filosofía:</strong> simplicidad, control total y documentación excelente
+                                (<em>Arch Wiki</em> es referencia universal).</li>
+                            <li>Modelo <strong>rolling release:</strong> no hay "versiones", el sistema se actualiza
+                                continuamente.</li>
+                            <li>Instalación manual, pensada para quien quiere entender cada pieza del sistema.</li>
+                            <li>Gestor de paquetes: <code>pacman</code>, y el <strong>AUR</strong> (Arch User
+                                Repository).</li>
+                            <li><strong>Derivados populares:</strong> Manjaro, EndeavourOS, Garuda Linux — buscan la
+                                base de Arch con instalación más simple.</li>
+                        </ul>
+                    </small>
+                </section>
+
+
+
+                <section id="linux_vs_windows" data-state="no_footer">
+                    <h3>Linux vs Windows: comparativa</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 75%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Característica</th>
+                                    <th style="padding: 6px;">Linux</th>
+                                    <th style="padding: 6px;">Windows</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Licencia</strong></td>
+                                    <td style="padding: 6px;">Libre / abierta (mayormente gratis)</td>
+                                    <td style="padding: 6px;">Propietaria, de pago</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Código fuente</strong></td>
+                                    <td style="padding: 6px;">Abierto, auditable</td>
+                                    <td style="padding: 6px;">Cerrado</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Modelo en servidor</strong></td>
+                                    <td style="padding: 6px;">Sin GUI (headless), gestión CLI</td>
+                                    <td style="padding: 6px;">Suele incluir GUI, gestión gráfica</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Personalización</strong></td>
+                                    <td style="padding: 6px;">Muy alta</td>
+                                    <td style="padding: 6px;">Limitada por diseño</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Soporte</strong></td>
+                                    <td style="padding: 6px;">Comunidad / Comercial (Red Hat, Canonical)</td>
+                                    <td style="padding: 6px;">Oficial de Microsoft</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Costo a escala</strong></td>
+                                    <td style="padding: 6px;">Bajo o nulo</td>
+                                    <td style="padding: 6px;">Puede ser muy alto</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                </section>
+
+
+
+                <section id="ipreguntas3" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(Kernel único + Familias: Debian, RHEL, Independientes)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 5: MERCADO Y DESKTOP -->
+            <section>
+                <section id="mercado1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Cuota de Mercado y Desktop:</h3>
+                    <h4>Servidores, Escritorio y Casos del Estado</h4>
+                </section>
+
+                <section id="mercado_servidores" data-state="no_footer">
+                    <h3>Cuota de mercado real (servidores)</h3>
+                    <small>
+                        <ul>
+                            <li>Linux representa aproximadamente el <strong>44,8%</strong> del mercado global de
+                                servidores (2024), proyectando el <strong>51%</strong> para 2026.</li>
+                            <li>Controla alrededor del <strong>90% de la infraestructura de nube pública</strong> (AWS,
+                                Azure, GCP).</li>
+                            <li>El <strong>100% de las supercomputadoras del TOP500</strong> corren Linux desde 2017.
+                            </li>
+                            <li>Entre servidores web que revelan su SO, Linux domina ampliamente frente a Windows
+                                Server.</li>
+                        </ul>
+                        <br>
+                        <p style="font-size: 70%;"><strong>Fuentes:</strong> Fact.MR / Fortune Business Insights,
+                            W3Techs, TOP500.org</p>
+                    </small>
+                </section>
+
+                <section id="mercado_escritorio" data-state="no_footer">
+                    <h3>Cuota de mercado real (escritorio)</h3>
+                    <small>
+                        <p>Datos de <strong>StatCounter</strong> (abril 2026):</p>
+                        <table style="width: 80%; font-size: 85%; margin: 0 auto 15px auto; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 8px;">Sistema Operativo</th>
+                                    <th style="padding: 8px;">Cuota de escritorio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>Windows</strong></td>
+                                    <td style="padding: 8px;">~66,6%</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>macOS</strong></td>
+                                    <td style="padding: 8px;">~7,3%</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>Linux</strong></td>
+                                    <td style="padding: 8px;">~3,0%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <ul>
+                            <li>Linux en escritorio crece sostenidamente (venía de ~2,8% en 2022).</li>
+                            <li><strong>Contexto extra:</strong> Android (kernel Linux) domina el mercado móvil con más
+                                del 67%.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="desktop_empresa" data-state="no_footer">
+                    <h3>Linux Desktop en la empresa</h3>
+                    <small>
+                        <ul>
+                            <li>El bajo porcentaje de escritorio <strong>no significa que sea inviable</strong> en un
+                                entorno corporativo.</li>
+                            <li>Hay organizaciones y profesionales de IT/dev que usan Linux Desktop como herramienta
+                                diaria.</li>
+                            <li>A lo largo del curso haremos un <strong>laboratorio dedicado a Linux Desktop</strong>,
+                                con una comparativa más profunda contra Windows.</li>
+                        </ul>
+                        <br>
+                        <blockquote>Linux no es solo un sistema de servidor.</blockquote>
+                    </small>
+                </section>
+
+                <section id="desktop_estado_arg" data-state="no_footer">
+                    <h3>Linux Desktop en el Estado: Argentina</h3>
+                    <small>
+                        <ul>
+                            <li><strong>GobMis:</strong> Distribución propia de la <strong>Provincia de
+                                    Misiones</strong>, basada en Devuan 6 (Debian 13). Pensada para la administración
+                                pública provincial.</li>
+                            <li><strong>Lihuen:</strong> Distro desarrollada por la UNLP orientada a educación
+                                <em>(discontinuada)</em>.
+                            </li>
+                            <li><strong>Huayra GNU/Linux:</strong> Proyecto nacional impulsado por Educ.ar para el plan
+                                Conectar Igualdad.</li>
+                        </ul>
+                        <br>
+                        <blockquote>Crear una distro es relativamente accesible; sostenerla en el tiempo con soporte y
+                            comunidad es el verdadero desafío.</blockquote>
+                    </small>
+                </section>
+
+                <section id="desktop_estado_ue" data-state="no_footer">
+                    <h3>Linux Desktop en el Estado: Unión Europea</h3>
+                    <small>
+                        <ul>
+                            <li><strong>Schleswig-Holstein (Alemania):</strong> Migración de ~30.000 puestos a
+                                LibreOffice y Linux (KDE Plasma) por <strong>soberanía digital</strong>.</li>
+                            <li><strong>Lyon (Francia):</strong> Abandonó Windows y MS Office migrando a Linux y FOSS.
+                            </li>
+                            <li><strong>Antecedente histórico:</strong> Múnich con <strong>LiMux</strong> (2004) migró
+                                ~15.000 equipos pero terminó revirtiendo por gestión del cambio y compatibilidad.</li>
+                        </ul>
+                        <br>
+                        <p>La tendencia europea es creciente, pero recuerda que el éxito depende de la tecnología y de
+                            la gestión del cambio.</p>
+                    </small>
+                </section>
+
+                <section id="ipreguntas4" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(Cuota de mercado: ~51% servidores, ~3% escritorio)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 6: VIRTUALIZACIÓN Y ENTORNO -->
+            <section>
+                <section id="virtualizacion1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Virtualización y Entorno:</h3>
+                    <h4>Hipervisores, VirtualBox y WSL2</h4>
+                </section>
+
+                <section id="concepto_virt" data-state="no_footer">
+                    <h3>¿Qué es la virtualización?</h3>
+                    <small>
+                        <ul>
+                            <li>Técnica que permite ejecutar <strong>uno o más sistemas operativos "invitados"</strong>
+                                sobre una misma máquina física ("anfitriona").</li>
+                            <li>El componente clave es el <strong>hipervisor:</strong> reparte y aísla CPU, memoria,
+                                disco y red entre cada máquina virtual (VM).</li>
+                            <li><strong>Ventaja para estudiantes:</strong> podemos "romper" un servidor Linux o probar
+                                configuraciones riesgosas <strong>sin tocar nuestra PC real</strong>.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="tipos_hipervisor" data-state="no_footer">
+                    <h3>Tipos de hipervisor</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 80%; border-collapse: collapse; margin-bottom: 15px;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 8px;">Característica</th>
+                                    <th style="padding: 8px;">Tipo 1 (bare-metal)</th>
+                                    <th style="padding: 8px;">Tipo 2 (hosted)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>¿Dónde corre?</strong></td>
+                                    <td style="padding: 8px;">Directo sobre el hardware</td>
+                                    <td style="padding: 8px;">Como aplicación sobre un SO</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>Rendimiento</strong></td>
+                                    <td style="padding: 8px;">Muy alto (Producción)</td>
+                                    <td style="padding: 8px;">Suficiente para estudio/desarrollo</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>Ejemplos</strong></td>
+                                    <td style="padding: 8px;">VMware ESXi, Proxmox, KVM</td>
+                                    <td style="padding: 8px;"><strong>VirtualBox</strong>, VMware Workstation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <ul>
+                            <li>En <strong>producción</strong> se usan hipervisores tipo 1.</li>
+                            <li>Para <strong>aprender en nuestra PC</strong>, VirtualBox (tipo 2) es ideal por su
+                                sencillez.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="vbox_intro" data-state="no_footer">
+                    <h3>VirtualBox: nuestro entorno</h3>
+                    <small>
+                        <ul>
+                            <li>Hipervisor de <strong>tipo 2</strong>, gratuito y de código abierto (Oracle).</li>
+                            <li>Permite crear una VM con disco virtual, memoria RAM y placas de red virtuales para
+                                instalar un servidor Debian/Ubuntu completo.</li>
+                            <li>Todo lo que hagamos dentro de la VM queda totalmente <strong>aislado</strong> de nuestro
+                                sistema anfitrión.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="wsl2_intro" data-state="no_footer">
+                    <h3>WSL2: una alternativa distinta</h3>
+                    <small>
+                        <ul>
+                            <li><strong>WSL2</strong> (<em>Windows Subsystem for Linux 2</em>) corre un <strong>kernel
+                                    Linux real</strong> dentro de Windows sobre una VM ligera (Hyper-V).</li>
+                            <li>Integración nativa con Windows: acceso directo a archivos y excelente rendimiento de
+                                red.</li>
+                            <li>Ideal para tener una <strong>terminal Linux rápida</strong> en Windows.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="vbox_vs_wsl2" data-state="no_footer">
+                    <h3>VirtualBox vs WSL2</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 75%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Criterio</th>
+                                    <th style="padding: 6px;">VirtualBox (VM completa)</th>
+                                    <th style="padding: 6px;">WSL2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Qué instalás</strong></td>
+                                    <td style="padding: 6px;">SO completo (Debian/Ubuntu Server)</td>
+                                    <td style="padding: 6px;">Distro Linux integrada a Windows</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Ideal para</strong></td>
+                                    <td style="padding: 6px;">Simular servidor real, red, particionado</td>
+                                    <td style="padding: 6px;">Uso diario de CLI desde Windows</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Aislamiento</strong></td>
+                                    <td style="padding: 6px;">Total (disco, red, hardware)</td>
+                                    <td style="padding: 6px;">Parcial (más integrado)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Uso en curso</strong></td>
+                                    <td style="padding: 6px;">Servidor principal de práctica</td>
+                                    <td style="padding: 6px;">Complemento de trabajo rápido</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                </section>
+
+                <section id="resumen_pasos" data-state="no_footer">
+                    <h3>Resumen y próximos pasos</h3>
+                    <small>
+                        <ul>
+                            <li>Recorrido histórico: Unix → GNU → Linux → GNU/Linux.</li>
+                            <li>Licencias: GPL (copyleft) vs MIT/BSD/Apache (permisivas).</li>
+                            <li>Conceptos: Kernel, Shell y Distribución.</li>
+                            <li>Familias: Debian/Ubuntu, RHEL/Oracle, Rocky/Alma, Alpine, Arch.</li>
+                            <li>Uso real: ~51% en servidores, ~3% en escritorio y casos en el Estado.</li>
+                            <li>Virtualización: Hipervisores Tipo 1 vs Tipo 2, VirtualBox y WSL2.</li>
+                        </ul>
+                        <br>
+                        <p><strong>¡Hora de ir al laboratorio práctico!</strong></p>
+                    </small>
+                </section>
+
+                <section id="labs_clase" data-state="no_footer">
+                    <h3>Actividad de práctica (Laboratorio):</h3>
+                    <small>
+                        <ul>
+                            <li>Instalación y configuración de <strong>VirtualBox</strong> en la PC anfitriona.</li>
+                            <li>Despliegue e instalación de la distribución base para el curso.</li>
+                            <li>Habilitación y configuración de <strong>WSL2</strong> en entornos Windows.</li>
+                        </ul>
+                    </small>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN FINAL -->
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <!-- Logos en el footer -->
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image"></span>
+        </div>
+
+        <script type="text/javascript">
+            window.addEventListener("load", function () {
+                revealDiv = document.querySelector("body div.reveal");
+                footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+
+    <!-- Script de Socket.io para Reveal Multiplex -->
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        // Eventos personalizados
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: true,
+
+            // Configuración de Multiplex (Modo Client / Cliente)
+            multiplex: {
+                secret: null,
+                id: 'd7fbced863e4e1774f68aae1cb28148f38a5e3210825a46f51d16c3468711e94',
+                url: 'https://multiplex.up.railway.app'
+            },
+
+            // Plugins de Reveal.js actualizados
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch]
+        });
+    </script>
+
+    <!-- Plugin Client de Multiplex -->
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+
+</body>
+
+</html>

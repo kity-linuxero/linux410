@@ -1,2 +1,3 @@
-# linux410
-Teóricas Administración de Servidores Linux con Orientación a seguridad informática
+# Linux 410
+
+Repositorio Teórico

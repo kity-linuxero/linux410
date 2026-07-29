@@ -1,0 +1,408 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Fundamentos contenedores Docker - CFL 410 - Clase 1</title>
+    <!-- <link rel="icon" type="image/x-icon" href="/img/logos/IDEPInformaticaLogo.png"> -->
+    <link rel="icon" type="image/x-icon" href="/img/logos/page.png">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/egg.css">
+
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+
+
+</head>
+
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <section data-state="customevent" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <!-- <h3>Centro de formación laboral 410</h3> -->
+
+                <h3>Curso: Fundamentos y usos prácticos de Docker</h3>
+
+
+            </section>
+
+
+            <section>
+                <section id="intro" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h2>Introducción al curso</h2>
+                </section>
+
+
+                <section id="intro-presentacion" data-state="no_footer">
+                    <h3>Presentación</h3>
+
+                    <p>Instructor: Cristian O. Giambruni</p>
+                    <small>
+                        <ul>
+                            <li>APU. <a href="https://www.info.unlp.edu.ar/" target="_blank">Facultad de
+                                    Informática</a>, UNLP</li>
+                            <li>Mat. <a href="https://www.cpciba.org.ar/" target="_blank">CPCIBA</a> 2402 </li>
+                            <li>Docente <a href="https://centro410laplata.edu.ar/" target="_blank">CFL 410</a>, Omar
+                                Nuñez</li>
+                            <li>Sysadmin <a href="https://www.loteria.gba.gov.ar/" target="_blank">Lotería Prov
+                                    Bs.As.</a></li>
+                            <li>Programador y Sysadmin Startup</li>
+                            <li>Coordinador <a
+                                    href="https://www.instagram.com/idep_informatica/profilecard/?igsh=dXh0aWE3YzlqYmwz"
+                                    target="_blank">IDEP Informática</a></li>
+                            <li>Contacto: cgiambruni@gmail.com</li>
+                        </ul>
+                    </small>
+
+
+                </section>
+
+                <section id="intro-cfl410" data-state="no_footer">
+                    <h3>Centro de Formación Laboral 410</h3>
+
+                    <div class="custom-container">
+                        <div class="custom-text">
+                            <small>
+                                <p>El <strong>Centro de Formación Laboral N° 410 "Omar Núñez"</strong> es una
+                                    institución de
+                                    Formación Profesional que funciona en la ciudad de La Plata en el marco de un
+                                    <strong>convenio con la Asociación Trabajadores del Estado (ATE)</strong>
+                                </p>
+                                <p>El CFL 410 es uno de los cinco Centro de Formación Laboral conveniados con ATE,
+                                    orientados a
+                                    brindar capacitación técnica gratuita (no arancelada) para trabajadoras y
+                                    trabajadores, en
+                                    articulación con el sistema público de formación profesional.</p>
+                            </small>
+
+                        </div>
+
+                        <div class="custom-image">
+                            <img src="img/logos/cfl_logo.png">
+
+                        </div>
+
+
+                    </div>
+
+
+
+                </section>
+
+                <section id="intro-cfl4102" data-state="no_footer">
+                    <h3>Centro de Formación Laboral 410</h3>
+
+                    <small>
+                        <p>
+                            Los cursos dictados en este centro cuentan con <strong>certificación oficial</strong>,
+                            expedida por la
+                            <strong>Dirección General de Cultura y Educación (DGCyE) de la Provincia de Buenos
+                                Aires</strong>, lo que garantiza su
+                            validez formal y reconocimiento institucional.
+                        </p>
+                        <p>
+                            Contacto:
+                        <ul>
+                            <li>📍 <a href="https://maps.app.goo.gl/3LoJLGjK1ihE9Z76A" target="_blank">Calle 7 N° 1429,
+                                    e/61 y 62</a></li>
+                            <li>📞​ 0221 484-6318</li>
+                            <li>📧 cfl410@gmail.com</li>
+                            <li>🌐 <a href="https://centro410laplata.edu.ar/"
+                                    target="_blank">centro410laplata.edu.ar</a></li>
+                        </ul>
+                        </p>
+                    </small>
+
+                </section>
+
+
+                <section id="intro-idepinformatica" data-state="no_footer">
+                    <h3>IDEP Informática</h3>
+
+                    <div class="custom-container">
+                        <div class="custom-text">
+                            <small>
+                                <p>
+                                    El curso fue pensado, diseñado y trabajado desde el espacio de <strong>IDEP
+                                        Informática</strong>, un
+                                    ámbito específico del <strong>Instituto de Estudios sobre Estado y Participación
+                                        (IDEP)</strong> de la
+                                    <strong>Asociación Trabajadores del Estado (ATE)</strong> PBA.
+                                </p>
+                                <p> Desde ese espacio:
+                                <ul>
+                                    <li>Piensan y diseñan cursos y capacitaciones técnicas,</li>
+                                    <li>organizan charlas y actividades de actualización,</li>
+                                    <li>analizan los cambios tecnológicos que impactan en el trabajo informático</li>
+                                    <li>y se aporta a la discusión paritaria del sector informático estatal, vinculando
+                                        formación,
+                                        funciones y condiciones laborales.
+                                    </li>
+                                </ul>
+
+                                </p>
+                            </small>
+
+                        </div>
+
+                        <div class="custom-image">
+                            <img src="img/logos/IDEPInformaticaLogo-full.png" width="70%">
+
+                        </div>
+
+
+                    </div>
+
+
+
+                </section>
+
+                <section id="intro-contacto-idep" data-state="no_footer">
+                    <h3>Contacto y redes IDEP/IDEP Informática</h3>
+
+                    <small>
+                        <p>
+                            Los cursos dictados en este centro cuentan con <strong>certificación oficial</strong>,
+                            expedida por la
+                            <strong>Dirección General de Cultura y Educación (DGCyE) de la Provincia de Buenos
+                                Aires</strong>, lo que garantiza su
+                            validez formal y reconocimiento institucional.
+                        </p>
+                        <p>
+                            IDEP - ATE Provincia Buenos Aires
+                        <ul>
+                            <li><i class="fa-brands fa-instagram"></i> Instagram: <a
+                                    href="https://www.instagram.com/ideppba" target="_blank">@ideppba</a></li>
+                            <li><i class="fa-brands fa-youtube"></i> YouTube: <a href="https://www.youtube.com/@IdepPBA"
+                                    target="_blank">@ideppba</a></li>
+                            <li><i class="fa-regular fa-envelope-open"></i> Email: idep@atepba.org.ar</li>
+
+                        </ul>
+                        </p>
+
+                        <p>
+                            IDEP Informática
+                        <ul>
+                            <li><i class="fa-brands fa-instagram"></i> Instagram: <a
+                                    href="https://www.instagram.com/idep_informatica" target="_blank">@ideppba</a></li>
+                            </li>
+
+                        </ul>
+                        </p>
+                    </small>
+
+                </section>
+
+
+
+                <section id="organizacion" data-state="no_footer">
+                    <h3>Organización del curso</h3>
+                    <small>
+                        <ul>
+                            <li>Apuntes y contenidos del curso en <a href="https://campus.idepba.com.ar"
+                                    target="_blank">Campus Virtual IDEP</a></li>
+                            <li>Entre uno y cuatro laboratorios luego de la explicación teórica</li>
+                            <li>Trabajo final entregable a final de curso. El TP se sube en el Campus.</li>
+                            <li>Notificaciones mediante grupo WhatsApp</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="contenidos" data-state="no_footer">
+                    <h3>Contenidos y alcance</h3>
+                    <small>
+                        <ul>
+                            <li>Introducción a contenedores Docker</li>
+                            <li>Conceptos básicos de imágenes Docker</li>
+                            <li>Dockerfile</li>
+                            <li>Redes en Docker</li>
+                            <li>Volúmenes y persistencia en Docker</li>
+                            <li>Docker Compose</li>
+                            <li>Composes útiles</li>
+                        </ul>
+                    </small>
+
+                </section>
+
+                <section id="requisitos" data-state="no_footer">
+                    <h3>Requisitos inscripción</h3>
+                    <p><small>Requisitos para la inscripción formal en el CFL 410</small></p>
+                    <small>
+                        <ul>
+                            <ul>En papel impreso:
+                                <li>Dos fotocopias del DNI</li>
+                                <li>Certificado de estudios secundarios o superior</li>
+                                <li>Constancia de CUIL (en caso que el CUIL no esté en el DNI)</li>
+                                <li>Formulario: <a href="./files/FormularioInscripcion.pdf" download>Solicitud de
+                                        inscripción - Año lectivo 2026</a></li>
+
+
+                            </ul>
+                            <br>
+
+                            <li>Inscripción en la <a href="https://cursosipfl.trabajo.gba.gob.ar"
+                                    target="_blank">plataforma del IPFL</a>
+                                <ul>
+                                    <li>-Operadora/or en Contenedores Docker- - N° <strong>44988</strong></li>
+                                    <li>Centro 410 - La Plata | ATE</li>
+                                    <li><strong>Importante:</strong> Hay que registrarse previamente en la plataforma
+                                        del IPFL</li>
+                                </ul>
+                            </li>
+
+
+
+                        </ul>
+
+                        <p>
+                        <ul> Para aprobación del curso:
+                            <li>80% de asistencia.</li>
+                            <li>Aprobación del trabajo final.</li>
+
+                        </ul>
+                        </p>
+
+
+                        <p>
+                            <strong>IMPORTANTE:</strong>
+                            Toda esta documentación es solicidada por el <a
+                                href="https://cursosipfl.trabajo.gba.gob.ar/" target="_blank">Instituto Provincial de
+                                Formación Laboral (IPFL)</a>
+                            y es fundamental para la obtención del certificado de
+                            aprobación.
+                        </p>
+                    </small>
+
+                </section>
+
+
+
+
+            </section>
+
+
+
+
+
+            </section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%"></a>
+
+
+            </section>
+
+
+
+        </div>
+    </div>
+
+    <footer>
+        <!-- Logos en el footer -->
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image"></span>
+        </div>
+
+        <script type="text/javascript">
+            window.addEventListener("load", function () {
+
+                revealDiv = document.querySelector("body div.reveal")
+                footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/zoom/zoom.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+
+
+    <script>
+        // More info about initialization & config:
+        // - https://revealjs.com/initialization/
+        // - https://revealjs.com/config/
+
+        // Para eventos personalizados. Indica que está en la presentación
+
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            //element.style.display = "none";
+            // element.style.display = "table";
+            element.style.opacity = "15%";
+        });
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!",
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            // Learn about plugins: https://revealjs.com/plugins/
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, CopyCode]
+        });
+    </script>
+
+</body>
+
+</html>
