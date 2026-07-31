@@ -1,51 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
-	<title>reveal.js</title>
-
-	<link rel="stylesheet" href="dist/reset.css" />
-	<link rel="stylesheet" href="dist/reveal.css" />
-	<link rel="stylesheet" href="dist/theme/black.css" />
-
-	<!-- Theme used for syntax highlighted code -->
-	<link rel="stylesheet" href="dist/plugin/highlight/monokai.css" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Administración de Servidores GNU/Linux - IDEP Informática</title>
+	<link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
-	<div class="reveal">
-		<div class="slides">
-			<section>Slide 1</section>
-			<section>Slide 2</section>
+
+	<!-- Encabezado con espacio para logo y título -->
+	<header class="header">
+		<div class="container header-container">
+			<div class="logo-container">
+				<!-- Reemplaza "img/idep-logo.png" por la ruta real de tu imagen -->
+				<img src="img/logos/IDEPInformaticaLogo.png" alt="IDEP Informática Logo" class="logo">
+			</div>
+			<div class="header-text">
+				<h1>Administración de Servidores GNU/Linux</h1>
+				<p class="subtitle">Orientación a Seguridad Informática</p>
+			</div>
 		</div>
-	</div>
+	</header>
 
-	<script src="dist/reveal.js"></script>
-	<script src="dist/plugin/notes.js"></script>
-	<script src="dist/plugin/markdown.js"></script>
-	<script src="dist/plugin/highlight.js"></script>
-	<script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
-	<script>
-		// More info about initialization & config:
-		// - https://revealjs.com/initialization/
-		// - https://revealjs.com/config/
-		Reveal.initialize({
-			hash: true,
+	<main class="container">
+		<!-- Accesos rápidos al Campus y Laboratorio -->
+		<section class="quick-links">
+			<a href="https://campus.idepinformatica.edu.ar" target="_blank" class="btn btn-primary">
+				🎓 Campus Virtual
+			</a>
+			<a href="laboratorios.html" class="btn btn-secondary">
+				🧪 Guía de Laboratorios
+			</a>
+		</section>
 
-			multiplex: {
-				secret: null,
-				id: '38f1ed9c7f46e3dce3b4c85f2e76e66b27e1a5052f8743d8ca5654568e256e82',
-				url: 'https://multiplex.up.railway.app'
-			},
+		<!-- Listado de Clases -->
+		<section class="classes-section">
+			<h2>Clases del Curso</h2>
+			<div class="classes-grid">
 
-			// Learn about plugins: https://revealjs.com/plugins/
-			plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
-		});
-	</script>
-	<script src="https://multiplex.up.railway.app/client.js"></script>
+				<!-- Clase 1 -->
+				<article class="class-card">
+					<div class="class-number">Clase 01</div>
+					<div class="class-info">
+						<h3>Introducción a Linux y Entorno Virtualizado</h3>
+						<p>Conceptos fundamentales, arquitectura del Kernel y preparación del laboratorio en
+							VirtualBox/Proxmox.</p>
+					</div>
+					<a href="clase1.html" class="class-link">Acceder &rarr;</a>
+				</article>
+
+				<!-- Clase 2 (Ejemplo para duplicar) -->
+				<article class="class-card">
+					<div class="class-number">Clase 02</div>
+					<div class="class-info">
+						<h3>Comandos Esenciales y Sistema de Archivos</h3>
+						<p>Navegación, gestión de archivos, permisos POSIX y comandos avanzados de búsqueda.</p>
+					</div>
+					<a href="clase2.html" class="class-link">Acceder &rarr;</a>
+				</article>
+
+				<!-- Clase no disponible -->
+				<article class="class-card disabled">
+					<div class="class-number">Clase 03</div>
+					<div class="class-info">
+						<h3>Gestión de Usuarios y ACLs</h3>
+						<p>Configuración de sudoers, permisos avanzados y políticas de seguridad.</p>
+					</div>
+					<span class="class-status">Próximamente</span>
+				</article>
+
+				<!-- Agrega más bloques .class-card según avances -->
+
+			</div>
+		</section>
+	</main>
+
+	<footer class="footer">
+		<div class="container">
+			<p>Curso preparado por <strong>IDEP Informática</strong></p>
+		</div>
+	</footer>
+
 </body>
 
 </html>
