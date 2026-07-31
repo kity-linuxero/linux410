@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Administracion de servidores GNU/Linux - Clase 2: Virtualizacion</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SECCION 1: PORTADA Y TEMAS -->
+            <section>
+                <section id="inicio" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Administracion de servidores GNU/Linux</h3>
+                    <h4>Clase 2: Virtualizacion</h4>
+                    <small>
+                        <p>Modulo 1 - Hipervisores, Maquinas Virtuales y Entorno de Laboratorio</p>
+                    </small>
+                </section>
+
+                <section id="index" data-state="no_footer">
+                    <h3>Temas de clase 2</h3>
+                    <h4>Virtualizacion y Entorno de Trabajo</h4>
+                    <small>
+                        <ul>
+                            <li><a href="#/virtualizacion1">Que es la Virtualizacion?</a></li>
+                            <li><a href="#/tipos_hipervisor">Tipos de Hipervisor</a></li>
+                            <li><a href="#/arq_vm">Arquitectura de una Maquina Virtual</a></li>
+                            <li><a href="#/red_vm">Redes en Maquinas Virtuales</a></li>
+                            <li><a href="#/disco_virtual">Tipos de Disco Virtual</a></li>
+                            <li><a href="#/snapshots">Snapshots: el poder de la VM</a></li>
+                            <li><a href="#/vbox_intro">VirtualBox: nuestro entorno</a></li>
+                            <li><a href="#/wsl2_intro">WSL2: la alternativa</a></li>
+                            <li><a href="#/primera_vm">Preparando la primera VM</a></li>
+                            <li><a href="#/labs_clase">Laboratorio de la Clase</a></li>
+                        </ul>
+                        <p><a href="?print-pdf">Exportar clase</a></p>
+                    </small>
+                </section>
+
+                <section id="objetivos" data-state="no_footer">
+                    <h3>Objetivos de la clase</h3>
+                    <small>
+                        <p>Al finalizar esta clase vas a poder:</p>
+                        <ul>
+                            <li>Explicar que es la virtualizacion y por que es clave en la industria.</li>
+                            <li>Distinguir entre <strong>hipervisores Tipo 1 y Tipo 2</strong> y cuando se usa cada uno.</li>
+                            <li>Entender la arquitectura interna de una maquina virtual (CPU, RAM, disco, red).</li>
+                            <li>Conocer los distintos modos de red que ofrece VirtualBox.</li>
+                            <li>Comprender que es un <strong>snapshot</strong> y para que sirve.</li>
+                            <li>Saber los pasos conceptuales para crear y arrancar una primera VM.</li>
+                        </ul>
+                        <br>
+                        <p><em>(La practica de instalacion la veremos en el laboratorio)</em></p>
+                    </small>
+                </section>
+            </section>
+
+
+            <!-- SECCION 2: QUE ES LA VIRTUALIZACION -->
+            <section>
+                <section id="virtualizacion1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Virtualizacion y Entorno:</h3>
+                    <h4>Hipervisores, VirtualBox y WSL2</h4>
+                </section>
+
+                <section id="concepto_virt" data-state="no_footer">
+                    <h3>Que es la virtualizacion?</h3>
+                    <small>
+                        <ul>
+                            <li>Tecnica que permite ejecutar <strong>uno o mas sistemas operativos invitados</strong>
+                                sobre una misma maquina fisica (anfitriona).</li>
+                            <li>El componente clave es el <strong>hipervisor:</strong> reparte y aisla CPU, memoria,
+                                disco y red entre cada maquina virtual (VM).</li>
+                            <li><strong>Ventaja para estudiantes:</strong> podemos romper un servidor Linux o probar
+                                configuraciones riesgosas <strong>sin tocar nuestra PC real</strong>.</li>
+                            <li><strong>Ventaja en produccion:</strong> un servidor fisico puede correr decenas de
+                                servidores virtuales, maximizando la utilizacion del hardware.</li>
+                        </ul>
+                        <br>
+                        <blockquote>La virtualizacion es la tecnologia base de toda la nube moderna (AWS, Azure, GCP).</blockquote>
+                    </small>
+                </section>
+
+                <section id="tipos_hipervisor" data-state="no_footer">
+                    <h3>Tipos de hipervisor</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 80%; border-collapse: collapse; margin-bottom: 15px;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 8px;">Caracteristica</th>
+                                    <th style="padding: 8px;">Tipo 1 (bare-metal)</th>
+                                    <th style="padding: 8px;">Tipo 2 (hosted)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>Donde corre?</strong></td>
+                                    <td style="padding: 8px;">Directo sobre el hardware</td>
+                                    <td style="padding: 8px;">Como aplicacion sobre un SO</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>Rendimiento</strong></td>
+                                    <td style="padding: 8px;">Muy alto (Produccion)</td>
+                                    <td style="padding: 8px;">Suficiente para estudio/desarrollo</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 8px;"><strong>Ejemplos</strong></td>
+                                    <td style="padding: 8px;">VMware ESXi, Proxmox, KVM</td>
+                                    <td style="padding: 8px;"><strong>VirtualBox</strong>, VMware Workstation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <ul>
+                            <li>En <strong>produccion</strong> se usan hipervisores tipo 1.</li>
+                            <li>Para <strong>aprender en nuestra PC</strong>, VirtualBox (tipo 2) es ideal por su sencillez.</li>
+                        </ul>
+                    </small>
+                </section>
+            </section>
+
+
+            <!-- SECCION 3: ARQUITECTURA DE UNA VM -->
+            <section>
+                <section id="arq_vm_cover" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Arquitectura de una Maquina Virtual</h3>
+                    <h4>Que hay dentro de una VM?</h4>
+                </section>
+
+                <section id="arq_vm" data-state="no_footer">
+                    <h3>Arquitectura interna de una VM</h3>
+                    <small>
+                        <p>Una maquina virtual emula los mismos componentes que una PC fisica:</p>
+                        <table style="width: 100%; font-size: 78%; border-collapse: collapse; margin-top: 10px;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Componente virtual</th>
+                                    <th style="padding: 6px;">Equivalente fisico</th>
+                                    <th style="padding: 6px;">En VirtualBox</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>vCPU</strong></td>
+                                    <td style="padding: 6px;">Nucleos del procesador</td>
+                                    <td style="padding: 6px;">Configurable (1-N cores)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>RAM virtual</strong></td>
+                                    <td style="padding: 6px;">Memoria RAM</td>
+                                    <td style="padding: 6px;">Porcion de la RAM del host</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Disco virtual</strong></td>
+                                    <td style="padding: 6px;">Disco duro / SSD</td>
+                                    <td style="padding: 6px;">Archivo .vdi / .vmdk</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>NIC virtual</strong></td>
+                                    <td style="padding: 6px;">Placa de red</td>
+                                    <td style="padding: 6px;">Adaptador de red emulado</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>BIOS/UEFI virtual</strong></td>
+                                    <td style="padding: 6px;">Firmware de arranque</td>
+                                    <td style="padding: 6px;">UEFI o BIOS emulado</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <p>El hipervisor intercede entre el hardware real y cada VM, traduciendo las instrucciones.</p>
+                    </small>
+                </section>
+
+                <section id="red_vm" data-state="no_footer">
+                    <h3>Modos de red en una VM</h3>
+                    <small>
+                        <p>El modo de red define como la VM se conecta al mundo exterior:</p>
+                        <table style="width: 100%; font-size: 74%; border-collapse: collapse; margin-top: 8px;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Modo</th>
+                                    <th style="padding: 6px;">Internet?</th>
+                                    <th style="padding: 6px;">Visible desde host?</th>
+                                    <th style="padding: 6px;">Uso tipico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>NAT</strong></td>
+                                    <td style="padding: 6px;">Si</td>
+                                    <td style="padding: 6px;">No</td>
+                                    <td style="padding: 6px;">Acceso a Internet simple</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Puente</strong></td>
+                                    <td style="padding: 6px;">Si</td>
+                                    <td style="padding: 6px;">Si (IP propia en la red)</td>
+                                    <td style="padding: 6px;">Simular servidor en la LAN</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Red interna</strong></td>
+                                    <td style="padding: 6px;">No</td>
+                                    <td style="padding: 6px;">No (solo entre VMs)</td>
+                                    <td style="padding: 6px;">Labs de red aislados</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Host-only</strong></td>
+                                    <td style="padding: 6px;">No</td>
+                                    <td style="padding: 6px;">Solo host a VM</td>
+                                    <td style="padding: 6px;">SSH desde host, desarrollo local</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <p>Laboratorio: <strong>NAT</strong> para Internet + <strong>Host-only</strong> para SSH desde la PC.</p>
+                    </small>
+                </section>
+
+                <section id="disco_virtual" data-state="no_footer">
+                    <h3>Tipos de disco virtual</h3>
+                    <small>
+                        <p>El disco de una VM es un <strong>archivo en el host</strong>. Existen distintos formatos y modos:</p>
+                        <table style="width: 100%; font-size: 78%; border-collapse: collapse; margin-top: 8px;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Concepto</th>
+                                    <th style="padding: 6px;">Descripcion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>.vdi</code></td>
+                                    <td style="padding: 6px;">Formato nativo de VirtualBox. Recomendado para uso con VirtualBox.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>.vmdk</code></td>
+                                    <td style="padding: 6px;">Formato de VMware, compatible con VirtualBox. Portable entre plataformas.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Reservado dinamico</strong></td>
+                                    <td style="padding: 6px;">El archivo crece a medida que la VM escribe datos. Ahorra espacio en el host.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Tamano fijo</strong></td>
+                                    <td style="padding: 6px;">El archivo ocupa el maximo desde el inicio. Mejor rendimiento de I/O.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <p>Laboratorio: <code>.vdi</code> con <strong>reservado dinamico</strong>, 20-30 GB.</p>
+                    </small>
+                </section>
+            </section>
+
+
+            <!-- SECCION 4: SNAPSHOTS -->
+            <section>
+                <section id="snapshots_cover" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Snapshots:</h3>
+                    <h4>El superpoder de las maquinas virtuales</h4>
+                </section>
+
+                <section id="snapshots" data-state="no_footer">
+                    <h3>Snapshots: guardar el estado de una VM</h3>
+                    <small>
+                        <ul>
+                            <li>Un <strong>snapshot</strong> (instantanea) guarda el estado completo de la VM:
+                                disco, RAM y configuracion en un momento dado.</li>
+                            <li>Permite <strong>volver atras</strong> si algo sale mal.</li>
+                            <li><strong>Caso de uso tipico:</strong> antes de actualizar el sistema o instalar un
+                                servicio, sacamos un snapshot. Si falla, revertimos en segundos.</li>
+                            <li>Se pueden encadenar multiples snapshots formando un arbol de estados.</li>
+                        </ul>
+                        <br>
+                        <blockquote>En el laboratorio, <strong>siempre sacar un snapshot</strong> antes de cada practica riesgosa. Es lo que hacen los admins en produccion.</blockquote>
+                    </small>
+                </section>
+
+                <section id="snapshot_flujo" data-state="no_footer">
+                    <h3>Flujo tipico con snapshots</h3>
+                    <small>
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="text codigo-redondo" data-trim>
+VM instalada y configurada
+        |
+        v
+  [Snapshot 1: Base limpia]
+        |
+        v
+Instalo Nginx, configuro firewall...
+        |
+   Funciona? --- Si --> [Snapshot 2: Con Nginx]
+        |                    |
+       No                    v
+        |              Sigo trabajando...
+        v
+Revierto a Snapshot 1
+y empiezo de nuevo
+                        </code></pre>
+                        <ul>
+                            <li>Los snapshots <strong>no reemplazan los backups</strong>: son para pruebas rapidas.</li>
+                            <li>Muchos snapshots acumulados <strong>degradan el rendimiento</strong> del disco virtual.</li>
+                        </ul>
+                    </small>
+                </section>
+            </section>
+
+
+            <!-- SECCION 5: VIRTUALBOX Y WSL2 -->
+            <section>
+                <section id="herramientas_cover" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Herramientas del Laboratorio:</h3>
+                    <h4>VirtualBox y WSL2</h4>
+                </section>
+
+                <section id="vbox_intro" data-state="no_footer">
+                    <h3>VirtualBox: nuestro entorno</h3>
+                    <small>
+                        <ul>
+                            <li>Hipervisor de <strong>tipo 2</strong>, gratuito y de codigo abierto (Oracle).</li>
+                            <li>Permite crear una VM con disco virtual, RAM y placas de red virtuales para
+                                instalar un servidor Debian/Ubuntu completo.</li>
+                            <li>Todo lo que hagamos dentro de la VM queda <strong>aislado</strong> del sistema anfitrion.</li>
+                            <li>Consola de administracion grafica y CLI (<code>VBoxManage</code>).</li>
+                            <li>Compatible con Windows, macOS y Linux como sistema anfitrion.</li>
+                        </ul>
+                        <br>
+                        <p>Descarga: <a href="https://www.virtualbox.org/" target="_blank" rel="noopener noreferrer">virtualbox.org</a></p>
+                    </small>
+                </section>
+
+                <section id="wsl2_intro" data-state="no_footer">
+                    <h3>WSL2: una alternativa distinta</h3>
+                    <small>
+                        <ul>
+                            <li><strong>WSL2</strong> (<em>Windows Subsystem for Linux 2</em>) corre un <strong>kernel
+                                    Linux real</strong> dentro de Windows sobre una VM ligera (Hyper-V).</li>
+                            <li>Integracion nativa con Windows: acceso directo a archivos y buen rendimiento de red.</li>
+                            <li>Ideal para tener una <strong>terminal Linux rapida</strong> en Windows.</li>
+                            <li><strong>Limitacion:</strong> no simula hardware completo - sin BIOS, UEFI ni particionado como un servidor real.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="vbox_vs_wsl2" data-state="no_footer">
+                    <h3>VirtualBox vs WSL2</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 75%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Criterio</th>
+                                    <th style="padding: 6px;">VirtualBox (VM completa)</th>
+                                    <th style="padding: 6px;">WSL2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Que instala</strong></td>
+                                    <td style="padding: 6px;">SO completo (Debian/Ubuntu Server)</td>
+                                    <td style="padding: 6px;">Distro Linux integrada a Windows</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Ideal para</strong></td>
+                                    <td style="padding: 6px;">Simular servidor real, red, particionado</td>
+                                    <td style="padding: 6px;">Uso diario de CLI desde Windows</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Aislamiento</strong></td>
+                                    <td style="padding: 6px;">Total (disco, red, hardware)</td>
+                                    <td style="padding: 6px;">Parcial (mas integrado)</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Uso en curso</strong></td>
+                                    <td style="padding: 6px;">Servidor principal de practica</td>
+                                    <td style="padding: 6px;">Complemento de trabajo rapido</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                </section>
+            </section>
+
+
+            <!-- SECCION 6: PRIMERA VM -->
+            <section>
+                <section id="primera_vm_cover" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Preparando la primera VM:</h3>
+                    <h4>Del concepto al arranque</h4>
+                </section>
+
+                <section id="primera_vm" data-state="no_footer">
+                    <h3>Pasos para crear una VM (concepto)</h3>
+                    <small>
+                        <p>Antes de entrar al laboratorio, el flujo conceptual:</p>
+                        <ol style="font-size: 90%;">
+                            <li><strong>Descargar la imagen ISO</strong> del sistema operativo (Debian o Ubuntu Server).</li>
+                            <li><strong>Crear la VM en VirtualBox</strong>: nombre, tipo de SO, RAM y cores.</li>
+                            <li><strong>Crear el disco virtual</strong>: formato .vdi, tipo dinamico, tamano 20+ GB.</li>
+                            <li><strong>Montar la ISO</strong> en la unidad optica virtual de la VM.</li>
+                            <li><strong>Arrancar la VM</strong> - el sistema inicia desde la ISO y corre el instalador.</li>
+                            <li><strong>Seguir el instalador</strong>: idioma, particionado, usuario, contrasena.</li>
+                            <li>Una vez instalado, <strong>desmontar la ISO</strong> y reiniciar la VM.</li>
+                        </ol>
+                    </small>
+                </section>
+
+                <section id="particionado" data-state="no_footer">
+                    <h3>Particionado basico del disco</h3>
+                    <small>
+                        <p>Al instalar Linux, el instalador nos pide como dividir el disco virtual. Esquema minimo:</p>
+                        <table style="width: 100%; font-size: 78%; border-collapse: collapse; margin-top: 8px;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Particion</th>
+                                    <th style="padding: 6px;">Sistema de archivos</th>
+                                    <th style="padding: 6px;">Tamano</th>
+                                    <th style="padding: 6px;">Funcion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>/boot</code></td>
+                                    <td style="padding: 6px;">ext4</td>
+                                    <td style="padding: 6px;">512 MB - 1 GB</td>
+                                    <td style="padding: 6px;">Archivos de arranque del kernel</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>/</code> (root)</td>
+                                    <td style="padding: 6px;">ext4</td>
+                                    <td style="padding: 6px;">15-20 GB</td>
+                                    <td style="padding: 6px;">Sistema operativo completo</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>swap</code></td>
+                                    <td style="padding: 6px;">swap</td>
+                                    <td style="padding: 6px;">1-2 GB</td>
+                                    <td style="padding: 6px;">Memoria virtual de intercambio</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <p>Usaremos el particionado <strong>guiado automatico</strong> del instalador de Debian/Ubuntu.</p>
+                    </small>
+                </section>
+
+                <section id="resumen_pasos" data-state="no_footer">
+                    <h3>Resumen de la clase</h3>
+                    <small>
+                        <ul>
+                            <li><strong>Virtualizacion:</strong> ejecutar VMs sobre hardware fisico compartido.</li>
+                            <li><strong>Tipo 1</strong> (ESXi, Proxmox, KVM) - produccion. <strong>Tipo 2</strong> (VirtualBox) - desarrollo.</li>
+                            <li><strong>Arquitectura VM:</strong> vCPU, RAM virtual, disco virtual, NIC virtual, BIOS.</li>
+                            <li><strong>Modos de red:</strong> NAT, puente, red interna, host-only.</li>
+                            <li><strong>Disco:</strong> .vdi / .vmdk, dinamico vs fijo.</li>
+                            <li><strong>Snapshots:</strong> guardar y restaurar el estado completo de la VM.</li>
+                            <li><strong>Primera VM:</strong> ISO - VM - disco - montar ISO - instalar - reiniciar.</li>
+                        </ul>
+                        <br>
+                        <p><strong>Hora de ir al laboratorio practico!</strong></p>
+                    </small>
+                </section>
+
+                <section id="labs_clase" data-state="no_footer">
+                    <h3>Actividad de practica (Laboratorio):</h3>
+                    <small>
+                        <ul>
+                            <li>Instalacion y configuracion de <strong>VirtualBox</strong> en la PC anfitriona.</li>
+                            <li>Descarga de la ISO de <strong>Debian 12</strong> (o Ubuntu Server 24.04 LTS).</li>
+                            <li>Creacion de la primera VM: disco, RAM, red y montaje de ISO.</li>
+                            <li>Instalacion del sistema operativo desde el instalador.</li>
+                            <li>Primer arranque, login y snapshot llamado "base limpia".</li>
+                            <li>Habilitacion y configuracion de <strong>WSL2</strong> en Windows (optativo).</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="ipreguntas_virt" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(Virtualizacion: Tipo 1 vs Tipo 2, VirtualBox, WSL2, Snapshots)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCION FINAL -->
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image"></span>
+        </div>
+        <script type="text/javascript">
+            window.addEventListener("load", function () {
+                revealDiv = document.querySelector("body div.reveal");
+                footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+    <script>
+        Reveal.on("customevent", function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+        Reveal.on("hide_footer", function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+        Reveal.on("no_footer", function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: true,
+            multiplex: {
+                secret: null,
+                id: "d7fbced863e4e1774f68aae1cb28148f38a5e3210825a46f51d16c3468711e94",
+                url: "https://multiplex.up.railway.app"
+            },
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch]
+        });
+    </script>
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+</html>
