@@ -29,24 +29,22 @@
                     data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
 
                     <h3>Administración de servidores GNU/Linux</h3>
-                    <h4>Clase 1: Introducción a Linux y Entorno Virtualizado</h4>
+                    <h4>Clase 1: Introducción a Linux</h4>
                     <small>
-                        <p>Módulo 1 — Virtualización, Entorno de Trabajo y Fundamentos de Linux</p>
+                        <p>Módulo 1 — Historia, Fundamentos y Ecosistema Linux</p>
                     </small>
 
                 </section>
 
                 <section id="index" data-state="no_footer">
                     <h3>Temas de clase 1</h3>
-                    <h4>Introducción a Linux y Entorno Virtual</h4>
+                    <h4>Introducción a Linux</h4>
                     <small>
                         <ul>
                             <li><a href="#/origenes1">Historia y Orígenes de Linux</a></li>
                             <li><a href="#/licencias1">Licencias de Software</a></li>
                             <li><a href="#/distros1">Arquitectura y Distribuciones</a></li>
                             <li><a href="#/mercado1">Cuota de Mercado y Linux Desktop</a></li>
-                            <li><a href="#/virtualizacion1">Virtualización (VirtualBox y WSL2)</a></li>
-                            <li><a href="#/labs_clase">Laboratorio de la Clase</a></li>
                         </ul>
 
                         <p><a href="?print-pdf">Exportar clase</a></p>
@@ -68,9 +66,6 @@
                                 cada una.</li>
                             <li>Tener un panorama real de cuánto se usa Linux hoy (servidor y escritorio).</li>
                         </ul>
-                        <br>
-                        <p><em>(El laboratorio de hoy es sobre VirtualBox y WSL2 — eso lo vemos después de esta parte
-                                teórica)</em></p>
                     </small>
                 </section>
             </section>
@@ -132,8 +127,16 @@
                                 pero <strong>100% libre</strong>.</li>
                             <li>En 1985 crea la <a href="https://www.fsf.org/" target="_blank"
                                     rel="noopener noreferrer"><strong>Free Software Foundation (FSF)</strong></a>.</li>
-                            <li>Para 1991, GNU ya tenía casi todas las herramientas de un sistema Unix (compilador,
-                                editor, shell, utilidades)...</li>
+                            <li>Para 1991, GNU ya tenía casi todas las herramientas clave de un sistema Unix:
+                                <ul>
+                                    <li><strong>Compilador y toolchain:</strong> <code>gcc</code>, <code>make</code>,
+                                        <code>gdb</code></li>
+                                    <li><strong>Shell:</strong> <code>bash</code></li>
+                                    <li><strong>Editor de texto:</strong> <code>emacs</code></li>
+                                    <li><strong>Utilidades de sistema:</strong> <code>grep</code>, <code>ls</code>,
+                                        <code>cp</code>, <code>tar</code>, <code>sed</code></li>
+                                </ul>
+                            </li>
                         </ul>
                         <br>
                         <p><strong>...pero le faltaba una pieza clave: el kernel.</strong></p>
@@ -377,7 +380,7 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                                         embebidos)</td>
                                 </tr>
                                 <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 6px;"><code>hurd-i386</code></td>
+                                    <td style="padding: 6px;"><code>*hurd-i386</code></td>
                                     <td style="padding: 6px;">GNU/Hurd 32-bit (Kernel GNU Hurd en procesadores x86
                                         32-bit)</td>
                                 </tr>
@@ -658,158 +661,6 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                     <p><small><em>(Cuota de mercado: ~51% servidores, ~3% escritorio)</em></small></p>
                 </section>
             </section>
-
-
-            <!-- SECCIÓN 6: VIRTUALIZACIÓN Y ENTORNO -->
-            <section>
-                <section id="virtualizacion1" data-state="customevent" data-transition="slide"
-                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
-                    <h3>Virtualización y Entorno:</h3>
-                    <h4>Hipervisores, VirtualBox y WSL2</h4>
-                </section>
-
-                <section id="concepto_virt" data-state="no_footer">
-                    <h3>¿Qué es la virtualización?</h3>
-                    <small>
-                        <ul>
-                            <li>Técnica que permite ejecutar <strong>uno o más sistemas operativos "invitados"</strong>
-                                sobre una misma máquina física ("anfitriona").</li>
-                            <li>El componente clave es el <strong>hipervisor:</strong> reparte y aísla CPU, memoria,
-                                disco y red entre cada máquina virtual (VM).</li>
-                            <li><strong>Ventaja para estudiantes:</strong> podemos "romper" un servidor Linux o probar
-                                configuraciones riesgosas <strong>sin tocar nuestra PC real</strong>.</li>
-                        </ul>
-                    </small>
-                </section>
-
-                <section id="tipos_hipervisor" data-state="no_footer">
-                    <h3>Tipos de hipervisor</h3>
-                    <small>
-                        <table style="width: 100%; font-size: 80%; border-collapse: collapse; margin-bottom: 15px;">
-                            <thead>
-                                <tr style="background-color: #289548; color: white;">
-                                    <th style="padding: 8px;">Característica</th>
-                                    <th style="padding: 8px;">Tipo 1 (bare-metal)</th>
-                                    <th style="padding: 8px;">Tipo 2 (hosted)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 8px;"><strong>¿Dónde corre?</strong></td>
-                                    <td style="padding: 8px;">Directo sobre el hardware</td>
-                                    <td style="padding: 8px;">Como aplicación sobre un SO</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 8px;"><strong>Rendimiento</strong></td>
-                                    <td style="padding: 8px;">Muy alto (Producción)</td>
-                                    <td style="padding: 8px;">Suficiente para estudio/desarrollo</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 8px;"><strong>Ejemplos</strong></td>
-                                    <td style="padding: 8px;">VMware ESXi, Proxmox, KVM</td>
-                                    <td style="padding: 8px;"><strong>VirtualBox</strong>, VMware Workstation</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <ul>
-                            <li>En <strong>producción</strong> se usan hipervisores tipo 1.</li>
-                            <li>Para <strong>aprender en nuestra PC</strong>, VirtualBox (tipo 2) es ideal por su
-                                sencillez.</li>
-                        </ul>
-                    </small>
-                </section>
-
-                <section id="vbox_intro" data-state="no_footer">
-                    <h3>VirtualBox: nuestro entorno</h3>
-                    <small>
-                        <ul>
-                            <li>Hipervisor de <strong>tipo 2</strong>, gratuito y de código abierto (Oracle).</li>
-                            <li>Permite crear una VM con disco virtual, memoria RAM y placas de red virtuales para
-                                instalar un servidor Debian/Ubuntu completo.</li>
-                            <li>Todo lo que hagamos dentro de la VM queda totalmente <strong>aislado</strong> de nuestro
-                                sistema anfitrión.</li>
-                        </ul>
-                    </small>
-                </section>
-
-                <section id="wsl2_intro" data-state="no_footer">
-                    <h3>WSL2: una alternativa distinta</h3>
-                    <small>
-                        <ul>
-                            <li><strong>WSL2</strong> (<em>Windows Subsystem for Linux 2</em>) corre un <strong>kernel
-                                    Linux real</strong> dentro de Windows sobre una VM ligera (Hyper-V).</li>
-                            <li>Integración nativa con Windows: acceso directo a archivos y excelente rendimiento de
-                                red.</li>
-                            <li>Ideal para tener una <strong>terminal Linux rápida</strong> en Windows.</li>
-                        </ul>
-                    </small>
-                </section>
-
-                <section id="vbox_vs_wsl2" data-state="no_footer">
-                    <h3>VirtualBox vs WSL2</h3>
-                    <small>
-                        <table style="width: 100%; font-size: 75%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="background-color: #289548; color: white;">
-                                    <th style="padding: 6px;">Criterio</th>
-                                    <th style="padding: 6px;">VirtualBox (VM completa)</th>
-                                    <th style="padding: 6px;">WSL2</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 6px;"><strong>Qué instalás</strong></td>
-                                    <td style="padding: 6px;">SO completo (Debian/Ubuntu Server)</td>
-                                    <td style="padding: 6px;">Distro Linux integrada a Windows</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 6px;"><strong>Ideal para</strong></td>
-                                    <td style="padding: 6px;">Simular servidor real, red, particionado</td>
-                                    <td style="padding: 6px;">Uso diario de CLI desde Windows</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 6px;"><strong>Aislamiento</strong></td>
-                                    <td style="padding: 6px;">Total (disco, red, hardware)</td>
-                                    <td style="padding: 6px;">Parcial (más integrado)</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 6px;"><strong>Uso en curso</strong></td>
-                                    <td style="padding: 6px;">Servidor principal de práctica</td>
-                                    <td style="padding: 6px;">Complemento de trabajo rápido</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </small>
-                </section>
-
-                <section id="resumen_pasos" data-state="no_footer">
-                    <h3>Resumen y próximos pasos</h3>
-                    <small>
-                        <ul>
-                            <li>Recorrido histórico: Unix → GNU → Linux → GNU/Linux.</li>
-                            <li>Licencias: GPL (copyleft) vs MIT/BSD/Apache (permisivas).</li>
-                            <li>Conceptos: Kernel, Shell y Distribución.</li>
-                            <li>Familias: Debian/Ubuntu, RHEL/Oracle, Rocky/Alma, Alpine, Arch.</li>
-                            <li>Uso real: ~51% en servidores, ~3% en escritorio y casos en el Estado.</li>
-                            <li>Virtualización: Hipervisores Tipo 1 vs Tipo 2, VirtualBox y WSL2.</li>
-                        </ul>
-                        <br>
-                        <p><strong>¡Hora de ir al laboratorio práctico!</strong></p>
-                    </small>
-                </section>
-
-                <section id="labs_clase" data-state="no_footer">
-                    <h3>Actividad de práctica (Laboratorio):</h3>
-                    <small>
-                        <ul>
-                            <li>Instalación y configuración de <strong>VirtualBox</strong> en la PC anfitriona.</li>
-                            <li>Despliegue e instalación de la distribución base para el curso.</li>
-                            <li>Habilitación y configuración de <strong>WSL2</strong> en entornos Windows.</li>
-                        </ul>
-                    </small>
-                </section>
-            </section>
-
 
             <!-- SECCIÓN FINAL -->
             <section id="fin" data-state="hide_footer" data-transition="slide"
