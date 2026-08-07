@@ -18,21 +18,150 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/egg.css">
 
-    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <style>
+        /* ── Theme Toggle Button ── */
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        /* Dark theme overrides via class on <html> */
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        /* Override radial gradient backgrounds in dark mode */
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
 
 </head>
 
 <body>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
 
     <div class="reveal">
         <div class="slides">
 
             <section data-state="customevent" data-transition="slide"
                 data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
-                <!-- <h3>Centro de formación laboral 410</h3> -->
+                <h3>Bienvenidos y bienvenidas</h3>
 
-                <h3>Curso: Fundamentos y usos prácticos de Docker</h3>
+                <h4>Administración de Servidores GNU-Linux con orientación en seguridad informática</h4>
 
 
             </section>
@@ -54,9 +183,18 @@
                             <li>APU. <a href="https://www.info.unlp.edu.ar/" target="_blank">Facultad de
                                     Informática</a>, UNLP</li>
                             <li>Mat. <a href="https://www.cpciba.org.ar/" target="_blank">CPCIBA</a> 2402 </li>
-                            <li>Docente <a href="https://centro410laplata.edu.ar/" target="_blank">CFL 410</a>, Omar
-                                Nuñez</li>
-                            <li>Sysadmin <a href="https://www.loteria.gba.gov.ar/" target="_blank">Lotería Prov
+                            <li>Docente/Instructor <a href="https://centro410laplata.edu.ar/" target="_blank">CFL
+                                    410</a>, Omar
+                                Nuñez
+                                <ul>
+                                    <li>Programación</li>
+                                    <li>Docker</li>
+                                    <li>Administración de Servidores GNU-Linux c/seguridad informática</li>
+
+                                </ul>
+
+                            </li>
+                            <li>Sysadmin <a href="https://www.loteria.gba.gob.ar/" target="_blank">Lotería Prov
                                     Bs.As.</a></li>
                             <li>Programador y Sysadmin Startup</li>
                             <li>Coordinador <a
@@ -204,6 +342,13 @@
                     </small>
 
                 </section>
+            </section>
+
+            <section>
+                <section id="presentacion_curso" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h2>Objetivos del curso</h2>
+                </section>
 
 
 
@@ -213,7 +358,8 @@
                         <ul>
                             <li>Apuntes y contenidos del curso en <a href="https://campus.idepba.com.ar"
                                     target="_blank">Campus Virtual IDEP</a></li>
-                            <li>Entre uno y cuatro laboratorios luego de la explicación teórica</li>
+                            <li>Laboratorios prácticos</li>
+                            <li>Actividades para discutir y compartir en el foro del campus</li>
                             <li>Trabajo final entregable a final de curso. El TP se sube en el Campus.</li>
                             <li>Notificaciones mediante grupo WhatsApp</li>
                         </ul>
@@ -255,10 +401,12 @@
                             <li>Inscripción en la <a href="https://cursosipfl.trabajo.gba.gob.ar"
                                     target="_blank">plataforma del IPFL</a>
                                 <ul>
-                                    <li>-Operadora/or en Contenedores Docker- - N° <strong>44988</strong></li>
+                                    <li>Administración de Servidores GNU-Linux con orientación en seguridad informática
+                                        N°
+                                        <strong>44989</strong>
+                                    </li>
                                     <li>Centro 410 - La Plata | ATE</li>
-                                    <li><strong>Importante:</strong> Hay que registrarse previamente en la plataforma
-                                        del IPFL</li>
+
                                 </ul>
                             </li>
 
@@ -290,7 +438,9 @@
 
 
 
-            </section>
+
+
+
 
 
 
@@ -331,11 +481,12 @@
     </footer>
 
     <script src="dist/reveal.js"></script>
-    <script src="plugin/notes/notes.js"></script>
-    <script src="plugin/markdown/markdown.js"></script>
-    <script src="plugin/highlight/highlight.js"></script>
-    <script src="plugin/zoom/zoom.js"></script>
-    <script src="plugin/copycode/copycode.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+
 
 
     <script>
@@ -399,8 +550,59 @@
             },
 
             // Learn about plugins: https://revealjs.com/plugins/
-            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, CopyCode]
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom]
         });
+
+        // ── Theme Toggle Logic ──
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+
+            // Original light background gradients to restore
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                // Update slide backgrounds with gradients
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                // Force Reveal to re-sync backgrounds only if Reveal is initialized and ready
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            // Initialize from saved preference
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
     </script>
 
 </body>
