@@ -415,17 +415,32 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                     <h3>Arquitectura: Kernel, Shell y Distribución</h3>
                     <small>
                         <ul>
-                            <li><strong>Kernel:</strong> El núcleo. Solo uno: <em>Linux</em>. Gestiona hardware,
-                                procesos y memoria.</li>
+                            <li><strong>Kernel:</strong> El núcleo del sistema. La mayoría de las distribuciones
+                                utilizan
+                                <em>Linux</em>, aunque pueden emplear distintas versiones, configuraciones y parches.
+                                Gestiona el hardware, los procesos y la memoria.
+                            </li>
+
                             <li><strong>Shell:</strong> El intérprete de comandos (<code>bash</code>, <code>zsh</code>).
-                                Es la interfaz que vamos a usar todo el curso.</li>
+                                Es la interfaz que vamos a utilizar mayormente durante el curso.</li>
+
                             <li><strong>Distribución (distro):</strong> Kernel + herramientas GNU + gestor de paquetes +
-                                configuraciones + (a veces) entorno gráfico, empaquetado por un proyecto u organización.
+                                configuraciones + sistema de inicio y gestión de servicios + (a veces) entorno gráfico,
+                                empaquetado y mantenido por un proyecto u organización.</li>
+
+                            <li><strong>Sistema de inicio (init):</strong> Se encarga de iniciar el sistema y gestionar
+                                los servicios. Existen distintas implementaciones, como <code>systemd</code>,
+                                <code>SysVinit</code> y otras.
                             </li>
                         </ul>
+
                         <br>
-                        <blockquote>El kernel es el mismo en (casi) todas las distros. Lo que cambia es <strong>todo lo
-                                que lo rodea</strong>.</blockquote>
+
+                        <blockquote>
+                            La mayoría de las distros utilizan el mismo kernel: <strong>Linux</strong>.
+                            Lo que cambia es <strong>todo lo que lo rodea</strong>: herramientas, servicios,
+                            configuración, paquetes y la forma de administrar el sistema.
+                        </blockquote>
                     </small>
                 </section>
 
@@ -607,7 +622,7 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                                 distros.</li>
                             <li>Estándar de facto como imagen base en <strong>Docker</strong>
                                 (<code>FROM alpine</code>).</li>
-                            <li>Lo veremos en profundidad en el módulo de contenedores (Clases 19-20).</li>
+                            <li>Por defecto, es un sistema Linux sin el stack GNU tradicional.</li>
                         </ul>
                     </small>
                 </section>
@@ -768,7 +783,8 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                     <h3>Linux Desktop en el Estado: Argentina</h3>
                     <small>
                         <ul>
-                            <li><strong>GobMis:</strong> Distribución propia de la <strong>Provincia de
+                            <li><strong><a href="https://distro.misiones.gob.ar/" target="_blank">GobMis</a>:</strong>
+                                Distribución propia de la <strong>Provincia de
                                     Misiones</strong>, basada en Devuan 6 (Debian 13). Pensada para la administración
                                 pública provincial.</li>
                             <li><strong>Lihuen:</strong> Distro desarrollada por la UNLP orientada a educación
@@ -803,6 +819,32 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                 <section id="ipreguntas4" data-state="no_footer">
                     <h2>Consultas</h2>
                     <p><small><em>(Cuota de mercado: ~51% servidores, ~3% escritorio)</em></small></p>
+                </section>
+            </section>
+
+            <!-- SECCIÓN LABS/PRACTICA -->
+            <section>
+
+
+                <section id="labs" data-state="hide_footer" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h2>Actividades practicas y laboratorios</h2>
+                </section>
+
+                <section id="labs_1" data-state="no_footer">
+                    <h2>Actividades prácticas</h2>
+                    <small>
+                        <ul>
+                            <li>Registrarse e ingresar en el <a href="https://campus.idepba.com.ar"
+                                    target="_blank">Campus
+                                    Virtual</a></li>
+
+                            <li>Inscribirse en el curso <a href="" target="_blank">Administración de Servidores
+                                    GNU/Linux</a> como indica este <a href="clase0.html#/requisitos"
+                                    target="_blank">instructivo</a></li>
+                        </ul>
+                    </small>
+
                 </section>
             </section>
 
