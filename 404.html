@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>404 — Página no encontrada</title>
+    <meta name="description" content="Error 404: La página que buscás no existe.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            color: #1a1a2e;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 520px;
+            padding: 2rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tux-image {
+            width: 280px;
+            max-width: 70vw;
+            height: auto;
+            margin: 0 auto 2rem;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.1));
+            border-radius: 12px;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-12px);
+            }
+        }
+
+        .error-code {
+            font-size: clamp(4rem, 15vw, 8rem);
+            font-weight: 800;
+            color: #e8e8e8;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            letter-spacing: -4px;
+            user-select: none;
+        }
+
+        .main-message {
+            font-size: clamp(1rem, 3.5vw, 1.35rem);
+            font-weight: 600;
+            color: #2d2d2d;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .sub-message {
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
+            color: #888;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: #1a1a2e;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .back-btn:hover {
+            background: #16213e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 26, 46, 0.25);
+        }
+
+        .back-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Subtle dot pattern background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle, #e0e0e0 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="container">
+    <p class="error-code">404</p>
+    <img class="tux-image" id="tux-img" src="" alt="Tux">
+    <p class="main-message">Uy, la página no se ha encontrado.<br>¿Escribiste algo mal?</p>
+    <p class="sub-message" id="sub-message"></p>
+    <button class="back-btn" onclick="history.back()">← Volver atrás</button>
+</div>
+
+<script>
+    const variants = [
+        {
+            img: 'img/busca.png',
+            alt: 'Tux buscando con lupa',
+            sub: 'Tux está investigando… pero no encuentra nada por acá. 🔍'
+        },
+        {
+            img: 'img/tux_sleep.png',
+            alt: 'Tux durmiendo',
+            sub: 'Tux se durmió esperando que cargue esta página. 😴'
+        },
+        {
+            img: 'img/tux_.jpg',
+            alt: 'Tux borracho con sudo rm -rf',
+            sub: 'Parece que alguien ejecutó sudo rm -rf / … ups. 🍺'
+        }
+    ];
+
+    // Cookie helpers
+    function setCookie(name, value, seconds) {
+        const d = new Date();
+        d.setTime(d.getTime() + seconds * 1000);
+        document.cookie = name + '=' + value + ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax';
+    }
+
+    function getCookie(name) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? match[2] : null;
+    }
+
+    // Pick variant: read from cookie or choose random
+    let chosenIndex = getCookie('tux404');
+
+    if (chosenIndex !== null && chosenIndex >= 0 && chosenIndex < variants.length) {
+        chosenIndex = parseInt(chosenIndex, 10);
+    } else {
+        chosenIndex = Math.floor(Math.random() * variants.length);
+        setCookie('tux404', chosenIndex, 60); // 1 minute
+    }
+
+    const variant = variants[chosenIndex];
+
+    document.getElementById('tux-img').src = variant.img;
+    document.getElementById('tux-img').alt = variant.alt;
+    document.getElementById('sub-message').textContent = variant.sub;
+</script>
+
+</body>
+</html>
