@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>404 — Página no encontrada</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/tux_cry.jpeg">
+
     <meta name="description" content="Error 404: La página que buscás no existe.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,6 +42,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -57,9 +61,12 @@
         }
 
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-12px);
             }
@@ -133,63 +140,65 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container" id="container">
-    <p class="error-code">404</p>
-    <img class="tux-image" id="tux-img" src="" alt="Tux">
-    <p class="main-message">Uy, la página no se ha encontrado.<br>¿Escribiste algo mal?</p>
-    <p class="sub-message" id="sub-message"></p>
-    <button class="back-btn" onclick="history.back()">← Volver atrás</button>
-</div>
+    <div class="container" id="container">
+        <p class="error-code">404</p>
+        <img class="tux-image" id="tux-img" src="" alt="Tux">
+        <p class="main-message">Uy, la página no se ha encontrado.<br>¿Escribiste algo mal?</p>
+        <p class="sub-message" id="sub-message"></p>
+        <button class="back-btn" onclick="history.back()">← Volver atrás</button>
+    </div>
 
-<script>
-    const variants = [
-        {
-            img: 'img/busca.png',
-            alt: 'Tux buscando con lupa',
-            sub: 'Tux está investigando… pero no encuentra nada por acá. 🔍'
-        },
-        {
-            img: 'img/tux_sleep.png',
-            alt: 'Tux durmiendo',
-            sub: 'Tux se durmió esperando que cargue esta página. 😴'
-        },
-        {
-            img: 'img/tux_.jpg',
-            alt: 'Tux borracho con sudo rm -rf',
-            sub: 'Parece que alguien ejecutó sudo rm -rf / … ups. 🍺'
+    <script>
+        const variants = [
+            {
+                img: 'img/busca.png',
+                alt: 'Tux buscando con lupa',
+                sub: 'Tux está investigando… pero no encuentra nada por acá. 🔍'
+            },
+            {
+                img: 'img/tux_sleep.png',
+                alt: 'Tux durmiendo',
+                sub: 'Tux se durmió esperando que cargue esta página. 😴'
+            },
+            {
+                img: 'img/tux_.jpg',
+                alt: 'Tux borracho con sudo rm -rf',
+                sub: 'Parece que alguien ejecutó sudo rm -rf / … ups. 🍺'
+            }
+        ];
+
+        // Cookie helpers
+        function setCookie(name, value, seconds) {
+            const d = new Date();
+            d.setTime(d.getTime() + seconds * 1000);
+            document.cookie = name + '=' + value + ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax';
         }
-    ];
 
-    // Cookie helpers
-    function setCookie(name, value, seconds) {
-        const d = new Date();
-        d.setTime(d.getTime() + seconds * 1000);
-        document.cookie = name + '=' + value + ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax';
-    }
+        function getCookie(name) {
+            const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            return match ? match[2] : null;
+        }
 
-    function getCookie(name) {
-        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-        return match ? match[2] : null;
-    }
+        // Pick variant: read from cookie or choose random
+        let chosenIndex = getCookie('tux404');
 
-    // Pick variant: read from cookie or choose random
-    let chosenIndex = getCookie('tux404');
+        if (chosenIndex !== null && chosenIndex >= 0 && chosenIndex < variants.length) {
+            chosenIndex = parseInt(chosenIndex, 10);
+        } else {
+            chosenIndex = Math.floor(Math.random() * variants.length);
+            setCookie('tux404', chosenIndex, 60); // 1 minute
+        }
 
-    if (chosenIndex !== null && chosenIndex >= 0 && chosenIndex < variants.length) {
-        chosenIndex = parseInt(chosenIndex, 10);
-    } else {
-        chosenIndex = Math.floor(Math.random() * variants.length);
-        setCookie('tux404', chosenIndex, 60); // 1 minute
-    }
+        const variant = variants[chosenIndex];
 
-    const variant = variants[chosenIndex];
-
-    document.getElementById('tux-img').src = variant.img;
-    document.getElementById('tux-img').alt = variant.alt;
-    document.getElementById('sub-message').textContent = variant.sub;
-</script>
+        document.getElementById('tux-img').src = variant.img;
+        document.getElementById('tux-img').alt = variant.alt;
+        document.getElementById('sub-message').textContent = variant.sub;
+    </script>
 
 </body>
+
 </html>

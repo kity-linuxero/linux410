@@ -184,7 +184,6 @@
                     <small>
                         <ul>
                             <li><a href="#/origenes1">Historia y Orígenes de Linux</a></li>
-                            <li><a href="#/licencias1">Licencias de Software</a></li>
                             <li><a href="#/distros1">Arquitectura y Distribuciones</a></li>
                             <li><a href="#/mercado1">Cuota de Mercado y Linux Desktop</a></li>
                         </ul>
@@ -225,12 +224,19 @@
                     <h3>¿Qué es un Sistema Operativo?</h3>
                     <small>
                         <ul>
-                            <li>Es el software que administra el <strong>hardware</strong> (CPU, memoria, disco, red) y
-                                ofrece una interfaz para que las aplicaciones y el usuario trabajen.</li>
+                            <li>Es el <strong>conjunto de software</strong> que permite usar una computadora: administra
+                                los recursos de hardware y le da a las aplicaciones y al usuario una forma de trabajar
+                                con ellos.</li>
+                            <li>Se compone de dos grandes capas:
+                                <ul>
+                                    <li><strong>Kernel (núcleo):</strong> la parte que toca el hardware directamente —
+                                        procesos, memoria, dispositivos.</li>
+                                    <li><strong>Espacio de usuario:</strong> todo lo que corre "sobre" el kernel —
+                                        shell, comandos, aplicaciones.</li>
+                                </ul>
+                            </li>
                             <li><strong>Tareas centrales:</strong> gestión de procesos, memoria, archivos, dispositivos
                                 y permisos.</li>
-                            <li>En este curso el foco va a estar en <strong>entornos sin interfaz gráfica</strong>
-                                (servidores), porque es el escenario más común en la administración de Linux.</li>
                         </ul>
                         <br>
                         <blockquote>Windows, macOS, Linux y Android son todos sistemas operativos, pero con historias,
@@ -244,8 +250,8 @@
                         <ul>
                             <li>Nace en los <strong>Bell Labs (AT&T)</strong>, creado por Ken Thompson y Dennis Ritchie.
                             </li>
-                            <li>Introduce ideas que siguen vigentes: <em>"todo es un archivo"</em>, programas pequeños
-                                que se combinan (<code>|</code>), sistema multiusuario y multitarea.</li>
+                            <li>Introduce ideas que siguen vigentes: <em>"todo es un archivo"</em>, sistema multiusuario
+                                y multitarea.</li>
                             <li>Era un software <strong>propietario y costoso</strong>: cada universidad o empresa
                                 pagaba licencia para usarlo.</li>
                             <li>Esa restricción generó tensión en la comunidad académica, que quería compartir y
@@ -264,12 +270,44 @@
                             <li><strong>Richard Stallman</strong>, investigador del MIT, funda el <a
                                     href="https://www.gnu.org/" target="_blank"
                                     rel="noopener noreferrer"><strong>Proyecto
-                                        GNU</strong></a> (<em>"GNU's Not Unix"</em>) en 1983.</li>
+                                        GNU</strong></a> en 1983.</li>
                             <li><strong>Objetivo:</strong> crear un sistema operativo completo, compatible con Unix,
                                 pero <strong>100% libre</strong>.</li>
-                            <li>En 1985 crea la <a href="https://www.fsf.org/" target="_blank"
+                            <li>En 1985 publica el <a href="http://gnu.ist.utl.pt/gnu/manifesto.es.html"
+                                    target="_blank">GNU Manifesto</a>, donde explica explícitamente la filosofía detrás
+                                del software libre y funda la <a href="https://www.fsf.org/" target="_blank"
                                     rel="noopener noreferrer"><strong>Free Software Foundation (FSF)</strong></a>.</li>
-                            <li>Para 1991, GNU ya tenía casi todas las herramientas clave de un sistema Unix:
+                            <li>En 1989 crea la primera versión de la <a
+                                    href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank"
+                                    rel="noopener noreferrer"><strong>GPL (GNU General Public License)</strong></a>.
+                                <ul>
+                                    <li>Garantiza cuatro libertades: <strong>usar, estudiar, modificar y
+                                            redistribuir</strong> el software.</li>
+                                    <li>Es <strong>copyleft</strong> ("viral"): si tomás código GPL y lo modificás, tu
+                                        versión <strong>también debe ser GPL</strong> y publicar su código fuente.</li>
+                                    <li>Así se garantiza que el software libre <strong>siga siendo libre</strong>.</li>
+                                </ul>
+                            </li>
+
+
+                        </ul>
+                        <br>
+                        <p><em>Licencias como <strong><a href="https://opensource.org/license/mit"
+                                        target="_blank">MIT</a>
+                                </strong> son más <strong>permisivas</strong>: permiten
+                                reutilizar el código incluso en software
+                                cerrado, sin obligación de compartir los cambios.</em></p>
+
+
+                    </small>
+                </section>
+
+                <section id="gpl_libre" data-state="no_footer">
+                    <h3>El Proyecto GNU</h3>
+                    <small>
+                        <ul>
+                            <li>Para 1991, el Proyecto GNU ya tenía casi todas las herramientas clave de un sistema
+                                Unix:
                                 <ul>
                                     <li><strong>Compilador y toolchain:</strong> <code>gcc</code>, <code>make</code>,
                                         <code>gdb</code>
@@ -277,12 +315,13 @@
                                     <li><strong>Shell:</strong> <code>bash</code></li>
                                     <li><strong>Editor de texto:</strong> <code>emacs</code></li>
                                     <li><strong>Utilidades de sistema:</strong> <code>grep</code>, <code>ls</code>,
-                                        <code>cp</code>, <code>tar</code>, <code>sed</code>
+                                        <code>cp</code>, <code>tar</code>, <code>sed</code>...
                                     </li>
                                 </ul>
-                            </li>
+
+
+
                         </ul>
-                        <br>
                         <p><strong>...pero le faltaba una pieza clave: el kernel.</strong></p>
                     </small>
                 </section>
@@ -299,7 +338,7 @@
                                     target="_blank" rel="noopener noreferrer">Usenet</a> en agosto de 1991,
                                 describiéndolo como <em>"un hobby, no será
                                     grande ni profesional como GNU"</em>.</li>
-                            <li>Lo licencia bajo <strong>GPL</strong>, lo que permite que se combine con las
+                            <li>Lo licencia bajo <strong>GPL</strong>v2, lo que permite que se combine con las
                                 herramientas de GNU.</li>
                             <li><strong>Resultado:</strong> el <a href="https://kernel.org/" target="_blank"
                                     rel="noopener noreferrer">kernel Linux</a> + las herramientas GNU = un sistema
@@ -344,66 +383,7 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
             </section>
 
 
-            <!-- SECCIÓN 3: LICENCIAS -->
-            <section>
-                <section id="licencias1" data-state="customevent" data-transition="slide"
-                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
-                    <h3>Licencias de Software:</h3>
-                    <h4>Modelos y Diferencias (GPL vs Permisivas)</h4>
-                </section>
-
-                <section id="licencias_esencial" data-state="no_footer">
-                    <h3>Licencias de software: lo esencial</h3>
-                    <small>
-                        <table style="width: 100%; font-size: 80%; border-collapse: collapse; margin-bottom: 20px;">
-                            <thead>
-                                <tr style="background-color: #289548; color: white;">
-                                    <th style="padding: 8px;">Licencia</th>
-                                    <th style="padding: 8px;">Modifico y redistribuyo</th>
-                                    <th style="padding: 8px;">¿Debo compartir cambios?</th>
-                                    <th style="padding: 8px;">Ejemplos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 8px;"><strong>GPL (v2/v3)</strong></td>
-                                    <td style="padding: 8px;">Sí</td>
-                                    <td style="padding: 8px;"><strong>Sí</strong>, obligatorio (copyleft)</td>
-                                    <td style="padding: 8px;">Kernel Linux, bash</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 8px;"><strong>MIT / BSD</strong></td>
-                                    <td style="padding: 8px;">Sí</td>
-                                    <td style="padding: 8px;">No, es opcional</td>
-                                    <td style="padding: 8px;">Librerías, X11</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="padding: 8px;"><strong>Apache 2.0</strong></td>
-                                    <td style="padding: 8px;">Sí</td>
-                                    <td style="padding: 8px;">No, pero protege patentes</td>
-                                    <td style="padding: 8px;">Android (parte), Kubernetes</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <ul>
-                            <li><strong>GPL</strong> es "viral": si tomás código GPL y lo modificás, tu resultado
-                                también debe ser GPL.</li>
-                            <li><strong>MIT/BSD/Apache</strong> son "permisivas": una empresa puede tomarlas y hacer
-                                software cerrado con ellas.</li>
-                            <li>Esto explica por qué empresas como Google o Apple prefieren licencias permisivas en
-                                ciertos proyectos.</li>
-                        </ul>
-                    </small>
-                </section>
-
-                <section id="ipreguntas2" data-state="no_footer">
-                    <h2>Consultas</h2>
-                    <p><small><em>(GPL vs MIT/BSD vs Apache — Copyleft vs Permisivas)</em></small></p>
-                </section>
-            </section>
-
-
-            <!-- SECCIÓN 4: ARQUITECTURA Y DISTRIBUCIONES -->
+            <!-- SECCIÓN 3: ARQUITECTURA Y DISTRIBUCIONES -->
             <section>
                 <section id="distros1" data-state="customevent" data-transition="slide"
                     data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
@@ -445,7 +425,7 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                 </section>
 
                 <section id="que_es_distro" data-state="no_footer">
-                    <h3>¿Qué es una distro y por qué importa?</h3>
+                    <h3>¿Importa la distro?</h3>
                     <small>
                         <p>Elegir distro <strong>no es un detalle menor</strong>, define:</p>
                         <ul>
@@ -561,6 +541,9 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                                 </tr>
                             </tbody>
                         </table>
+
+                        <p><em>Es prueba de la importancia de contar con el código fuente disponible es que podemos
+                                compilar y usar el mismo kernel en hardware tan distinto.</em></p>
                     </small>
                 </section>
 
@@ -605,7 +588,12 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                                     <li><strong>AlmaLinux:</strong> impulsado por CloudLinux.</li>
                                 </ul>
                             </li>
-                            <li>Hoy ambas son las opciones estándar cuando se necesita "RHEL sin pagar licencia".</li>
+
+                            <li>Compatibilidad: Ambos ofrecen compatibilidad binaria o de interfaz (ABI) con RHEL.</li>
+                            <li>Estabilidad: Diseñados para servidores y entornos de producción con <strong>ciclos de
+                                    vida de 10
+                                    años</strong>.</li>
+                            <li>Costo: 100% gratuitos y comunitarios.</li>
                         </ul>
                     </small>
                 </section>
@@ -627,7 +615,7 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                     </small>
                 </section>
 
-                <section id="arch_linux" data-state="no_footer">
+                <!-- <section id="arch_linux" data-state="no_footer">
                     <h3>Arch Linux y sus derivados</h3>
                     <small>
                         <ul>
@@ -642,7 +630,7 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                                 base de Arch con instalación más simple.</li>
                         </ul>
                     </small>
-                </section>
+                </section> -->
 
 
 
@@ -702,7 +690,7 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
             </section>
 
 
-            <!-- SECCIÓN 5: MERCADO Y DESKTOP -->
+            <!-- SECCIÓN 4: MERCADO Y DESKTOP -->
             <section>
                 <section id="mercado1" data-state="customevent" data-transition="slide"
                     data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
@@ -763,7 +751,7 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                     </small>
                 </section>
 
-                <section id="desktop_empresa" data-state="no_footer">
+                <!-- <section id="desktop_empresa" data-state="no_footer">
                     <h3>Linux Desktop en la empresa</h3>
                     <small>
                         <ul>
@@ -777,7 +765,7 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                         <br>
                         <blockquote>Linux no es solo un sistema de servidor.</blockquote>
                     </small>
-                </section>
+                </section> -->
 
                 <section id="desktop_estado_arg" data-state="no_footer">
                     <h3>Linux Desktop en el Estado: Argentina</h3>
@@ -848,13 +836,14 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                     <h2>Actividades prácticas</h2>
                     <small>
                         <ul>
-                            <li>Registrarse e ingresar en el <a href="https://campus.idepba.com.ar"
-                                    target="_blank">Campus
+                            <li>Ingresar en el <a href="https://campus.idepba.com.ar" target="_blank">Campus
                                     Virtual</a></li>
 
                             <li>Inscribirse en el curso <a href="" target="_blank">Administración de Servidores
                                     GNU/Linux</a> como indica este <a href="clase0.html#/requisitos"
                                     target="_blank">instructivo</a></li>
+                            <li>Actividad práctica <a href="https://campus.idepba.com.ar/mod/forum/discuss.php?d=56"
+                                    target="_blank">Linux en PBA</a></li>
                         </ul>
                     </small>
 
@@ -895,6 +884,9 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
     <script src="dist/plugin/highlight.js"></script>
     <script src="dist/plugin/zoom.js"></script>
     <script src="dist/plugin/search.js"></script>
+
+    <!-- Script de Socket.io para Reveal Multiplex -->
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
 
 
 
@@ -955,12 +947,21 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
                 },
                 cssautoload: true,
                 csspath: "",
-                clipboardjspath: ""
+                clipboardjspath: "",
+            },
+
+            // Multiplex (cliente: secret en null)
+            multiplex: {
+                secret: null,
+                id: '7b0917d41c6a3bf43a6a45f82e1e3d0a3b7cafee14437efc073f990f1fb25328',
+                url: 'https://multiplex.up.railway.app'
             },
 
             // Learn about plugins: https://revealjs.com/plugins/
             plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom]
         });
+
+
 
         // ── Theme Toggle Logic ──
         (function () {
@@ -1013,6 +1014,10 @@ Herramientas GNU (bash, coreutils, gcc, etc.)
             });
         })();
     </script>
+
+    <!-- Plugin Cliente de Multiplex -->
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+    <!-- <script src="https://multiplex.up.railway.app/master.js"></script> -->
 
 </body>
 
