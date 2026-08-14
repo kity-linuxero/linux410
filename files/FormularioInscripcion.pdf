@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <script type="module" src="/@vite/client"></script>
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Administración de Servidores GNU/Linux - IDEP Informática</title>
+	<link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+	<!-- Encabezado con espacio para logo y título -->
+	<header class="header">
+		<div class="container header-container">
+			<div class="logo-container">
+				<!-- Reemplaza "img/idep-logo.png" por la ruta real de tu imagen -->
+				<img src="/img/logos/IDEPInformaticaLogo.png" alt="IDEP Informática Logo" class="logo">
+			</div>
+			<div class="header-text">
+				<h1>Administración de Servidores GNU/Linux</h1>
+				<p class="subtitle">Orientación a Seguridad Informática</p>
+			</div>
+		</div>
+	</header>
+
+	<main class="container">
+		<!-- Accesos rápidos al Campus y Laboratorio -->
+		<section class="quick-links">
+			<a href="https://campus.idepba.com.ar" target="_blank" class="btn btn-primary">
+				🎓 Campus Virtual
+			</a>
+			<a href="laboratorios.html" class="btn btn-secondary">
+				🧪 Guía de Laboratorios
+			</a>
+		</section>
+
+		<!-- Listado de Clases -->
+		<section class="classes-section">
+			<h2>Clases del Curso</h2>
+			<div class="classes-grid">
+
+
+				<!-- Clase 1 -->
+				<article class="class-card">
+					<div class="class-number">Presentación</div>
+					<div class="class-info">
+						<h3>Presentación del Curso</h3>
+						<p>Presentación del curso, objetivos, metodologías y evaluación.</p>
+					</div>
+					<a href="clase0.html" class="class-link">Acceder &rarr;</a>
+				</article>
+
+				<!-- Clase 1 -->
+				<article class="class-card">
+					<div class="class-number">Clase 01</div>
+					<div class="class-info">
+						<h3>Introducción a Linux</h3>
+						<p>CHistoria, Fundamentos y Ecosistema Linux</p>
+					</div>
+					<a href="clase1.html" class="class-link">Acceder &rarr;</a>
+				</article>
+
+				<!-- Clase 2 (Ejemplo para duplicar) -->
+				<article class="class-card">
+					<div class="class-number">Clase 02</div>
+					<div class="class-info">
+						<h3>Virtualización</h3>
+						<p>Hipervisores, Maquinas Virtuales y Entorno de Laboratorio</p>
+					</div>
+					<span class="class-status">Próximamente</span>
+					<!-- <a href="clase2.html" class="class-link">Acceder &rarr;</a> -->
+				</article>
+
+
+
+				<!-- Agrega más bloques .class-card según avances -->
+
+			</div>
+		</section>
+	</main>
+
+	<footer class="footer">
+		<div class="container">
+			<p>Curso preparado por <strong>IDEP Informática</strong></p>
+		</div>
+	</footer>
+
+</body>
+
+</html>
