@@ -78,6 +78,18 @@
             opacity: 1;
         }
 
+        /* Ocultar el botón al exportar a PDF (?print-pdf) y al imprimir */
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
         /* Dark theme overrides via class on <html> */
         html.dark-theme {
             --r-background-color: #1a1a2e !important;
