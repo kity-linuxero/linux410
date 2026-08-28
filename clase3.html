@@ -1,0 +1,1309 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 3</title>
+    <!-- <link rel="icon" type="image/x-icon" href="/img/logos/IDEPInformaticaLogo.png"> -->
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/egg.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* ── Theme Toggle Button ── */
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        /* Ocultar el botón al exportar a PDF (?print-pdf) y al imprimir */
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        /* Dark theme overrides via class on <html> */
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        /* Override radial gradient backgrounds in dark mode */
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+
+    <!-- CLASE AUN NO DISPONIBLE-->
+    <!-- <meta http-equiv="refresh" content="0; url=./404.html"> -->
+
+</head>
+
+<body>
+
+    <!-- CLASE AUN NO DISPONIBLE-->
+    <!-- <script>
+        window.location.href = "/404.html";
+    </script> -->
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SECCIÓN 1: PORTADA, TEMAS Y OBJETIVOS -->
+            <section>
+                <section id="inicio" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+
+                    <h3>Administración de servidores GNU/Linux</h3>
+                    <h4>Clase 3: Instalación del sistema</h4>
+                    <h5>Arranque, particiones y FHS</h5>
+                    <small>
+                        <p>Módulo 1 — Cuestiones básicas antes de instalar el primer servidor</p>
+                    </small>
+
+                </section>
+
+                <section id="index" data-state="no_footer">
+                    <h3>Temas de clase 3</h3>
+                    <small>
+                        <ul>
+                            <li><a href="#/arranque1">Cómo arranca un equipo</a></li>
+                            <li><a href="#/firmware1">BIOS y UEFI</a></li>
+                            <li><a href="#/arranque_linux">El arranque de Linux: GRUB, kernel e initramfs</a></li>
+                            <li><a href="#/servidor_fisico">Gestión de servidores físicos</a></li>
+                            <li><a href="#/particiones1">Discos, particiones y tablas de partición</a></li>
+                            <li><a href="#/filesystems">Sistemas de archivos y puntos de montaje</a></li>
+                            <li><a href="#/dirs_principales">FHS (<em>Filesystem Hierarchy Standard</em>)</a></li>
+                            <li><a href="#/instalacion1">Panorama de la instalación de Debian</a></li>
+                            <br>
+                            <li><a href="#/labs_1">Laboratorio 2: Instalación de Debian 13</a></li>
+                        </ul>
+
+                        <p><a href="?print-pdf">Exportar a PDF</a></p>
+                    </small>
+                </section>
+
+                <section id="objetivos" data-state="no_footer">
+                    <h3>Objetivos de la clase</h3>
+                    <small>
+                        <p>Al finalizar la clase vas a poder:</p>
+                        <ul>
+                            <li>Describir la <strong>secuencia de arranque</strong> de un equipo, desde el firmware
+                                hasta el inicio de sesión.</li>
+                            <li>Diferenciar <strong>BIOS</strong> (legacy) de <strong>UEFI</strong> y explicar qué es la
+                                <strong>ESP</strong>.
+                            </li>
+                            <li>Explicar la función del <strong>initramfs</strong>.</li>
+                            <li>Reconocer la capa de gestión adicional que tiene un <strong>servidor físico</strong> y
+                                que una VM no muestra.</li>
+                            <li>Diferenciar <strong>MBR</strong> de <strong>GPT</strong> y definir un esquema de
+                                particionado razonable.</li>
+                            <li>Explicar qué es un <strong>punto de montaje</strong> y por qué Linux no utiliza letras
+                                de unidad.</li>
+                            <li>Ubicar los directorios principales del <strong>FHS</strong>.</li>
+                            <li>Instalar <strong>Debian 13</strong> en la VM creada en la Clase 2.</li>
+                        </ul>
+                        <br>
+                        <blockquote><strong>Por qué vemos este tema:</strong> antes de instalar un sistema operativo
+                            conviene entender qué decisiones toma el instalador y cuál es su impacto. Estos conceptos
+                            son la <strong>base del laboratorio</strong>.
+                        </blockquote>
+                    </small>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 2: CÓMO ARRANCA UN EQUIPO -->
+            <section>
+                <section id="arranque1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Cómo arranca un equipo:</h3>
+                    <h4>Desde el encendido hasta el shell</h4>
+                </section>
+
+                <section id="secuencia_arranque" data-state="no_footer">
+                    <h3>La secuencia de arranque</h3>
+                    <small>
+                        <p>La secuencia general es la misma en una notebook, un servidor de rack o una VM. Lo que
+                            cambia es la <strong>implementación</strong> de cada componente, no el orden.</p>
+                        <ul>
+                            <li><strong>Firmware (BIOS/UEFI):</strong> es el primer software que se ejecuta. Inicializa
+                                el hardware, realiza el POST y busca el dispositivo de arranque.</li>
+                            <li><strong>Bootloader (GRUB):</strong> recibe el control del firmware y carga el kernel en
+                                memoria.</li>
+                            <li><strong>Kernel:</strong> toma el control del hardware y monta el sistema de archivos
+                                raíz.</li>
+                            <li><strong>Init (systemd):</strong> es el primer proceso del espacio de usuario
+                                (<code>PID 1</code>) e inicia el resto de los servicios.</li>
+                        </ul>
+                        <br>
+                        <blockquote><strong>Firmware → Bootloader → Kernel → Init → Login</strong></blockquote>
+                        <p>La secuencia también existe en Windows, aunque cada sistema implementa sus propios
+                            componentes.</p>
+                    </small>
+                    <aside class="notes">
+                        <p>Es relevante porque el instalador de Debian interviene en dos puntos: dónde instala el
+                            bootloader y qué estructura de particiones utiliza para que el firmware pueda encontrarlo.
+                        </p>
+                    </aside>
+                </section>
+
+                <section id="ipreguntas1" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(Firmware → Bootloader → Kernel → Init)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 3: BIOS Y UEFI -->
+            <section>
+                <section id="firmware1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>BIOS y UEFI:</h3>
+                    <h4>Dos formas de arrancar</h4>
+                </section>
+
+                <section id="bios_vs_uefi" data-state="no_footer">
+                    <h3>BIOS (legacy) y UEFI</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 70%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Característica</th>
+                                    <th style="padding: 6px;">BIOS (legacy)</th>
+                                    <th style="padding: 6px;">UEFI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Antigüedad</strong></td>
+                                    <td style="padding: 6px;">Desde la década de 1980</td>
+                                    <td style="padding: 6px;">Estándar desde aproximadamente 2010</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Tabla de particiones habitual</strong></td>
+                                    <td style="padding: 6px;">MBR</td>
+                                    <td style="padding: 6px;">GPT</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Límite de tamaño de disco</strong></td>
+                                    <td style="padding: 6px;">2 TiB</td>
+                                    <td style="padding: 6px;">Prácticamente sin límite práctico</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Interfaz</strong></td>
+                                    <td style="padding: 6px;">Modo texto</td>
+                                    <td style="padding: 6px;">Gráfica, con mouse y red</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Seguridad</strong></td>
+                                    <td style="padding: 6px;">No incluye Secure Boot</td>
+                                    <td style="padding: 6px;">Puede incluir Secure Boot</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Ubicación del bootloader</strong></td>
+                                    <td style="padding: 6px;">Sector de arranque del disco</td>
+                                    <td style="padding: 6px;">Partición dedicada (ESP)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <ul>
+
+                            <li>Actualmente, casi todo el hardware nuevo y las VM modernas utilizan
+                                <strong>UEFI</strong>. Muchos equipos conservan un modo de compatibilidad BIOS, aunque su uso es cada vez menos frecuente.
+                            </li>
+                            <li>VirtualBox permite elegir el firmware de la VM (EFI activado o desactivado), y esa
+                                decisión <strong>se refleja en el modo de particionar el disco</strong>.</li>
+                        </ul>
+                        <br>
+
+                        <p style="font-size: 70%;"><strong>Fuentes:</strong> <a href="https://wiki.debian.org/UEFI"
+                                target="_blank" rel="noopener noreferrer">Debian Wiki — UEFI</a></p>
+                    </small>
+                </section>
+
+                <section id="secure_boot" data-state="no_footer">
+                    <h3>Secure Boot</h3>
+                    <small>
+                        <ul>
+                            <li>Es un mecanismo de <strong>UEFI</strong> que verifica la <strong>firma</strong> del
+                                software ejecutado antes de iniciar el sistema operativo.</li>
+                            <li>Su objetivo es impedir la ejecución de código no autorizado durante las primeras etapas
+                                del arranque.</li>
+                            <li>Desde Debian 10, Debian lo admite mediante <strong>shim</strong>, un cargador pequeño
+                                firmado por Microsoft que incorpora las claves de Debian. <strong>No es necesario
+                                    desactivarlo</strong> para instalar el sistema.</li>
+                            <li>Al utilizar controladores de terceros —por ejemplo, los de NVIDIA— puede ser necesario
+                                desactivar Secure Boot o firmar los módulos manualmente.</li>
+                        </ul>
+                        <br>
+                        <p style="font-size: 70%;"><strong>Fuentes:</strong> <a
+                                href="https://wiki.debian.org/SecureBoot" target="_blank"
+                                rel="noopener noreferrer">Debian Wiki — Secure Boot</a></p>
+                    </small>
+                </section>
+
+                <section id="servidor_fisico" data-state="no_footer">
+                    <h3>Gestión de un servidor físico</h3>
+                    <small>
+                        <p>Un servidor físico incorpora
+                            además una <strong>capa de gestión independiente</strong>:</p>
+                        <ul>
+                            <li><strong>BMC</strong> (<em>Baseboard Management Controller</em>): microcontrolador con
+                                CPU, memoria y conexión de red propias, capaz de funcionar <strong>aunque el servidor
+                                    esté apagado</strong>.</li>
+                            <li>Cada fabricante utiliza su propia denominación: <strong>iLO</strong> (HPE),
+                                <strong>iDRAC</strong> (Dell) y <strong>XClarity</strong> (Lenovo).
+                            </li>
+                            <li>Permite encender y apagar el equipo, consultar sensores, montar una ISO remota y abrir
+                                una consola por red. Este tipo de administración se denomina <strong>fuera de
+                                    banda</strong> (<em>out-of-band</em>).</li>
+
+                            <li>Las controladoras <strong>RAID</strong> también disponen de firmware propio para su
+                                configuración, antes de que intervenga el sistema operativo.</li>
+                        </ul>
+                        <br>
+                        <blockquote>No vamos a utilizar estas herramientas durante el curso, pero es importante
+                            conocerlas al trabajar con hardware físico.</blockquote>
+                        <p style="font-size: 70%;"><strong>Fuentes:</strong> <a
+                                href="https://www.dmtf.org/standards/redfish" target="_blank"
+                                rel="noopener noreferrer">DMTF — Redfish</a></p>
+                    </small>
+                </section>
+
+                <section id="ipreguntas2" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(BIOS/MBR · UEFI/GPT/ESP)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 4: EL ARRANQUE DE LINUX -->
+            <section>
+                <section id="arranque_linux" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>El arranque de Linux:</h3>
+                    <h4>GRUB, kernel e initramfs</h4>
+                </section>
+
+                <section id="grub" data-state="no_footer">
+                    <h3>GRUB: el gestor de arranque</h3>
+                    <small>
+                        <ul>
+                            <li><strong>GRUB</strong> (<em>GRand Unified Bootloader</em>) es el bootloader estándar de
+                                Debian y de muchas distribuciones.</li>
+                            <li>Es el menú que puede aparecer durante unos segundos al iniciar: permite elegir entre
+                                kernels, iniciar en modo de recuperación o arrancar otro sistema operativo.</li>
+                            <li>Su función es <strong>localizar el kernel</strong>, cargarlo en memoria, pasarle sus
+                                parámetros y cederle el control. También permite arrancar otros sistemas operativos como Windows.</li>
+                            <li>Su configuración se encuentra en <code>/boot/grub/</code>. Los archivos
+                                <code>.efi</code> están en la ESP, montada habitualmente en <code>/boot/efi</code>.
+                            </li>
+                        </ul>
+                        <br>
+
+                    </small>
+                </section>
+
+                <section id="initramfs" data-state="no_footer">
+                    <h3>Initramfs: el sistema mínimo de arranque</h3>
+                    <small>
+                        <p>Para montar el sistema de archivos raíz (<code>/</code>), el kernel necesita controladores
+                            para el disco, el sistema de archivos y, en algunos casos, RAID o LVM. Sin embargo, esos
+                            controladores pueden estar almacenados <strong>dentro de la raíz que todavía no se
+                                montó</strong>.</p>
+                        <ul>
+                            <li>El <strong>initramfs</strong> resuelve esta dependencia inicial: es un sistema de
+                                archivos mínimo y comprimido que GRUB carga en RAM junto con el kernel.</li>
+                            <li>Contiene los módulos del kernel necesarios para el arranque y un conjunto reducido de
+                                herramientas básicas.</li>
+                            <li>El kernel utiliza este sistema temporal, carga los controladores requeridos,
+                                <strong>monta la raíz real</strong> y luego cede el control a <strong>systemd</strong>.
+                            </li>
+                            <li>Es un archivo visible en <code>/boot</code>:
+                                <code>/boot/initrd.img-&lt;versión&gt;</code>. El kernel correspondiente se encuentra en
+                                <code>/boot/vmlinuz-&lt;versión&gt;</code>.
+                            </li>
+                        </ul>
+                        <br>
+                        <blockquote>El initramfs se regenera al actualizar el kernel o modificar componentes de
+                            almacenamiento. </blockquote>
+                    </small>
+                </section>
+
+                <section id="secuencia_completa" data-state="no_footer">
+                    <h3>Secuencia completa de arranque</h3>
+                    <pre class="codigo_shadow" data-id="code-animation"><code class="text codigo-redondo" data-trim>
+1. Firmware  → realiza el POST, inicializa el hw y lee la ESP
+2. GRUB      → carga el kernel y el initramfs en RAM
+3. Kernel    → inicia con el initramfs como raíz temporal
+4. Initramfs → carga controladores, encuentra y monta el /
+5. systemd   → inicia los servicios definidos
+6. Login     → consola local o SSH
+                    </code></pre>
+                    <small>
+                        <blockquote>A partir del punto 5 comienza el funcionamiento habitual del sistema. Las etapas
+                            previas ocurren en pocos segundos y suelen hacerse visibles solo ante un problema.
+                        </blockquote>
+                    </small>
+                </section>
+
+                <section id="ipreguntas3" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(GRUB · initramfs y su función · systemd como PID 1)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 5: DISCOS Y PARTICIONES -->
+            <section>
+                <section id="particiones1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Discos y particiones:</h3>
+                    <h4>Tablas de partición, ESP, swap y sistemas de archivos</h4>
+                </section>
+
+                <section id="nombres_discos" data-state="no_footer">
+                    <h3>Almacenamiento en Linux</h3>
+                    <small>
+                        <p>Antes de particionar, es importante saber interpretar los nombres de los dispositivos. En
+                            Linux aparecen como archivos dentro de <code>/dev</code>:</p>
+                        <table style="width: 100%; font-size: 70%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Nombre</th>
+                                    <th style="padding: 6px;">Qué representa</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>/dev/sda</code></td>
+                                    <td style="padding: 6px;">Primera unidad SATA, SAS, SCSI o USB. El segundo suele ser
+                                        <code>sdb</code>, y así sucesivamente.
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>/dev/sda1</code></td>
+                                    <td style="padding: 6px;">Primera partición de esa unidad.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>/dev/nvme0n1</code></td>
+                                    <td style="padding: 6px;">Primera unidad NVMe. Sus particiones se denominan
+                                        <code>nvme0n1p1</code>, <code>nvme0n1p2</code>, etc.
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>/dev/vda</code></td>
+                                    <td style="padding: 6px;">Disco paravirtualizado (virtio), habitual en KVM y
+                                        Proxmox.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>/dev/sr0</code></td>
+                                    <td style="padding: 6px;">Unidad de CD/DVD.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <blockquote>En VirtualBox con controladora SATA veremos <code>/dev/sda</code>. El orden de estos
+                            nombres puede cambiar entre arranques cuando hay varios discos; por eso los sistemas
+                            actuales identifican las particiones mediante <strong>UUID</strong> y no solo por nombre.
+                        </blockquote>
+                    </small>
+                </section>
+
+                <section id="que_es_particionar" data-state="no_footer">
+                    <h3>¿Qué es particionar?</h3>
+                    <small>
+                        <ul>
+                            <li>Es <strong>dividir un dispositivo de almacenamiento en secciones lógicas
+                                    independientes</strong>, cada una con su propio sistema de archivos.</li>
+                            <li>Permite separar el sistema operativo de los datos y aplicar políticas distintas a cada
+                                área.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="mbr_gpt" data-state="no_footer">
+                    <h3>Tablas de particiones MBR y GPT</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 70%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Característica</th>
+                                    <th style="padding: 6px;">MBR (<em>Master Boot Record</em>)</th>
+                                    <th style="padding: 6px;">GPT (<em>GUID Partition Table</em>)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Firmware asociado</strong></td>
+                                    <td style="padding: 6px;">BIOS</td>
+                                    <td style="padding: 6px;">UEFI</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Máximo de particiones primarias</strong></td>
+                                    <td style="padding: 6px;">4 (o 3 + una extendida)</td>
+                                    <td style="padding: 6px;">128</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Tamaño máximo de disco</strong></td>
+                                    <td style="padding: 6px;">2 TiB</td>
+                                    <td style="padding: 6px;">Sin límite práctico para los usos actuales</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Redundancia</strong></td>
+                                    <td style="padding: 6px;">No; hay un único punto de falla</td>
+                                    <td style="padding: 6px;">Conserva una copia de la tabla al final del disco</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Uso actual</strong></td>
+                                    <td style="padding: 6px;">Discos antiguos o compatibilidad</td>
+                                    <td style="padding: 6px;">Estándar actual</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <ul>
+                            <li>Las particiones <strong>extendidas y lógicas</strong> fueron una solución para superar
+                                el límite de cuatro particiones primarias de MBR. Con GPT ya no son necesarias.</li>
+                            <li>El instalador de Debian selecciona normalmente <code>gpt</code> en sistemas UEFI y
+                                <code>msdos</code> (MBR) en equipos con BIOS antigua.
+                            </li>
+                        </ul>
+                        <br>
+                        <p style="font-size: 70%;"><strong>Fuentes:</strong> <a
+                                href="https://www.debian.org/releases/stable/amd64/apcs05.es.html" target="_blank"
+                                rel="noopener noreferrer">Manual de instalación de Debian — Programas para
+                                particionar</a></p>
+                    </small>
+                </section>
+
+                <section id="esp" data-state="no_footer">
+                    <h3>ESP (<em>EFI System Partition</em>)</h3>
+                    <small>
+                        <ul>
+                            <li>Es una partición pequeña, de algunos cientos de MB, formateada en <strong>FAT32</strong>.
+                            </li>
+                            <li>Almacena los bootloaders como archivos <code>.efi</code>. En Debian, GRUB se instala en
+                                <code>EFI/debian/</code>.
+                            </li>
+                            <li>FAT32 no es una elección arbitraria: la <strong>especificación UEFI exige</strong> que
+                                el firmware pueda leerlo.</li>
+                            <li>En Linux suele montarse en <code>/boot/efi</code>.</li>
+                            <li>Si el equipo comparte Windows y Linux, ambos sistemas utilizan la misma ESP, cada uno en
+                                su propio subdirectorio.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="swap" data-state="no_footer">
+                    <h3>Partición Swap</h3>
+                    <small>
+                        <ul>
+                            <li>Es espacio en disco que el kernel puede usar como <strong>extensión de la RAM</strong>
+                                cuando ésta se llena.</li>
+                            <li>Es una <strong>partición dedicada</strong> (con su propio fs). La swap del sistema puede también configurarse
+                                como un <strong>archivo de swap</strong> dentro de una partición existente. El archivo
+                                ofrece mayor flexibilidad, ya que puede ampliarse o eliminarse sin modificar la tabla de
+                                particiones.</li>
+                            <li>La regla antigua de asignar el doble de la RAM ya no es apropiada para servidores con
+                                grandes cantidades de memoria.</li>
+                            <li>Una cantidad moderada de swap permite liberar páginas de memoria poco utilizadas. Un uso
+                                continuo e intenso de swap suele indicar <strong>falta de RAM</strong>.</li>
+                            <li>En el laboratorio usaremos una <strong>partición dedicada</strong> para simplificar el
+                                esquema, ya que es la forma predeterminada en que se instala Debian.</li>
+                        </ul>
+                        <br>
+                        <blockquote>Una alternativa interesante a la swap en disco es <strong>zram</strong>, que usa espacio comprimido en
+                            la RAM como memoria swap.</blockquote>
+                    </small>
+                </section>
+
+                <section id="filesystems" data-state="no_footer">
+                    <h3>Sistemas de archivos</h3>
+                    <small>
+                        <p>Particionar divide el disco. <strong>Formatear</strong> crea dentro de una partición la
+                            estructura necesaria para almacenar archivos. Sin ver mucho en detalle, listamos los
+                            filesystem típicos en una instalación GNU/Linux.</p>
+                        <table style="width: 100%; font-size: 65%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Sistema de archivos</th>
+                                    <th style="padding: 6px;">Uso habitual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>ext4</strong></td>
+                                    <td style="padding: 6px;">Predeterminado en Debian. Maduro, estable y adecuado para
+                                        usos generales.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>XFS</strong></td>
+                                    <td style="padding: 6px;">Predeterminado en RHEL/Rocky. Se desempeña bien con
+                                        archivos grandes y alta concurrencia.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Btrfs</strong></td>
+                                    <td style="padding: 6px;">Incluye snapshots, checksums y RAID por software. Lo
+                                        utilizan por defecto openSUSE y Fedora.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>ZFS</strong></td>
+                                    <td style="padding: 6px;">Ofrece snapshots, RAID propio, verificación de integridad
+                                        y caché en RAM (<strong>ARC</strong>). Por su licencia <a
+                                            href="https://es.wikipedia.org/wiki/Common_Development_and_Distribution_License"
+                                            target="_blank" rel="noopener noreferrer">CDDL</a>, no forma parte del
+                                        kernel Linux. Se suele utilizar en ProxmoxVE.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>FAT32 / NTFS</strong></td>
+                                    <td style="padding: 6px;">Provenientes del entorno Windows. FAT32 es relevante aquí
+                                        por la ESP. Linux tiene soporte nativo NTFS desde el kernel 5.15.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <blockquote>Durante el Lab2 usaremos <strong>ext4</strong>. Es la opción por defecto en Debian y
+                            otros sistemas GNU/Linux.</blockquote>
+                    </small>
+                </section>
+
+                <section id="esquema_vm" data-state="no_footer">
+                    <h3>Esquema de particionado del laboratorio</h3>
+                    <pre class="codigo_shadow" data-id="code-animation"><code class="text codigo-redondo" data-trim>
+ESP     (512 MB  - FAT32 - montada en /boot/efi)
+swap    (2 GB    - swap)
+/       (el resto - ext4)
+                    </code></pre>
+                    <small>
+                        <blockquote>El particionado será <strong>guiado</strong>. El asistente guiado de Debian ofrece
+                            varias opciones, pudiendo elegir una partición sola, LVM o separar varias particiones.
+                        </blockquote>
+                    </small>
+                </section>
+
+                <section id="ipreguntas4" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(Nombres en /dev · MBR/GPT · ESP · swap · ext4)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 6: PUNTOS DE MONTAJE Y FHS -->
+            <section>
+                <section id="fhs1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Puntos de montaje y FHS:</h3>
+                    <h4>Un único árbol de archivos</h4>
+                </section>
+
+                <section id="punto_montaje" data-state="no_footer">
+                    <h3>¿Qué es un punto de montaje?</h3>
+                    <small>
+                        <ul>
+                            <li>En Windows, cada unidad de almacenamiento (partición/disco) suele aparecer con una
+                                <strong>letra</strong>, como <code>D:</code>, <code>E:</code>, etc.
+                            </li>
+                            <li>En Linux no se utilizan letras de unidad. Cada dispositivo se <strong>monta</strong> en
+                                un directorio del único árbol de archivos; ese directorio es el <strong>punto de
+                                    montaje</strong>.</li>
+                            <li>Al conectar, por ejemplo, un pendrive, el sistema puede montarlo en una ruta como
+                                <code>/media/usuario/PENDRIVE</code>. Desde allí, se accede a él como a cualquier otra
+                                carpeta.
+                            </li>
+                            <li>Una carpeta compartida por red —NFS o Samba— también se monta en una ruta, por ejemplo
+                                <code>/mnt/servidor</code>, y queda integrada al árbol de archivos.
+                            </li>
+                            <li>Para consultar los sistemas de archivos montados se pueden usar <code>mount</code> o
+                                <code>df -h</code>.
+                            </li>
+                        </ul>
+                        <br>
+                        <blockquote>El montaje puede realizarse de forma automática cuando el dispositivo se conecta,
+                            manualmente con <code>mount</code> o automáticamente durante el arranque según lo definido
+                            en <code>/etc/fstab</code>. Este archivo se estudiará en detalle en la clase de
+                            almacenamiento.</blockquote>
+                    </small>
+                </section>
+
+                <section id="arbol_unico" data-state="no_footer">
+                    <h3>Un único árbol</h3>
+                    <small>
+                        <ul>
+                            <li>Todo cuelga de la raíz <code>/</code>, sin importar en qué disco físico o recurso remoto
+                                se encuentre cada elemento.</li>
+                            <li>El <strong>FHS</strong> (<em>Filesystem Hierarchy Standard</em>) define qué se almacena
+                                en cada directorio. Gracias a esta convención, la estructura resulta
+                                <strong>predecible entre distribuciones</strong>.
+                            </li>
+                        </ul>
+                        <br>
+                        <p style="font-size: 70%;"><strong>Fuentes:</strong> <a
+                                href="https://wiki.debian.org/es/FilesystemHierarchyStandard" target="_blank"
+                                rel="noopener noreferrer">Debian Wiki — FHS</a>, <a
+                                href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html" target="_blank"
+                                rel="noopener noreferrer">Filesystem Hierarchy Standard 3.0</a></p>
+                    </small>
+                </section>
+
+                <section id="dirs_principales" data-state="no_footer">
+                    <h3>Directorios principales</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 75%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Directorio</th>
+                                    <th style="padding: 6px;">Contenido</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>/</code></td>
+                                    <td style="padding: 6px;">Raíz del sistema. Todo cuelga de este directorio.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>-/boot</code></td>
+                                    <td style="padding: 6px;">Kernel, initramfs y GRUB. Con UEFI, la ESP se monta en
+                                        <code>/boot/efi</code>.
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>-/etc</code></td>
+                                    <td style="padding: 6px;">Configuración del sistema, habitualmente en texto plano.
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>-/var</code></td>
+                                    <td style="padding: 6px;">Datos variables: logs, colas de correo, bases de datos y
+                                        cachés.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>-/home</code></td>
+                                    <td style="padding: 6px;">Directorios personales de los usuarios.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>-/usr</code></td>
+                                    <td style="padding: 6px;">Programas y librerías instalados; contiene gran parte del
+                                        sistema.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>-/tmp</code></td>
+                                    <td style="padding: 6px;">Archivos temporales; puede limpiarse en cada reinicio.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                </section>
+
+                <section id="otros_dirs" data-state="no_footer">
+                    <h3>Otros directorios bajo <code>/</code></h3>
+                    <small>
+                        <table style="width: 100%; font-size: 62%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 5px;">Directorio</th>
+                                    <th style="padding: 5px;">Contenido</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 5px;"><code>/dev</code></td>
+                                    <td style="padding: 5px;">Dispositivos representados como archivos: discos,
+                                        terminales y <code>/dev/null</code>, entre otros.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 5px;"><code>/proc</code></td>
+                                    <td style="padding: 5px;">Sistema de archivos <strong>virtual</strong> con
+                                        información del kernel y de los procesos en tiempo real. No ocupa espacio en
+                                        disco.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 5px;"><code>/sys</code></td>
+                                    <td style="padding: 5px;">Sistema de archivos virtual que expone la información del
+                                        kernel sobre el hardware y los controladores.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 5px;"><code>/run</code></td>
+                                    <td style="padding: 5px;">Datos de ejecución de los servicios: PID, sockets y
+                                        bloqueos. Vive en RAM y se vacía en cada arranque.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 5px;"><code>/bin</code></td>
+                                    <td style="padding: 5px;">Comandos esenciales para cualquier usuario
+                                        (<code>ls</code>, <code>cp</code>, <code>cat</code>).</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 5px;"><code>/sbin</code></td>
+                                    <td style="padding: 5px;">Comandos de administración del sistema.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 5px;"><code>/lib</code></td>
+                                    <td style="padding: 5px;">Librerías compartidas que requieren los binarios de
+                                        <code>/bin</code> y <code>/sbin</code>.
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 5px;"><code>/mnt</code></td>
+                                    <td style="padding: 5px;">Punto de montaje temporal para uso manual del
+                                        administrador.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 5px;"><code>/opt</code></td>
+                                    <td style="padding: 5px;">Software de terceros no empaquetado por la distribución.
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 5px;"><code>/root</code></td>
+                                    <td style="padding: 5px;">Directorio personal del usuario root. <strong>No debe
+                                            confundirse con <code>/</code>.</strong></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 5px;"><code>/srv</code></td>
+                                    <td style="padding: 5px;">Datos servidos por el equipo, como sitios web o FTP.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                </section>
+
+                <!-- <section id="usr_merge" data-state="no_footer">
+                    <h3>Dos aclaraciones sobre el árbol</h3>
+                    <small>
+                        <blockquote><strong>Sobre <code>/run</code>:</strong> debe estar disponible en las primeras
+                            etapas del arranque y no debe persistir después de reiniciar. Puede contener archivos de
+                            estado de los servicios, como PID o sockets.</blockquote>
+                        <br>
+                        <blockquote>En Debian moderno, <code>/bin</code>, <code>/sbin</code> y <code>/lib</code> son
+                            <strong>enlaces simbólicos</strong> (<em>symlinks</em>) a sus equivalentes dentro de
+                            <code>/usr</code>, como parte de la transición conocida como <strong>usr-merge</strong>. Se
+                            siguen utilizando de la misma manera, pero <code>ls -l /</code> muestra la flecha del
+                            enlace.
+                        </blockquote>
+                    </small>
+                </section> -->
+
+                <section id="fhs_windows" data-state="no_footer">
+                    <h3>FHS y el modelo de Windows</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 70%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;"></th>
+                                    <th style="padding: 6px;">Linux (FHS)</th>
+                                    <th style="padding: 6px;">Windows</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Configuración</strong></td>
+                                    <td style="padding: 6px;">Archivos de texto en <code>/etc</code></td>
+                                    <td style="padding: 6px;">Registro binario y archivos distribuidos</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Programas</strong></td>
+                                    <td style="padding: 6px;"><code>/usr/bin</code>, <code>/usr/lib</code></td>
+                                    <td style="padding: 6px;"><em>Archivos de programa</em> y entradas de registro</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Almacenamiento</strong></td>
+                                    <td style="padding: 6px;">Un solo árbol; las unidades se montan
+                                        <strong>dentro</strong> de él
+                                    </td>
+                                    <td style="padding: 6px;">Una letra por unidad de almacenamiento</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Portabilidad de configuración</strong></td>
+                                    <td style="padding: 6px;">Copiar un archivo de texto</td>
+                                    <td style="padding: 6px;">Exportar claves de registro</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Documentos usuario</strong></td>
+                                    <td style="padding: 6px;"><code>/home/user</code></td>
+                                    <td style="padding: 6px;"><code>C:\Users\user</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <blockquote>La configuración en archivos de texto y en ubicaciones predecibles facilita la
+                            automatización y la administración consistente de muchos servidores.</blockquote>
+                    </small>
+                </section>
+
+                <section id="produccion" data-state="no_footer">
+                    <h3>Aplicación en servidores de producción</h3>
+                    <small>
+                        <p>No siempre conviene ubicar todo en una sola partición. Es habitual
+                            separar:</p>
+                        <ul>
+                            <li><strong><code>/var</code></strong>, donde se escriben los logs. Si un servicio llena ese
+                                espacio, una partición separada ayuda a preservar el resto del sistema.</li>
+                            <li><strong><code>/home</code></strong>, para conservar los datos de usuarios si es
+                                necesario reinstalar el sistema operativo.</li>
+                            <li><strong><code>/tmp</code></strong>, que puede montarse con opciones restrictivas por
+                                motivos de seguridad.</li>
+                        </ul>
+                        <p>Cada una de estas separaciones corresponde a una partición o volumen montado en un punto del
+                            árbol.</p>
+                        <br>
+                        <blockquote>Para aplicar esta estrategia con flexibilidad suele utilizarse <strong>LVM</strong>,
+                            ya que permite redimensionar volúmenes más adelante. Por eso en esta clase usamos el esquema
+                            simple y retomaremos el tema cuando veamos LVM.</blockquote>
+                    </small>
+                </section>
+
+                <section id="ipreguntas5" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(Punto de montaje · árbol único · /etc, /var, /run, /proc)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 7: PANORAMA DE LA INSTALACIÓN -->
+            <section>
+                <section id="instalacion1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Panorama de la instalación:</h3>
+                    <h4>Qué va a pasar al instalar Debian 13</h4>
+                </section>
+
+                <section id="que_instalamos" data-state="no_footer">
+                    <h3>Qué vamos a instalar</h3>
+                    <small>
+                        <ul>
+                            <li><strong>Debian 13 “trixie”</strong>, la versión estable actual. Debian denomina sus
+                                versiones con personajes de <em>Toy Story</em>.</li>
+                            <li>En Debian es la misma distribución usada para desktop como para server, solo que en
+                                servers no suelen instalarse interfaces gráficas.</li>
+                            <li>Ramas de Debian: <strong>stable</strong> —la que utilizaremos, probada y con soporte de
+                                seguridad—, <strong>testing</strong> y <strong>unstable</strong>. En servidores se
+                                utiliza normalmente la rama stable, salvo una necesidad concreta.</li>
+                            <li>Arquitectura <code>amd64</code>, la habitual en equipos de 64 bits.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="imagen_instalacion" data-state="no_footer">
+                    <h3>Imagen de instalación</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 70%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Imagen</th>
+                                    <th style="padding: 6px;">Tamaño</th>
+                                    <th style="padding: 6px;">Uso</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>netinst</strong></td>
+                                    <td style="padding: 6px;">~700 MB</td>
+                                    <td style="padding: 6px;">Instalador mínimo que descarga paquetes de Internet
+                                        durante la instalación. <strong>Es la que usaremos.</strong></td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>DVD completo</strong></td>
+                                    <td style="padding: 6px;">Varios GB</td>
+                                    <td style="padding: 6px;">Incluye los paquetes necesarios para instalar sin
+                                        conexión.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Live</strong></td>
+                                    <td style="padding: 6px;">~2–3 GB</td>
+                                    <td style="padding: 6px;">Sistema que inicia sin instalarse, útil para probar y
+                                        orientado al escritorio.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <blockquote>La imagen netinst necesita acceso a Internet. Para eso se utilizará el
+                            <strong>Adaptador 1 (NAT)</strong> configurado en la Clase 2. También permite instalar
+                            paquetes actualizados desde el inicio.
+                        </blockquote>
+                    </small>
+                </section>
+
+                <section id="etapas_instalador" data-state="no_footer">
+                    <h3>Etapas del instalador</h3>
+                    <small>
+                        <p>El instalador de Debian —<strong>debian-installer</strong>, o <em>d-i</em>— sigue las mismas
+                            etapas principales tanto en modo gráfico como en modo texto:</p>
+                        <ol>
+                            <li>Idioma, ubicación y teclado.</li>
+                            <li>Red: hostname y dominio. En nuestro caso, DHCP automático.</li>
+                            <li>Usuarios: contraseña de <strong>root</strong> y creación de un usuario común.</li>
+                            <li><strong>Particionado</strong>: aplicación de los conceptos vistos en clase.</li>
+                            <li>Instalación del sistema base: los paquetes mínimos necesarios para arrancar.</li>
+                            <li>Configuración de <code>apt</code> y selección de una réplica (<em>mirror</em>).</li>
+                            <li><strong>Selección de software (<code>tasksel</code>)</strong>.</li>
+                            <li>Instalación de GRUB en el disco.</li>
+                            <li>Reinicio y primer arranque.</li>
+                        </ol>
+                        <br>
+                        <blockquote><strong>Sobre root:</strong> si se deja vacía la contraseña de root, Debian no
+                            habilita esa cuenta y otorga permisos de <code>sudo</code> al usuario creado. Es el
+                            comportamiento predeterminado en Ubuntu y una práctica frecuente en servidores. En el
+                            laboratorio definiremos la contraseña de root para conocer ambas formas de administración.
+                        </blockquote>
+                        <p style="font-size: 70%;"><strong>Fuentes:</strong> <a
+                                href="https://www.debian.org/releases/stable/amd64/" target="_blank"
+                                rel="noopener noreferrer">Guía de instalación de Debian</a></p>
+                    </small>
+                </section>
+
+                <section id="ipreguntas6" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(netinst · etapas del instalador)</em></small></p>
+                </section>
+
+                <section id="resumen" data-state="no_footer">
+                    <h3>Resumen de la clase</h3>
+                    <small>
+                        <ul>
+                            <li><strong>Arranque:</strong> Firmware → Bootloader → Kernel → Init. La secuencia se aplica
+                                tanto a una notebook como a un servidor.</li>
+                            <li><strong>BIOS/MBR</strong> corresponde al modelo anterior; <strong>UEFI/GPT</strong> es
+                                el estándar actual y suelen utilizarse en conjunto.</li>
+                            <li>La <strong>ESP</strong> es una partición FAT32 que contiene los archivos de arranque y
+                                se monta en <code>/boot/efi</code>.</li>
+                            <li>El <strong>initramfs</strong> proporciona los controladores iniciales que el kernel
+                                necesita antes de montar el sistema de archivos raíz.</li>
+                            <li>Un servidor físico incorpora una capa de gestión <strong>fuera de banda</strong>
+                                (BMC / iLO / iDRAC) que una VM no expone.</li>
+                            <li><strong>Discos:</strong> <code>/dev/sda</code> y <code>/dev/nvme0n1</code>. Para
+                                identificarlos de forma estable se utilizan <strong>UUID</strong>.</li>
+                            <li><strong>Esquema del laboratorio:</strong> ESP + swap + <code>/</code> en ext4, con
+                                particionado guiado y sin LVM por ahora.</li>
+                            <li><strong>Punto de montaje:</strong> directorio en el que se integra un disco o recurso de
+                                red al árbol de archivos. Reemplaza las letras de unidad.</li>
+                            <li><strong>FHS:</strong> árbol de directorios único y predecible, con configuración en
+                                texto plano dentro de <code>/etc</code>.</li>
+                        </ul>
+                    </small>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN LABS/PRACTICA -->
+            <section>
+
+                <section id="labs" data-state="hide_footer" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h2>Actividades prácticas y laboratorios</h2>
+                </section>
+
+                <section id="labs_1" data-state="no_footer">
+                    <h2>Actividad práctica</h2>
+                    <small>
+                        <p><em>Instalación de Debian 13 en una nueva VM creada</em></p>
+                        <p>Enlace al laboratorio: <a
+                                href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab2/lab2.md"
+                                target="_blank" rel="noopener noreferrer">Laboratorio 2 — Instalación de Debian 13</a>
+                        </p>
+                    </small>
+                </section>
+
+            </section>
+
+            <!-- SECCIÓN FINAL -->
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <!-- Logos en el footer -->
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image"></span>
+        </div>
+
+        <script type="text/javascript">
+            window.addEventListener("load", function () {
+
+                revealDiv = document.querySelector("body div.reveal")
+                footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+
+    <!-- Script de Socket.io para Reveal Multiplex -->
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+
+
+    <script>
+        // More info about initialization & config:
+        // - https://revealjs.com/initialization/
+        // - https://revealjs.com/config/
+
+        // Para eventos personalizados. Indica que está en la presentación
+
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            //element.style.display = "none";
+            // element.style.display = "table";
+            element.style.opacity = "15%";
+        });
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!",
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: "",
+            },
+
+            // Multiplex (cliente: secret en null)
+            multiplex: {
+                secret: null,
+                id: '7b0917d41c6a3bf43a6a45f82e1e3d0a3b7cafee14437efc073f990f1fb25328',
+                url: 'https://multiplex.up.railway.app'
+            },
+
+            // Learn about plugins: https://revealjs.com/plugins/
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom]
+        });
+
+
+
+        // ── Theme Toggle Logic ──
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+
+            // Original light background gradients to restore
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                // Update slide backgrounds with gradients
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                // Force Reveal to re-sync backgrounds only if Reveal is initialized and ready
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            // Initialize from saved preference
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <!-- Plugin Cliente de Multiplex -->
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+    <!-- <script src="https://multiplex.up.railway.app/master.js"></script> -->
+
+</body>
+
+</html>
