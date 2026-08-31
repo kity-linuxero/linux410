@@ -1,0 +1,1145 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 4</title>
+    <!-- <link rel="icon" type="image/x-icon" href="/img/logos/IDEPInformaticaLogo.png"> -->
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/egg.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* ── Theme Toggle Button ── */
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        /* Ocultar el botón al exportar a PDF (?print-pdf) y al imprimir */
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        /* Dark theme overrides via class on <html> */
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        /* Override radial gradient backgrounds in dark mode */
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+
+    <!-- CLASE AUN NO DISPONIBLE-->
+    <!-- <meta http-equiv="refresh" content="0; url=./404.html"> -->
+
+</head>
+
+<body>
+
+    <!-- CLASE AUN NO DISPONIBLE-->
+    <!-- <script>
+        window.location.href = "/404.html";
+    </script> -->
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SECCIÓN 1: PORTADA, TEMAS Y OBJETIVOS -->
+            <section>
+                <section id="inicio" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+
+                    <h3>Administración de servidores GNU/Linux</h3>
+                    <h4>Clase 4: Primer contacto con el servidor</h4>
+                    <small>
+                        <p>Módulo 1 — Del arranque al acceso remoto</p>
+                    </small>
+
+                </section>
+
+                <section id="index" data-state="no_footer">
+                    <h3>Temas de clase 4</h3>
+                    <small>
+                        <ul>
+                            <li><a href="#/systemd1">Init y systemd</a></li>
+                            <li><a href="#/runlevels_targets">Runlevels y targets</a></li>
+                            <li><a href="#/login1">Login e identidad: TTY y prompt</a></li>
+                            <li><a href="#/root_usuarios">root, usuarios y <code>sudo</code></a></li>
+                            <li><a href="#/postinst1">Post-instalación</a></li>
+                            <li><a href="#/locales">Locale, teclado, hora y hostname</a></li>
+                            <li><a href="#/ssh1">Primer acceso por SSH</a></li>
+                            <li><a href="#/esquema_red">Reenvío de puertos en VirtualBox</a></li>
+                            <br>
+                            <li><a href="#/labs_1">Laboratorio 3: Post-instalación y primer acceso por SSH</a></li>
+                        </ul>
+
+                        <p><a href="?print-pdf">Exportar a PDF</a></p>
+                    </small>
+                </section>
+
+                <section id="objetivos" data-state="no_footer">
+                    <h3>Objetivos de la clase</h3>
+                    <small>
+                        <p>Al finalizar esta clase vas a poder:</p>
+                        <ul>
+                            <li>Explicar qué es <strong>systemd</strong> y qué lugar ocupa como <code>PID 1</code>.</li>
+                            <li>Diferenciar un usuario normal, <strong>root</strong> y un usuario habilitado para
+                                <code>sudo</code>, y distinguir <code>su</code> de <code>sudo</code>.
+                            </li>
+                            <li>Dejar el servidor con su <strong>locale, teclado, zona horaria y hostname</strong>
+                                correctamente configurados.</li>
+                            <li>Actualizar el sistema mediante <strong>APT</strong>.</li>
+                            <li>Conectarte a tu servidor <strong>por SSH</strong> desde tu máquina anfitriona.</li>
+                        </ul>
+                        <br>
+                        <blockquote><strong>Por qué vemos este tema:</strong> en la clase 3 estudiamos la secuencia de
+                            arranque e instalamos Debian. En esta clase vamos a revisar el sistema ya instalado,
+                            completar su configuración inicial y acceder a él de forma remota.</blockquote>
+                    </small>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 2: INIT Y SYSTEMD -->
+            <section>
+                <section id="systemd1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Init y systemd:</h3>
+                    <h4>El primer proceso del espacio de usuario</h4>
+                </section>
+
+                <section id="repaso_arranque" data-state="no_footer">
+                    <h3>Repaso del arranque</h3>
+                    <small>
+                        <p>En la clase 3 vimos cómo se inicia Linux, desde el firmware hasta el login:</p>
+                        <br>
+                        <blockquote><strong>Firmware (BIOS/UEFI) → Bootloader (GRUB) → Kernel + initramfs →
+                                init-systemd (PID 1) → Login</strong></blockquote>
+                        <br>
+                        <p>GRUB e initramfs ya se explicaron en esa clase. En esta retomamos la secuencia desde
+                            <strong>systemd</strong>, el primer proceso del espacio de usuario.
+                        </p>
+                    </small>
+                </section>
+
+                <section id="pid1" data-state="no_footer">
+                    <h3>El sistema init y el PID 1</h3>
+                    <small>
+                        <p>Se denomina <strong>sistema init</strong> al software que el kernel inicia como primer
+                            proceso del espacio de usuario. <strong>SysVinit</strong> y <strong>systemd</strong> son dos
+                            implementaciones diferentes de esa función. En Debian actual, el sistema init predeterminado
+                            es systemd.</p>
+                        <ul>
+                            <li>Cuando el kernel termina de arrancar, inicia el proceso con <strong>PID 1</strong>.</li>
+                            <li>A partir de ese proceso se inicia el resto del sistema. También adopta procesos
+                                huérfanos y participa en el apagado ordenado del equipo.</li>
+                            <li>Si el PID 1 termina de forma inesperada, el sistema no puede continuar funcionando
+                                normalmente.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="sysvinit_systemd" data-state="no_footer">
+                    <h3>De SysVinit a systemd</h3>
+                    <small>
+                        <table style="width: 100%; font-size: 65%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;"></th>
+                                    <th style="padding: 6px;">SysVinit (clásico)</th>
+                                    <th style="padding: 6px;">systemd (actual)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Cómo arranca</strong></td>
+                                    <td style="padding: 6px;">Scripts ejecutados según el orden definido para cada
+                                        runlevel</td>
+                                    <td style="padding: 6px;">Unidades que pueden iniciarse en paralelo según sus
+                                        dependencias</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Qué levanta</strong></td>
+                                    <td style="padding: 6px;">Lo que diga el runlevel</td>
+                                    <td style="padding: 6px;">Unidades con dependencias declaradas</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Servicios</strong></td>
+                                    <td style="padding: 6px;">Los gestiona mediante scripts de inicio y detención</td>
+                                    <td style="padding: 6px;">Puede supervisarlos y reiniciarlos según su configuración
+                                    </td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Logs</strong></td>
+                                    <td style="padding: 6px;">Archivos administrados por syslog y los propios servicios
+                                    </td>
+                                    <td style="padding: 6px;">Journal centralizado, además de otros mecanismos de
+                                        registro</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Configuración</strong></td>
+                                    <td style="padding: 6px;"><code>/etc/init.d/</code> + enlaces en
+                                        <code>/etc/rc?.d/</code>
+                                    </td>
+                                    <td style="padding: 6px;">Archivos <code>.service</code> declarativos</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <ul>
+                            <li><strong>Upstart</strong> fue otro sistema de inicio utilizado por Ubuntu entre 2006 y
+                                2015.</li>
+                            <li>Actualmente, <strong>systemd</strong> es el sistema de inicio utilizado por Debian,
+                                Ubuntu, RHEL, Fedora, SUSE y muchas de sus derivadas. Distribuciones como Alpine y
+                                Devuan utilizan otras alternativas.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="runlevels_targets" data-state="no_footer">
+                    <h3>Runlevels y targets</h3>
+                    <small>
+                        <p>SysVinit utiliza <strong>runlevels</strong> para representar distintos modos de
+                            funcionamiento. systemd utiliza <strong>targets</strong> con un propósito equivalente y
+                            conserva alias de compatibilidad para los runlevels tradicionales:</p>
+                        <table style="width: 100%; font-size: 70%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Runlevel</th>
+                                    <th style="padding: 6px;">Target de systemd</th>
+                                    <th style="padding: 6px;">Qué es</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;">0</td>
+                                    <td style="padding: 6px;"><code>poweroff.target</code></td>
+                                    <td style="padding: 6px;">Apagado</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;">1</td>
+                                    <td style="padding: 6px;"><code>rescue.target</code></td>
+                                    <td style="padding: 6px;">Monousuario, mantenimiento</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;">3</td>
+                                    <td style="padding: 6px;"><code>multi-user.target</code></td>
+                                    <td style="padding: 6px;">Multiusuario sin entorno gráfico</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;">5</td>
+                                    <td style="padding: 6px;"><code>graphical.target</code></td>
+                                    <td style="padding: 6px;">Multiusuario con entorno gráfico</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;">6</td>
+                                    <td style="padding: 6px;"><code>reboot.target</code></td>
+                                    <td style="padding: 6px;">Reinicio</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+systemctl get-default   # target predeterminado del sistema
+                        </code></pre>
+                    
+                </section>
+
+                <section id="systemctl_minimo" data-state="no_footer">
+                    <h3>systemd: info básica</h3>
+                    <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+systemctl status            # estado general del sistema
+systemctl status ssh        # estado del servicio SSH
+systemctl list-units --type=service # lista servicios activos
+systemctl is-enabled ssh    # habilitado en el arranque?
+                    </code></pre>
+                    <small>
+                        <blockquote><strong>Alcance:</strong> en esta clase alcanza con identificar a systemd como
+                            <code>PID 1</code> y utilizar <code>systemctl</code> para realizar consultas básicas. La
+                            administración de servicios y procesos se desarrollará más adelante.
+                        </blockquote>
+                    </small>
+                </section>
+
+                <section id="ipreguntas1" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(Arranque → sistema init → PID 1 → systemd → targets → <code>systemctl</code>)</em></small>
+                    </p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 3: LOGIN E IDENTIDAD -->
+            <section>
+                <section id="login1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Login e identidad:</h3>
+                    <h4>TTY, prompt, root y <code>sudo</code></h4>
+                </section>
+
+                <section id="tty" data-state="no_footer">
+                    <h3>TTY y consolas virtuales</h3>
+                    <small>
+                        <ul>
+                            <li>Un <strong>TTY</strong> es una terminal. El nombre proviene de los <em>teletipos</em>,
+                                las terminales físicas utilizadas durante las décadas de 1960 y 1970.</li>
+                            <li>Linux ofrece varias <strong>consolas virtuales</strong> en simultáneo: <code>tty1</code>
+                                a <code>tty6</code>.</li>
+                            <li>Se cambia entre ellas con <strong>Ctrl + Alt + F1 … F6</strong>.
+                                <ul>
+                                    <li><em>En VirtualBox hay que usar la tecla anfitriona: por defecto <strong>Ctrl
+                                                derecho + F1 … F6</strong>.</em></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <br>
+                        <blockquote>La consola local o la consola remota de gestión permite intervenir cuando SSH no
+                            está disponible, por ejemplo, ante un problema de red, falta de espacio en disco o una
+                            configuración incorrecta del firewall.</blockquote>
+                    </small>
+                </section>
+
+                <section id="prompt" data-state="no_footer">
+                    <h3>Formato del prompt</h3>
+                    <pre class="codigo_shadow" data-id="code-animation"><code class="text codigo-redondo" data-trim>
+cristian@lab2-vm:~$
+   │        │    │└─ tipo de usuario ($user | #root)
+   │        │    └── directorio actual (~ para home)
+   │        └───── nombre del host
+   └────────────── usuario conectado
+                    </code></pre>
+                    <small>
+                        <table style="width: 60%; margin: 0 auto; font-size: 75%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Símbolo</th>
+                                    <th style="padding: 6px;">Significado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>$</code></td>
+                                    <td style="padding: 6px;">Usuario normal</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><code>#</code></td>
+                                    <td style="padding: 6px;"><strong>root</strong> — usuario con privilegios
+                                        administrativos</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <blockquote>El último carácter del prompt ayuda a reconocer si la sesión pertenece a un usuario
+                            normal o a root.</blockquote>
+                    </small>
+                </section>
+
+                <section id="prompt_ps1" data-state="no_footer">
+                    <h3>El prompt es configurable</h3>
+                    <small>
+                        <p>El ejemplo anterior muestra el formato habitual del prompt de Bash en Debian. No es un
+                            formato fijo: puede incluir colores, información adicional o una distribución diferente
+                            según la distribución y el shell utilizado. En Bash se configura mediante la variable
+                            <code>PS1</code>, normalmente desde <code>~/.bashrc</code>.
+                        </p>
+                    </small>
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+echo "$PS1"     # Ver la configuración actual del prompt
+                        </code></pre>
+                        <small>
+                        <p>Los símbolos <code>$</code> y <code>#</code> son una convención frecuente para distinguir un
+                            usuario normal de root, pero también forman parte de la configuración y pueden modificarse.
+                        </p>
+                    </small>
+                </section>
+
+                <section id="root_usuarios" data-state="no_footer">
+                    <h3>root: superusuario / administrador</h3>
+                    <small>
+                        <ul>
+                            <li><strong>Usuario normal:</strong> es la cuenta personal con la que iniciamos sesión.
+                                Tiene acceso a sus propios archivos y solo puede realizar las tareas permitidas por los
+                                permisos del sistema.</li>
+                            <li><strong>root:</strong> es la cuenta de administrador del sistema y tiene el <strong>UID
+                                    0</strong>. Puede leer, modificar o eliminar cualquier archivo, cambiar permisos y
+                                administrar otras cuentas.</li>
+                            <li><strong>Usuario habilitado para <code>sudo</code>:</strong> sigue siendo un usuario
+                                normal, pero está autorizado para ejecutar determinados comandos con privilegios de
+                                root. En la configuración predeterminada de Debian, esta autorización se asigna mediante
+                                el grupo <code>sudo</code>.</li>
+                        </ul>
+                        <p>No existe un tipo de cuenta llamado “usuario sudo”: <code>sudo</code> es el comando que
+                            permite elevar privilegios de forma controlada. Para el trabajo cotidiano se utiliza la
+                            cuenta personal y se recurre a <code>sudo</code> solo cuando la tarea requiere permisos
+                            administrativos.</p>
+                    </small>
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+id              # UID, GID y grupos del usuario actual
+groups          # grupos a los que pertenece el usuario
+                        </code></pre>
+                        <small>
+                        <p style="font-size: 70%;"><strong>Fuentes:</strong> <a
+                                href="https://www.debian.org/doc/manuals/debian-reference/ch01.en.html#_the_root_account"
+                                target="_blank" rel="noopener noreferrer">Debian Reference — The root account</a>, <a
+                                href="https://www.debian.org/releases/trixie/amd64/ch06s03.es.html#di-user-setup"
+                                target="_blank" rel="noopener noreferrer">Guía de instalación de Debian 13 —
+                                Configuración de usuarios</a></p>
+                    </small>
+                </section>
+
+                <section id="su_sudo" data-state="no_footer">
+                    <h3><code>su</code> vs <code>sudo</code></h3>
+                    <small>
+                        <table style="width: 100%; font-size: 70%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;"></th>
+                                    <th style="padding: 6px;"><code>su</code></th>
+                                    <th style="padding: 6px;"><code>sudo</code></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Qué contraseña pide</strong></td>
+                                    <td style="padding: 6px;">La de <strong>root</strong></td>
+                                    <td style="padding: 6px;">La del usuario que ejecuta el comando</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Alcance</strong></td>
+                                    <td style="padding: 6px;">Abre una sesión completa como root</td>
+                                    <td style="padding: 6px;">Ejecuta <strong>un comando</strong> y vuelve</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Trazabilidad</strong></td>
+                                    <td style="padding: 6px;">La sesión se ejecuta con la identidad de root</td>
+                                    <td style="padding: 6px;">Registra qué usuario solicitó la elevación</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;"><strong>Si hay varios admins</strong></td>
+                                    <td style="padding: 6px;">Todos comparten la misma clave</td>
+                                    <td style="padding: 6px;">Cada uno con su cuenta</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </small>
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+su -            # sesión completa como root (clave de root)
+sudo apt update # un solo comando elevado (pide tu clave)
+sudo -i         # sesión interactiva como root vía sudo
+                        </code></pre>
+                        <small>
+                        <ul>
+                            <li>La configuración principal de <code>sudo</code> se encuentra en
+                                <code>/etc/sudoers</code>. Debe modificarse con <code>visudo</code>, que valida la
+                                sintaxis antes de guardar. Un error en este archivo puede impedir la elevación de
+                                privilegios.
+                            </li>
+                            <li>En la configuración predeterminada de Debian, los integrantes del grupo
+                                <strong><code>sudo</code></strong> pueden utilizar este comando.
+                            </li>
+                        </ul>
+                        <!-- <blockquote>En nuestra VM, <code>su -</code> no permite iniciar una sesión porque la cuenta root
+                            quedó bloqueada durante la instalación. Para obtener una sesión administrativa se utiliza
+                            <code>sudo -i</code>.
+                        </blockquote> -->
+                    </small>
+                </section>
+
+                <!-- <section id="decision_instalador" data-state="no_footer">
+                    <h3>La decisión que tomamos en el instalador</h3>
+                    <small>
+                        <p>Durante la instalación en el <a
+                                href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab2/lab2.md#33-usuarios-y-contrase%C3%B1as"
+                                target="_blank" rel="noopener noreferrer">Lab2</a>, dejamos en blanco la contraseña de
+                            <code>root</code>. El instalador permite dos configuraciones:
+                        </p>
+                        <ul>
+                            <li><strong>Contraseña de root definida:</strong> la cuenta root queda activa, y el primer
+                                usuario <strong>no</strong> entra al grupo <code>sudo</code>.</li>
+                            <li><strong>Contraseña de root en blanco:</strong> la cuenta root queda
+                                <strong>bloqueada</strong> y el instalador agrega al primer usuario al grupo
+                                <code>sudo</code>. Esta es la opción que utilizamos.
+                            </li>
+                        </ul>
+                        <p>Este modelo evita compartir una contraseña de root y permite asociar las acciones
+                            administrativas con las cuentas personales que las ejecutaron.</p>
+                        <br>
+                        <blockquote>La elección entre una cuenta root activa y el uso de <code>sudo</code> afecta la
+                            administración y la auditoría del sistema.</blockquote>
+                    </small>
+                </section> -->
+
+                <section id="ipreguntas2" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(TTY → prompt → root → <code>su</code> vs <code>sudo</code>)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 4: POST-INSTALACIÓN -->
+            <section>
+                <section id="postinst1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Post-instalación:</h3>
+                    <h4>Dejar el sistema identificado, localizado y actualizado</h4>
+                </section>
+
+                <section id="que_es_postinst" data-state="no_footer">
+                    <h3>Qué es la post-instalación</h3>
+                    <small>
+                        <p>La post-instalación reúne las tareas necesarias para dejar el sistema identificado,
+                            actualizado y listo para administrarlo. Incluye la configuración regional, la hora, el
+                            nombre del equipo, los repositorios y el acceso remoto.</p>
+                    </small>
+                </section>
+
+                <section id="identificar" data-state="no_footer">
+                    <h3>1. Identificar el sistema</h3>
+                    <small>
+                        <p>Antes de modificar el sistema, conviene identificar la máquina y revisar su estado general.
+                        </p>
+                    </small>
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+cat /etc/os-release # distribución y versión
+uname -a            # kernel y arquitectura
+hostnamectl         # nombre, SO, kernel, tipo de máquina
+lsblk               # discos y particiones
+ip a                # interfaces de red
+                        </code></pre>
+                    <small>
+                        <blockquote>Estas consultas reducen el riesgo de aplicar cambios en el equipo equivocado,
+                            especialmente cuando se administran varios servidores mediante SSH.</blockquote>
+                    </small>
+                </section>
+
+                <section id="locales" data-state="no_footer">
+                    <h3>2. Locales: el idioma del sistema</h3>
+                    <small>
+                        <p>Un <strong>locale</strong> define idioma, codificación de caracteres, formato de fecha,
+                            separador decimal y orden alfabético.</p>
+                    </small>
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+locale                          # ver la configuración actual
+sudo dpkg-reconfigure locales   # generar y elegir locales
+                        </code></pre>
+                        <small>
+                        <ul>
+                            <li><code>/etc/locale.gen</code> → qué locales se generan.</li>
+                            <li><code>/etc/default/locale</code> → cuál usa el sistema por defecto.</li>
+                            <li>Variables: <code>LANG</code> (el general) y las <code>LC_*</code> (para ajustes
+                                puntuales).</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="locale_servidor" data-state="no_footer">
+                    <h3>Idioma para un servidor</h3>
+                    <small>
+                        <p>En un entorno productivo suele utilizarse un locale en inglés, como <code>en_US.UTF-8</code>
+                            o <code>C.UTF-8</code>:</p>
+                        <ul>
+                            <li>Facilita la búsqueda de mensajes de error y su comparación con la documentación.</li>
+                            <li>Evita cambios inesperados en la salida de comandos que algunos scripts procesan como
+                                texto.</li>
+                            <li>Coincide con el idioma predominante en la documentación técnica.</li>
+                        </ul>
+                        <br>
+                        <blockquote>En el curso vamos a utilizar el sistema en español <code>es_AR.UTF-8</code>. Es una
+                            decisión para el laboratorio; en otros entornos debe definirse un criterio común y
+                            mantenerlo de forma consistente.</blockquote>
+                    </small>
+                </section>
+
+                <section id="teclado" data-state="no_footer">
+                    <h3>3. Teclado</h3>
+                    <small>
+                        <p>La distribución del teclado es independiente del locale. Determina qué carácter corresponde a
+                            cada tecla en la consola local.</p>
+                    </small>
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+sudo dpkg-reconfigure keyboard-configuration
+sudo setupcon       # aplicar sin reiniciar
+                        </code></pre>
+                        <small>
+                        <ul>
+                            <li>Configuración en <code>/etc/default/keyboard</code> → <code>XKBLAYOUT="latam"</code>
+                                para teclados latinoamericanos.</li>
+                            <li>Verificación: <code>localectl status</code>.</li>
+                        </ul>
+                        <blockquote>Una distribución incorrecta dificulta el uso de símbolos frecuentes como
+                            <code>|</code>, <code>/</code>, <code>@</code> y <code>~</code>. También puede provocar
+                            errores al ingresar contraseñas, ya que la pantalla no muestra los caracteres escritos.
+                        </blockquote>
+                    </small>
+                </section>
+
+                <section id="hora" data-state="no_footer">
+                    <h3>4. Hora y zona horaria</h3>
+                    
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+timedatectl                     # estado actual
+sudo timedatectl set-timezone America/Argentina/Buenos_Aires
+sudo timedatectl set-ntp true   # sincronización automática
+
+                        </code></pre>
+                    <small>
+                        <ul>
+                            <li>La zona horaria es un enlace: <code>/etc/localtime</code> →
+                                <code>/usr/share/zoneinfo/...</code>
+                            </li>
+                            <li>La sincronización la maneja <strong><code>systemd-timesyncd</code></strong> en una
+                                instalación estándar de Debian.</li>
+                            <li>El <strong>reloj de hardware se mantiene en UTC</strong> y la zona horaria se aplica
+                                encima.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="hora_importa" data-state="no_footer">
+                    <h3>Importancia de la hora del sistema</h3>
+                    <small>
+                        <ul>
+                            <li><strong>Logs:</strong> si dos servidores tienen relojes distintos, resulta difícil
+                                reconstruir el orden de los eventos durante un incidente.</li>
+                            <li><strong>Certificados TLS:</strong> tienen fecha de inicio y de vencimiento. Un reloj
+                                desfasado los invalida.</li>
+                            <li><strong>Tareas programadas:</strong> <code>cron</code> y los timers de systemd dependen
+                                del reloj.</li>
+                            <li><strong>Autenticación:</strong> Kerberos, TOTP y otros mecanismos pueden fallar cuando
+                                existe un desfase de varios minutos.</li>
+                        </ul>
+                    </small>
+                </section>
+
+
+
+                <section id="apt_update" data-state="no_footer">
+                    <h3>5. Actualización del sistema</h3>
+                    
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+sudo apt update  # actualizar la lista de paquetes disponibles
+sudo apt upgrade # instalar las actualizaciones
+                        </code></pre>
+                        <small>
+                        <ul>
+                            <li><code>apt update</code> solo descarga la información más reciente de los repositorios;
+                                no instala actualizaciones.</li>
+                            <li>Los repositorios son los servidores desde donde Debian descarga los paquetes firmados.
+                            </li>
+                        </ul>
+
+                        <blockquote><code>apt</code> se usa para distribuciones derivadas de Debian, como Ubuntu, Mint y Devuan. Para otras distribuciones, se utilizan gestores de paquetes diferentes: <code>dnf</code> en Fedora y RHEL, y <code>apk</code> en Alpine Linux, <code>pacman</code> en Arch Linux.
+                        </blockquote>
+
+
+                    </small>
+                </section>
+
+                <section id="ipreguntas3" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(Identificar → localizar → actualizar)</em></small></p>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN 5: PRIMER ACCESO POR SSH -->
+            <section>
+                <section id="ssh1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Primer acceso por SSH:</h3>
+                    <h4>De la consola local al acceso remoto</h4>
+                </section>
+
+                <section id="ssh" data-state="no_footer">
+                    <h3>SSH</h3>
+                    <small>
+                        <p><strong>SSH</strong> (<em>Secure Shell</em>) es un protocolo de red que permite administrar
+                            sistemas de forma remota mediante una conexión cifrada. Reemplaza a protocolos antiguos como
+                            Telnet y rlogin, que transmitían las credenciales en texto plano.</p>
+                    </small>
+
+                </section>
+
+                <section id="consola_a_remoto" data-state="no_footer">
+                    <h3>Acceso remoto al servidor</h3>
+                    <small>
+                        <p>Hasta ahora utilizamos la consola de VirtualBox. A partir de esta clase vamos a administrar
+                            la VM mediante <strong>SSH</strong> desde la máquina anfitriona. Esto permite trabajar con
+                            la terminal habitual del equipo, copiar y pegar texto y mantener varias sesiones abiertas.
+                        </p>
+                    </small>
+                </section>
+
+                <section id="verificar_ssh" data-state="no_footer">
+                    <h3>Verificar el servidor SSH</h3>
+                    <small>
+                        <p>Durante la instalación de la clase 3 seleccionamos <strong>SSH server</strong> en
+                            <code>tasksel</code>. Podemos comprobar su estado con los siguientes comandos:
+                        </p>
+                    </small>
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+systemctl status ssh        # ¿está corriendo?
+systemctl is-enabled ssh    # ¿arranca solo?
+ss -tlnp | grep :22         # ¿escucha en el puerto 22?
+                        </code></pre>
+                    
+                </section>
+
+                <section id="esquema_red" data-state="no_footer">
+                    <h3>El esquema de red del curso</h3>
+                    <small>
+                        <p>La VM tendrá un solo adaptador de red configurado en modo <strong>NAT</strong>. Este modo
+                            permite que nuestro servidor Linux acceda a Internet y, mediante una regla de reenvío de
+                            puertos, que la máquina anfitriona (nuestra laptop) se conecte al servicio SSH de la VM.</p>
+                        <img src="img/c4/renvio.png" style="width: 60%;" alt="Adaptador de red en modo NAT en VirtualBox">
+                    </small>
+                </section>
+
+                <section id="regla_reenvio" data-state="no_footer">
+                    <h3>Regla de reenvío de puertos</h3>
+                    <small>
+                        <p>En <strong>Avanzadas → Reenvío de puertos</strong>, agregar la siguiente regla:</p>
+                        <table style="width: 100%; font-size: 70%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: #289548; color: white;">
+                                    <th style="padding: 6px;">Nombre</th>
+                                    <th style="padding: 6px;">Protocolo</th>
+                                    <th style="padding: 6px;">IP Anfitrión</th>
+                                    <th style="padding: 6px;">Puerto anfitrión</th>
+                                    <th style="padding: 6px;">IP invitado</th>
+                                    <th style="padding: 6px;">Puerto invitado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid #ddd;">
+                                    <td style="padding: 6px;">SSH</td>
+                                    <td style="padding: 6px;">TCP</td>
+                                    <td style="padding: 6px;"></td>
+                                    <td style="padding: 6px;">2222</td>
+                                    <td style="padding: 6px;"></td>
+                                    <td style="padding: 6px;">22</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <img src="img/c4/renvio2.png" style="width: 55%;" alt="Regla de reenvío de puertos para SSH">
+                        <blockquote>Con esta regla, VirtualBox recibe las conexiones al puerto <code>2222</code> de la
+                            máquina anfitriona y las reenvía al puerto <code>22</code> de la VM.</blockquote>
+                    </small>
+                </section>
+
+                <section id="conectarse" data-state="no_footer">
+                    <h3>Conectarse desde el anfitrión</h3>
+                    
+                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+ssh -p 2222 usuario@localhost
+                        </code></pre>
+                        <small>
+                        <ul>
+                            <li><strong>Windows 10/11</strong> trae cliente OpenSSH integrado: funciona desde PowerShell
+                                o CMD. No hace falta instalar PuTTY.</li>
+                            <li><strong>Linux y macOS</strong>: <code>ssh</code> directo en la terminal.</li>
+                            <li>La primera conexión muestra la <strong>huella digital</strong> (<em>fingerprint</em>)
+                                del servidor. Después de verificarla y aceptarla, el cliente la guarda en
+                                <code>~/.ssh/known_hosts</code> para detectar cambios en conexiones posteriores.
+                            </li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="ipreguntas4" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><em>(SSH server → NAT → reenvío de puertos → conexión desde el anfitrión)</em></small></p>
+                </section>
+
+                <section id="resumen" data-state="no_footer">
+                    <h3>Resumen de la clase</h3>
+                    <small>
+                        <ul>
+                            <li><strong>systemd</strong> se ejecuta como <code>PID 1</code>, inicia las unidades del
+                                sistema y organiza los modos de funcionamiento mediante <em>targets</em>.</li>
+                            <li><strong>root</strong> es la cuenta administrativa con UID 0. Un usuario normal
+                                habilitado para <code>sudo</code> puede elevar sus privilegios cuando una tarea lo
+                                requiere.</li>
+                            <li>La <strong>post-instalación</strong> incluye la identificación del sistema, el locale,
+                                el teclado, la hora, el hostname y la actualización de paquetes.</li>
+                            <li>En servidores productivos suele utilizarse un locale en inglés y mantener los relojes
+                                sincronizados.</li>
+                            <li><strong>SSH</strong> permite administrar el servidor desde la máquina anfitriona
+                                mediante el reenvío de los puertos <code>2222</code> a <code>22</code> en VirtualBox.
+                            </li>
+                        </ul>
+                    </small>
+                </section>
+            </section>
+
+
+            <!-- SECCIÓN LABS/PRACTICA -->
+            <section>
+
+                <section id="labs" data-state="hide_footer" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h2>Actividades prácticas y laboratorios</h2>
+                </section>
+
+                <section id="labs_1" data-state="no_footer">
+                    <h2>Actividad práctica</h2>
+                    <small>
+                        <p><em>Post-instalación y primer acceso remoto</em></p>
+
+                        <p>Enlace al laboratorio: <a
+                                href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab3/lab3.md"
+                                target="_blank" rel="noopener noreferrer">Laboratorio 3 — Post-instalación y primer
+                                acceso por SSH</a></p>
+                    </small>
+                </section>
+
+                <section id="referencias" data-state="no_footer">
+                    <h3>Referencias</h3>
+                    <small>
+                        <p><strong>Documentación oficial de Debian</strong></p>
+                        <ul style="font-size: 80%;">
+                            <li><a href="https://www.debian.org/doc/manuals/debian-reference/ch03.en.html"
+                                    target="_blank" rel="noopener noreferrer">Debian Reference — Inicialización del
+                                    sistema</a></li>
+                            <li><a href="https://www.debian.org/doc/manuals/debian-reference/ch01.en.html#_the_root_account"
+                                    target="_blank" rel="noopener noreferrer">Debian Reference — La cuenta root</a></li>
+                            <li><a href="https://www.debian.org/releases/trixie/amd64/ch06s03.es.html#di-user-setup"
+                                    target="_blank" rel="noopener noreferrer">Guía de instalación de Debian 13 —
+                                    Configurar usuarios y contraseñas</a></li>
+                            <li><a href="https://wiki.debian.org/Locale" target="_blank"
+                                    rel="noopener noreferrer">Debian Wiki — Locale</a>, <a
+                                    href="https://wiki.debian.org/Keyboard" target="_blank"
+                                    rel="noopener noreferrer">Keyboard</a>, <a
+                                    href="https://wiki.debian.org/DateTime" target="_blank"
+                                    rel="noopener noreferrer">DateTime</a>, <a href="https://wiki.debian.org/sudo"
+                                    target="_blank" rel="noopener noreferrer">sudo</a>, <a
+                                    href="https://wiki.debian.org/SSH" target="_blank"
+                                    rel="noopener noreferrer">SSH</a></li>
+                        </ul>
+                        <p><strong>Manuales y proyectos upstream</strong></p>
+                        <ul style="font-size: 80%;">
+                            <li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemctl.html"
+                                    target="_blank" rel="noopener noreferrer"><code>systemctl(1)</code></a>, <a
+                                    href="https://www.freedesktop.org/software/systemd/man/latest/timedatectl.html"
+                                    target="_blank" rel="noopener noreferrer"><code>timedatectl(1)</code></a> y <a
+                                    href="https://www.freedesktop.org/software/systemd/man/latest/localectl.html"
+                                    target="_blank" rel="noopener noreferrer"><code>localectl(1)</code></a> — manuales
+                                de systemd</li>
+                            <li><a href="https://www.gnu.org/software/bash/manual/html_node/Controlling-the-Prompt.html"
+                                    target="_blank" rel="noopener noreferrer">GNU Bash — Personalización del prompt</a>
+                            </li>
+                            <li><a href="https://man.openbsd.org/ssh" target="_blank"
+                                    rel="noopener noreferrer"><code>ssh(1)</code> — manual del cliente OpenSSH</a></li>
+                            <li><a href="https://www.virtualbox.org/manual/ch06.html#natforward" target="_blank"
+                                    rel="noopener noreferrer">VirtualBox — Reenvío de puertos con NAT</a></li>
+                        </ul>
+                    </small>
+                </section>
+
+            </section>
+
+            <!-- SECCIÓN FINAL -->
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <!-- Logos en el footer -->
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image"></span>
+        </div>
+
+        <script type="text/javascript">
+            window.addEventListener("load", function () {
+
+                revealDiv = document.querySelector("body div.reveal")
+                footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+
+    <!-- Script de Socket.io para Reveal Multiplex -->
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+
+
+    <script>
+        // More info about initialization & config:
+        // - https://revealjs.com/initialization/
+        // - https://revealjs.com/config/
+
+        // Para eventos personalizados. Indica que está en la presentación
+
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            //element.style.display = "none";
+            // element.style.display = "table";
+            element.style.opacity = "15%";
+        });
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!",
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: "",
+            },
+
+            // Multiplex (cliente: secret en null)
+            multiplex: {
+                secret: null,
+                id: '7b0917d41c6a3bf43a6a45f82e1e3d0a3b7cafee14437efc073f990f1fb25328',
+                url: 'https://multiplex.up.railway.app'
+            },
+
+            // Learn about plugins: https://revealjs.com/plugins/
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom]
+        });
+
+
+
+        // ── Theme Toggle Logic ──
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+
+            // Original light background gradients to restore
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                // Update slide backgrounds with gradients
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                // Force Reveal to re-sync backgrounds only if Reveal is initialized and ready
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            // Initialize from saved preference
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <!-- Plugin Cliente de Multiplex -->
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+    <!-- <script src="https://multiplex.up.railway.app/master.js"></script> -->
+
+</body>
+
+</html>
