@@ -1,0 +1,1153 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 5</title>
+    <!-- <link rel="icon" type="image/x-icon" href="/img/logos/IDEPInformaticaLogo.png"> -->
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/egg.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* ── Theme Toggle Button ── */
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        /* Ocultar el botón al exportar a PDF (?print-pdf) y al imprimir */
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        /* Dark theme overrides via class on <html> */
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        /* Override radial gradient backgrounds in dark mode */
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+
+    <!-- CLASE AUN NO DISPONIBLE-->
+    <!-- <meta http-equiv="refresh" content="0; url=./404.html"> -->
+
+</head>
+
+<body>
+
+    <!-- CLASE AUN NO DISPONIBLE-->
+    <!-- <script>
+        window.location.href = "/404.html";
+    </script> -->
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SECCIÓN 1: PORTADA, TEMAS Y OBJETIVOS -->
+            <section>
+                <section id="inicio" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Administración de servidores GNU/Linux</h3>
+                    <h4>Clase 5: Navegación y operaciones con archivos</h4>
+                    <small><p>Módulo 1 — Primeros pasos en la shell</p></small>
+                </section>
+
+                <section id="index" data-state="no_footer">
+                    <h3>Temas de clase 5</h3>
+                    <small>
+                        <ul>
+                            <li><a href="#/shell1">Terminal, shell y comandos</a></li>
+                            <li><a href="#/linea1">Tab e historial</a></li>
+                            <li><a href="#/rutas1">Navegación y rutas</a></li>
+                            <li><a href="#/crear1">Crear archivos y directorios</a></li>
+                            <li><a href="#/comodines1">Comodines y comillas</a></li>
+                            <li><a href="#/copiar1">Copiar, mover y renombrar</a></li>
+                            <li><a href="#/eliminar1">Eliminar y diagnosticar errores</a></li>
+                            <li><a href="#/inodos1">Inodos y enlaces</a></li>
+                            <li><a href="#/apagado1">Apagado y reinicio</a></li>
+                            <br>
+                            <li><a href="#/labs_1">Actividad práctica: operaciones desde SSH</a></li>
+                        </ul>
+                        <p><a href="?print-pdf">Exportar a PDF</a></p>
+                    </small>
+                </section>
+
+                <section id="objetivos" data-state="no_footer">
+                    <h3>Objetivos de la clase</h3>
+                    <small>
+                        <p>Al finalizar esta clase vas a poder:</p>
+                        <ul>
+                            <li>Diferenciar una <strong>terminal</strong>, una <strong>shell</strong> y un comando.</li>
+                            <li>Reconocer la estructura básica de una orden de Bash.</li>
+                            <li>Usar Tab y el historial para trabajar con mayor precisión.</li>
+                            <li>Recorrer el árbol con rutas absolutas y relativas.</li>
+                            <li>Crear, copiar, mover, renombrar y eliminar archivos y directorios.</li>
+                            <li>Aplicar comodines controlando qué nombres expandirá Bash.</li>
+                            <li>Distinguir una copia, un enlace duro y uno simbólico.</li>
+                            <li>Interpretar errores habituales y apagar el servidor correctamente.</li>
+                        </ul>
+                        <blockquote><strong>Por qué vemos este tema:</strong> ya podemos ingresar al servidor por SSH. Antes de administrar servicios y configuraciones necesitamos aprender a ubicarnos y operar con archivos desde la línea de comandos.</blockquote>
+                    </small>
+                </section>
+            </section>
+
+            <!-- SECCIÓN 2: LA SHELL -->
+            <section>
+                <section id="shell1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>La shell:</h3>
+                    <h4>La interfaz de administración</h4>
+                </section>
+
+                <section id="terminal_shell_comando" data-state="no_footer">
+                    <h3>Terminal, shell y comando</h3>
+                    <small>
+                        <ul>
+                            <li><strong>Terminal:</strong> ventana o dispositivo desde el cual escribimos y vemos resultados.</li>
+                            <li><strong>Shell:</strong> programa que interpreta la línea y decide qué ejecutar.</li>
+                            <li><strong>Comando:</strong> instrucción que ejecuta un programa externo o una función de la shell.</li>
+                        </ul>
+                        <br>
+                        <blockquote><strong>Terminal → Bash → comando → resultado</strong></blockquote>
+                        <p>SSH aporta la conexión; la terminal permite interactuar; Bash interpreta lo que escribimos.</p>
+                    </small>
+                    <img src="img/c5/terminal.png" width="60%" class="codigo_shadow">
+                </section>
+
+                <section id="shells" data-state="no_footer">
+                    <h3>Bash y otras shells</h3>
+                    <small>
+                        <table style="width:100%; font-size:72%;">
+                            <thead><tr><th>Shell</th><th>Característica</th></tr></thead>
+                            <tbody>
+                                <tr><td><code>sh</code></td><td>Shell histórica y referencia para una sintaxis común de scripts.</td></tr>
+                                <tr><td><strong>Bash</strong></td><td><em>Bourne Again Shell</em>. Es la que utilizaremos en el curso.</td></tr>
+                                <tr><td><strong>Zsh</strong></td><td>Orientada al uso interactivo y muy configurable.</td></tr>
+                                <tr><td><strong>Fish</strong></td><td>Interfaz amigable, con algunas diferencias de sintaxis.</td></tr>
+                                <tr><td><strong>Dash</strong></td><td>Pequeña y rápida; Debian suele usarla como <code>/bin/sh</code>.</td></tr>
+                            </tbody>
+                        </table>
+                        <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+echo "$SHELL"      # shell configurada para el usuario
+bash --version     # versión instalada
+                        </code></pre>
+                        <p>Los ejemplos del curso estarán escritos para <strong>Bash</strong>.</p>
+                    </small>
+                </section>
+
+                <section id="sintaxis" data-state="no_footer">
+                    <h3>Cómo se escribe un comando</h3>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+comando [opciones] [argumentos]
+                    </code></pre>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+ls -la /var/log
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><code>ls</code>: comando.</li>
+                            <li><code>-la</code>: opciones cortas <code>-l</code> y <code>-a</code>.</li>
+                            <li><code>/var/log</code>: argumento; en este caso, una ruta.</li>
+                        </ul>
+                        <p>Las opciones cambian el comportamiento. Los argumentos indican sobre qué objeto trabajar.</p>
+                    </small>
+                </section>
+
+                <section id="opciones_argumentos" data-state="no_footer">
+                    <h3>Opciones, argumentos y orden</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+ls -l /etc
+ls --format=long /etc
+ls --help
+
+cp origen.txt destino.txt
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>Las opciones cortas suelen comenzar con <code>-</code>; las largas, con <code>--</code>.</li>
+                            <li>No todos los comandos ofrecen las mismas opciones.</li>
+                            <li>En operaciones con archivos, el orden entre origen y destino importa.</li>
+                            <li><code>comando --help</code> ofrece una referencia rápida.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="nombres_espacios" data-state="no_footer">
+                    <h3>Nombres con espacios</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+mkdir "Documentos del curso"
+ls Documentos\ del\ curso
+                    </code></pre>
+                    <small>
+                        <p>Los espacios separan argumentos. Las comillas o la barra invertida permiten tratarlos como parte del nombre.</p>
+                        <blockquote>Para archivos de administración suele ser más práctico usar nombres como <code>documentos-curso</code> o <code>documentos_curso</code>.</blockquote>
+                    </small>
+                </section>
+
+                <section id="preguntas_shell" data-state="no_footer"><h2>Consultas</h2><p><small>Terminal → shell → Bash → opciones y argumentos</small></p></section>
+            </section>
+
+            <!-- SECCIÓN 3: LÍNEA DE COMANDOS -->
+            <section>
+                <section id="linea1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Trabajar con la línea:</h3><h4>Tab e historial</h4>
+                </section>
+
+                <section id="tab" data-state="no_footer">
+                    <h3>Autocompletado con Tab</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+cd /etc/sys&lt;Tab&gt;
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>Una pulsación completa si existe una única coincidencia.</li>
+                            <li>Una segunda pulsación muestra las alternativas.</li>
+                            <li>Completa comandos, archivos, directorios y, cuando están definidas, opciones.</li>
+                            <li>Reduce errores de tipeo y ayuda a descubrir nombres reales.</li>
+                        </ul>
+                        <blockquote>Tab evita errores de escritura; no confirma que la operación sea correcta.</blockquote>
+                    </small>
+                </section>
+
+                <section id="historial" data-state="no_footer">
+                    <h3>Historial de comandos</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+history
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>Flechas arriba y abajo: recorrer órdenes recientes.</li>
+                            <li><strong>Ctrl + R:</strong> buscar hacia atrás por una parte del comando.</li>
+                            <li>Repetir Ctrl + R: buscar una coincidencia anterior.</li>
+                            <li>Enter: ejecutar. Flecha: editar. Ctrl + C: cancelar.</li>
+                        </ul>
+                        <p>El historial persistente se guarda habitualmente en <code>~/.bash_history</code>.</p>
+                    </small>
+                </section>
+
+                <section id="historial_seguridad" data-state="no_footer">
+                    <h3>Revisar antes de repetir</h3>
+                    <small>
+                        <ul>
+                            <li>La ruta puede no ser la misma.</li>
+                            <li>Podemos estar conectados con otro usuario o a otro servidor.</li>
+                            <li>El estado del sistema puede haber cambiado.</li>
+                            <li>Contraseñas, tokens y claves escritos como argumentos pueden quedar registrados.</li>
+                        </ul>
+                        <blockquote>Recuperar un comando ahorra escritura. Leerlo antes de ejecutarlo evita repetir un error.</blockquote>
+                    </small>
+                </section>
+
+                <section id="preguntas_linea" data-state="no_footer"><h2>Consultas</h2><p><small>Tab → coincidencias → historial → Ctrl + R</small></p></section>
+            </section>
+
+            <!-- SECCIÓN 4: NAVEGACIÓN Y RUTAS -->
+            <section>
+                <section id="rutas1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Navegación y rutas:</h3><h4>Saber dónde estamos y sobre qué actuamos</h4>
+                </section>
+
+                <section id="directorio_actual" data-state="no_footer">
+                    <h3>El directorio de trabajo</h3>
+                    <small><p>La shell siempre está ubicada en algún directorio del árbol.</p></small>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+cristian@lab2-vm:~$
+                    </code></pre>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+pwd
+# /home/cristian
+                    </code></pre>
+                    <small>
+                        <ol>
+                            <li>¿Con qué usuario estoy trabajando?</li>
+                            <li>¿En qué directorio estoy?</li>
+                            <li>¿Qué ruta recibirá el comando?</li>
+                        </ol>
+                    </small>
+                </section>
+
+                <section id="listar" data-state="no_footer">
+                    <h3>Listar el contenido</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+ls
+ls /etc
+ls -l /etc
+ls -la
+ls -lh /var/log
+ls -ld /etc
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><code>-l</code>: listado largo.</li>
+                            <li><code>-a</code>: incluye nombres ocultos.</li>
+                            <li><code>-h</code>: tamaños legibles junto con <code>-l</code>.</li>
+                            <li><code>-d</code>: muestra el directorio, no su contenido.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="cd" data-state="no_footer">
+                    <h3>Cambiar de directorio</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+cd /etc       # ir a /etc
+cd ..         # subir al directorio padre
+cd ~          # ir al home
+cd            # también vuelve al home
+cd -          # volver al directorio anterior
+                    </code></pre>
+                    <small><p><code>cd</code> es una orden interna: cambia el directorio de la shell actual.</p></small>
+                </section>
+
+                <section id="componentes_ruta" data-state="no_footer">
+                    <h3>Componentes especiales</h3>
+                    <table style="width:85%; font-size:72%;">
+                        <thead><tr><th>Componente</th><th>Significado</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>/</code></td><td>Raíz del árbol.</td></tr>
+                            <tr><td><code>.</code></td><td>Directorio actual.</td></tr>
+                            <tr><td><code>..</code></td><td>Directorio padre.</td></tr>
+                            <tr><td><code>~</code></td><td>Home del usuario.</td></tr>
+                            <tr><td><code>-</code></td><td>Directorio anterior, usado por <code>cd</code>.</td></tr>
+                        </tbody>
+                    </table>
+                    <blockquote><small><code>/</code> es la raíz. <code>/root</code> es el home del usuario root.</small></blockquote>
+                </section>
+
+                <section id="absolutas_relativas" data-state="no_footer">
+                    <h3>Rutas absolutas y relativas</h3>
+                    <small>
+                        <p><strong>Absoluta:</strong> comienza en <code>/</code> y expresa la ubicación completa.</p>
+                        <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>/home/cristian/documentos/informe.txt</code></pre>
+                        <p><strong>Relativa:</strong> comienza desde el directorio de trabajo actual.</p>
+                        <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>documentos/informe.txt</code></pre>
+                        <p>Si estamos en <code>/home/cristian</code>, ambas apuntan al mismo objeto.</p>
+                    </small>
+                </section>
+
+                <section id="nombres_linux" data-state="no_footer">
+                    <h3>Nombres en Linux</h3>
+                    <small>
+                        <ul>
+                            <li><code>informe.txt</code>, <code>Informe.txt</code> e <code>INFORME.txt</code> son nombres distintos.</li>
+                            <li>La extensión orienta, pero no determina por sí sola el tipo de archivo.</li>
+                            <li>Un nombre que comienza con <code>.</code> se oculta en listados normales.</li>
+                            <li><code>.bashrc</code>, <code>.profile</code> y <code>.ssh</code> no son tipos especiales.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="preguntas_rutas" data-state="no_footer"><h2>Consultas</h2><p><small><code>pwd</code> → <code>ls</code> → <code>cd</code> → rutas</small></p></section>
+            </section>
+
+            <!-- SECCIÓN 5: CREAR -->
+            <section>
+                <section id="crear1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Crear archivos y directorios:</h3><h4>Construir nuestro árbol de trabajo</h4>
+                </section>
+
+                <section id="mkdir" data-state="no_footer">
+                    <h3>Crear directorios con mkdir</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+cd ~
+mkdir laboratorio-clase5
+mkdir laboratorio-clase5/config
+mkdir laboratorio-clase5/logs laboratorio-clase5/datos
+                    </code></pre>
+                    <small><p>Se pueden crear uno o varios directorios. El directorio padre debe existir.</p></small>
+                </section>
+
+                <section id="mkdir_p" data-state="no_footer">
+                    <h3>Crear un árbol con mkdir -p</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+mkdir laboratorio-clase5/backup/diario
+# Error: falta backup
+
+mkdir -p laboratorio-clase5/backup/diario
+mkdir -p laboratorio-clase5/clientes/{norte,sur}
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><code>-p</code> crea los componentes intermedios que faltan.</li>
+                            <li>No informa error si el directorio final ya existe.</li>
+                            <li>Las llaves son una expansión de Bash: producen las rutas <code>norte</code> y <code>sur</code>.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="touch" data-state="no_footer">
+                    <h3>Crear archivos con touch</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+cd ~/laboratorio-clase5
+touch config/servidor.conf
+touch logs/acceso.log logs/error.log
+ls -l config logs
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>Si el archivo no existe, <code>touch</code> crea uno vacío.</li>
+                            <li>Si existe, actualiza sus marcas de tiempo: no lo vacía.</li>
+                            <li><code>touch -c nombre</code> evita crear un archivo inexistente.</li>
+                        </ul>
+                        <blockquote><code>touch</code> no es un editor.</blockquote>
+                    </small>
+                </section>
+
+                <section id="preguntas_crear" data-state="no_footer"><h2>Consultas</h2><p><small><code>mkdir</code> → <code>mkdir -p</code> → <code>touch</code></small></p></section>
+            </section>
+
+            <!-- SECCIÓN 6: COMODINES Y COMILLAS -->
+            <section>
+                <section id="comodines1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Comodines y comillas:</h3><h4>Cómo interpreta Bash los nombres</h4>
+                </section>
+
+                <section id="expansion" data-state="no_footer">
+                    <h3>Bash expande antes de ejecutar</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+ls logs/*.log
+                    </code></pre>
+                    <small><p>Antes de ejecutar <code>ls</code>, Bash reemplaza el patrón por las coincidencias:</p></small>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+ls logs/acceso.log logs/error.log
+                    </code></pre>
+                    <blockquote><small>Los comodines los interpreta Bash, no <code>ls</code>, <code>cp</code> ni <code>rm</code>.</small></blockquote>
+                </section>
+
+                <section id="patrones" data-state="no_footer">
+                    <h3>Patrones básicos</h3>
+                    <table style="width:90%; font-size:72%;">
+                        <thead><tr><th>Patrón</th><th>Coincide con</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>*</code></td><td>Cualquier cantidad de caracteres.</td></tr>
+                            <tr><td><code>?</code></td><td>Exactamente un carácter.</td></tr>
+                            <tr><td><code>[abc]</code></td><td>Uno de los caracteres indicados.</td></tr>
+                            <tr><td><code>[0-9]</code></td><td>Un carácter dentro del rango.</td></tr>
+                        </tbody>
+                    </table>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+ls logs/*.log
+ls archivo?.txt
+ls reporte[1-3].txt
+                    </code></pre>
+                </section>
+
+                <section id="comodines_seguridad" data-state="no_footer">
+                    <h3>Ver antes de modificar</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+printf '%s\n' logs/*.log
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>Los patrones trabajan con nombres, no buscan dentro del contenido.</li>
+                            <li>Por defecto, <code>*</code> no incluye nombres que comienzan con punto.</li>
+                            <li>Antes de usar un patrón con <code>mv</code> o <code>rm</code>, conviene ver qué expandirá.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="comillas" data-state="no_footer">
+                    <h3>Comillas simples y dobles</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+touch "informe mensual.txt"
+echo '$HOME'       # muestra $HOME
+echo "$HOME"       # muestra /home/usuario
+ls 'logs/*.log'   # el asterisco queda literal
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><code>'...'</code>: conserva el contenido de forma literal.</li>
+                            <li><code>"..."</code>: protege espacios, pero permite algunas expansiones.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="preguntas_comodines" data-state="no_footer"><h2>Consultas</h2><p><small>Expansión → patrones → verificación → comillas</small></p></section>
+            </section>
+
+            <!-- SECCIÓN 7: COPIAR Y MOVER -->
+            <section>
+                <section id="copiar1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Copiar, mover y renombrar:</h3><h4>Origen y destino</h4>
+                </section>
+
+                <section id="cp" data-state="no_footer">
+                    <h3>Copiar archivos</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+cp config/servidor.conf backup/servidor.conf
+cp config/servidor.conf backup/
+cp logs/*.log backup/diario/
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>El primer argumento es el origen; el último, el destino.</li>
+                            <li>El destino puede ser un nombre nuevo o un directorio existente.</li>
+                            <li>Un destino existente puede ser sobrescrito.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="cp_directorios" data-state="no_footer">
+                    <h3>Copiar directorios y controlar cambios</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+cp -r config backup/config-copia
+cp -iv config/servidor.conf backup/
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><code>-r</code>: copia directorios recursivamente.</li>
+                            <li><code>-i</code>: pregunta antes de sobrescribir.</li>
+                            <li><code>-n</code>: no sobrescribe.</li>
+                            <li><code>-v</code>: muestra cada operación.</li>
+                        </ul>
+                        <blockquote>Una copia en el mismo servidor no es, por sí sola, un backup.</blockquote>
+                    </small>
+                </section>
+
+                <section id="mv" data-state="no_footer">
+                    <h3>Mover y renombrar</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+mv logs/acceso.log logs/acceso-anterior.log
+mv logs/error.log backup/diario/
+mv clientes/norte datos/
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>Renombrar es un caso particular de mover.</li>
+                            <li><code>mv</code> mueve directorios sin necesitar <code>-r</code>.</li>
+                            <li><code>-i</code>, <code>-n</code> y <code>-v</code> ayudan a controlar la operación.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="mv_sistemas" data-state="no_footer">
+                    <h3>Mover no siempre cuesta lo mismo</h3>
+                    <small>
+                        <ul>
+                            <li><strong>Dentro del mismo sistema de archivos:</strong> suele cambiar la asociación del nombre.</li>
+                            <li><strong>Entre sistemas de archivos:</strong> puede copiar los datos y luego eliminar el origen.</li>
+                        </ul>
+                        <p>Por eso mover un archivo grande entre discos puede tardar y requiere espacio en el destino.</p>
+                        <blockquote>Antes y después: listar el origen y el destino.</blockquote>
+                    </small>
+                </section>
+
+                <section id="preguntas_copiar" data-state="no_footer"><h2>Consultas</h2><p><small>Origen → destino → copiar → mover → renombrar</small></p></section>
+            </section>
+
+            <!-- SECCIÓN 8: ELIMINAR Y ERRORES -->
+            <section>
+                <section id="eliminar1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Eliminar y diagnosticar:</h3><h4>Operaciones sin papelera</h4>
+                </section>
+
+                <section id="rm" data-state="no_footer">
+                    <h3>rmdir y rm</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+mkdir directorio-vacio
+rmdir directorio-vacio       # solo si está vacío
+
+rm archivo.txt               # elimina un archivo
+rm -i archivo.txt            # pregunta
+rm -r arbol-de-prueba        # elimina el árbol
+                    </code></pre>
+                    <small><p>La terminal no envía estos objetos a una papelera. La recuperación no es sencilla.</p></small>
+                </section>
+
+                <section id="rm_seguro" data-state="no_footer">
+                    <h3>Antes de borrar</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+whoami
+pwd
+ls -la arbol-de-prueba
+rm -ri arbol-de-prueba
+                    </code></pre>
+                    <small>
+                        <ol>
+                            <li>Confirmar identidad.</li>
+                            <li>Confirmar ubicación.</li>
+                            <li>Inspeccionar el objetivo.</li>
+                            <li>Usar la variante menos amplia.</li>
+                            <li>Verificar el resultado.</li>
+                        </ol>
+                        <blockquote><code>rm -rf</code> no debería convertirse en una receta automática.</blockquote>
+                    </small>
+                </section>
+
+                <section id="errores1" data-state="no_footer">
+                    <h3>Errores frecuentes</h3>
+                    <small>
+                        <table style="width:100%; font-size:67%;">
+                            <thead><tr><th>Mensaje</th><th>Qué revisar</th></tr></thead>
+                            <tbody>
+                                <tr><td><code>command not found</code></td><td>Nombre, instalación o <code>PATH</code>.</td></tr>
+                                <tr><td><code>No such file or directory</code></td><td>Ruta, ubicación o componente faltante.</td></tr>
+                                <tr><td><code>Permission denied</code></td><td>Permisos del objeto y de la ruta.</td></tr>
+                                <tr><td><code>File exists</code></td><td>El destino ya existe.</td></tr>
+                                <tr><td><code>Not a directory</code></td><td>Un componente de la ruta es un archivo.</td></tr>
+                                <tr><td><code>Directory not empty</code></td><td><code>rmdir</code> recibió un directorio con contenido.</td></tr>
+                            </tbody>
+                        </table>
+                    </small>
+                </section>
+
+                <section id="errores2" data-state="no_footer">
+                    <h3>Argumentos y nombres especiales</h3>
+                    <small>
+                        <ul>
+                            <li><code>missing operand</code>: falta un argumento obligatorio.</li>
+                            <li><code>invalid option</code>: la opción no existe o un nombre comenzó con <code>-</code>.</li>
+                        </ul>
+                    </small>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+touch -- -informe
+rm -- -informe
+                    </code></pre>
+                    <small><p><code>--</code> marca el final de las opciones. Lo que sigue se interpreta como argumento.</p></small>
+                </section>
+
+                <section id="diagnostico" data-state="no_footer">
+                    <h3>Método de diagnóstico</h3>
+                    <small>
+                        <ol>
+                            <li>Leer el mensaje completo.</li>
+                            <li>Identificar comando y ruta.</li>
+                            <li>Comprobar usuario y directorio actual.</li>
+                            <li>Listar origen y destino.</li>
+                            <li>Consultar <code>comando --help</code>.</li>
+                            <li>Corregir la causa sin agregar <code>sudo</code> por reflejo.</li>
+                        </ol>
+                        <blockquote>El comando puede terminar bien y aun así actuar sobre un destino equivocado.</blockquote>
+                    </small>
+                </section>
+
+                <section id="preguntas_eliminar" data-state="no_footer"><h2>Consultas</h2><p><small>Eliminar → verificar → leer errores → corregir la causa</small></p></section>
+            </section>
+
+            <!-- SECCIÓN 9: INODOS Y ENLACES -->
+            <section>
+                <section id="inodos1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Inodos y enlaces:</h3><h4>Más de un nombre para llegar a un archivo</h4>
+                </section>
+
+                <section id="inodo" data-state="no_footer">
+                    <h3>Nombre, inodo y contenido</h3>
+                    <small>
+                        <p>Un <strong>inodo</strong> (<em>inode</em>) identifica un objeto dentro de un sistema de archivos.</p>
+                        <ul>
+                            <li>Guarda tipo, propietario, permisos, tamaño y marcas de tiempo.</li>
+                            <li>Referencia los bloques donde se encuentra el contenido.</li>
+                            <li><strong>No guarda el nombre.</strong></li>
+                        </ul>
+                    </small>
+                    <blockquote><strong>nombre en un directorio → inodo → contenido</strong></blockquote>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+touch informe.txt
+ls -li informe.txt
+                    </code></pre>
+                </section>
+
+                <section id="enlace_duro" data-state="no_footer">
+                    <h3>Enlace duro</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+ln informe.txt informe-hard.txt
+ls -li informe.txt informe-hard.txt
+                    </code></pre>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+informe.txt ──────┐
+                  ├──→ mismo inodo → contenido
+informe-hard.txt ─┘
+                    </code></pre>
+                    <small><p>No hay un original y una copia: son dos nombres con la misma jerarquía.</p></small>
+                </section>
+
+                <section id="limites_duro" data-state="no_footer">
+                    <h3>Límites del enlace duro</h3>
+                    <small>
+                        <ul>
+                            <li>No puede cruzar de un sistema de archivos a otro.</li>
+                            <li>Normalmente no se permite sobre directorios.</li>
+                            <li>Eliminar un nombre no borra el contenido mientras quede otro enlace.</li>
+                            <li>En <code>ls -l</code>, la columna posterior a los permisos indica la cantidad de enlaces duros.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="enlace_simbolico" data-state="no_footer">
+                    <h3>Enlace simbólico</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+ln -s informe.txt acceso-informe
+ls -li informe.txt acceso-informe
+                    </code></pre>
+                    <blockquote><small><strong>acceso-informe → "informe.txt" → inodo del destino</strong></small></blockquote>
+                    <small>
+                        <ul>
+                            <li>Tiene su propio inodo y guarda una ruta.</li>
+                            <li>Puede apuntar a directorios y cruzar sistemas de archivos.</li>
+                            <li>Puede quedar roto si el destino cambia de nombre o desaparece.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="comparar_enlaces" data-state="no_footer">
+                    <h3>Enlace duro vs simbólico</h3>
+                    <small>
+                        <table style="width:100%; font-size:67%;">
+                            <thead><tr><th></th><th>Duro</th><th>Simbólico</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>Comando</strong></td><td><code>ln origen enlace</code></td><td><code>ln -s destino enlace</code></td></tr>
+                                <tr><td><strong>Referencia</strong></td><td>El mismo inodo</td><td>Una ruta</td></tr>
+                                <tr><td><strong>Inodo propio</strong></td><td>No</td><td>Sí</td></tr>
+                                <tr><td><strong>Cruza sistemas</strong></td><td>No</td><td>Sí</td></tr>
+                                <tr><td><strong>Directorios</strong></td><td>Normalmente no</td><td>Sí</td></tr>
+                                <tr><td><strong>Puede romperse</strong></td><td>No mientras exista el inodo</td><td>Sí</td></tr>
+                            </tbody>
+                        </table>
+                    </small>
+                </section>
+
+                <section id="symlink_roto" data-state="no_footer">
+                    <h3>¿Qué ocurre si movemos el destino?</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+mv informe.txt informe-final.txt
+ls -li informe-final.txt informe-hard.txt acceso-informe
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>El enlace duro continúa apuntando al mismo inodo.</li>
+                            <li>El simbólico sigue buscando la ruta <code>informe.txt</code> y queda roto.</li>
+                        </ul>
+                        <p>Ejemplo real: en Debian, <code>/bin</code>, <code>/sbin</code> y <code>/lib</code> son enlaces simbólicos hacia <code>/usr</code>.</p>
+                    </small>
+                </section>
+
+                <section id="preguntas_inodos" data-state="no_footer"><h2>Consultas</h2><p><small>Nombre → inodo → enlace duro → enlace simbólico</small></p></section>
+            </section>
+
+            <!-- SECCIÓN 10: APAGADO Y REINICIO -->
+            <section>
+                <section id="apagado1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Apagado y reinicio:</h3><h4>Terminar el sistema de forma ordenada</h4>
+                </section>
+
+                <section id="apagado_ordenado" data-state="no_footer">
+                    <h3>Un apagado ordenado</h3>
+                    <small>
+                        <p>El sistema necesita coordinar varias tareas:</p>
+                        <ul>
+                            <li>notificar el cierre a los procesos;</li>
+                            <li>detener los servicios;</li>
+                            <li>escribir en disco los datos pendientes;</li>
+                            <li>desmontar los sistemas de archivos;</li>
+                            <li>finalizar o iniciar nuevamente.</li>
+                        </ul>
+                        <blockquote>Cerrar a la fuerza VirtualBox equivale a interrumpir la alimentación de un equipo físico.</blockquote>
+                    </small>
+                </section>
+
+                <section id="comandos_apagado" data-state="no_footer">
+                    <h3>Comandos de apagado</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+sudo systemctl reboot
+sudo systemctl poweroff
+
+sudo reboot
+sudo poweroff
+sudo shutdown -r now       # reiniciar
+sudo shutdown -h now       # apagar
+                    </code></pre>
+                    <small><p>systemd coordina los procesos, servicios y sistemas de archivos durante la operación.</p></small>
+                </section>
+
+                <section id="apagado_programado" data-state="no_footer">
+                    <h3>Programar y cancelar</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+sudo shutdown -r +5 "Reinicio de mantenimiento"
+sudo shutdown -c
+                    </code></pre>
+                    <small>
+                        <p>La primera orden avisa a los usuarios y reinicia dentro de cinco minutos. La segunda cancela la operación.</p>
+                        <p>Después de reiniciar, esperamos el arranque y volvemos a ingresar:</p>
+                    </small>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+ssh -p 2222 cristian@localhost
+                    </code></pre>
+                </section>
+
+                <section id="preguntas_apagado" data-state="no_footer"><h2>Consultas</h2><p><small>Procesos → servicios → sistemas de archivos → reinicio</small></p></section>
+            </section>
+
+            <!-- SECCIÓN 11: CIERRE Y LABORATORIO -->
+            <section>
+                <section id="resumen" data-state="no_footer">
+                    <h3>Resumen de la clase</h3>
+                    <small>
+                        <ul>
+                            <li>La terminal permite interactuar y Bash interpreta las órdenes.</li>
+                            <li>Tab completa nombres; Ctrl + R busca en el historial.</li>
+                            <li><code>pwd</code>, <code>ls</code> y <code>cd</code> permiten ubicarnos y recorrer el árbol.</li>
+                            <li>Una ruta absoluta parte de <code>/</code>; una relativa depende del directorio actual.</li>
+                            <li><code>mkdir</code> y <code>touch</code> crean la estructura de trabajo.</li>
+                            <li>Bash expande comodines antes de ejecutar el comando.</li>
+                            <li><code>cp</code> copia, <code>mv</code> mueve y <code>rm</code> elimina.</li>
+                            <li>Un enlace duro comparte inodo; un enlace simbólico guarda una ruta.</li>
+                            <li>Los errores se leen antes de repetir la orden o agregar <code>sudo</code>.</li>
+                            <li>El apagado debe ser solicitado al sistema.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="labs" data-state="hide_footer" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h2>Actividades prácticas y laboratorios</h2>
+                </section>
+
+                <section id="labs_1" data-state="no_footer">
+                    <h2>Actividad práctica</h2>
+                    <small>
+                        <p><em>Organización de archivos desde una sesión SSH</em></p>
+                        <ol>
+                            <li>Crear un árbol de trabajo dentro de <code>~/laboratorio-clase5</code>.</li>
+                            <li>Navegar con rutas absolutas, relativas, <code>..</code>, <code>~</code> y <code>cd -</code>.</li>
+                            <li>Crear, copiar, mover y renombrar archivos.</li>
+                            <li>Seleccionar nombres mediante comodines controlados.</li>
+                            <li>Provocar y diagnosticar errores comunes.</li>
+                            <li>Comparar un enlace duro y uno simbólico.</li>
+                            <li>Eliminar solamente el árbol del ejercicio.</li>
+                            <li>Reiniciar y volver a conectarse por SSH.</li>
+                        </ol>
+                        <p>Enlace al laboratorio: <em>pendiente de elaborar</em></p>
+                    </small>
+                </section>
+
+                <section id="referencias" data-state="no_footer">
+                    <h3>Referencias</h3>
+                    <small>
+                        <ul>
+                            <li><a href="https://www.gnu.org/software/bash/manual/bash.html" target="_blank" rel="noopener noreferrer">GNU Bash Reference Manual</a></li>
+                            <li><a href="https://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html" target="_blank" rel="noopener noreferrer">GNU Bash — Commands for Completion</a></li>
+                            <li><a href="https://www.gnu.org/software/bash/manual/html_node/Bash-History-Facilities.html" target="_blank" rel="noopener noreferrer">GNU Bash — History Facilities</a></li>
+                            <li><a href="https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html" target="_blank" rel="noopener noreferrer">GNU Bash — Filename Expansion</a></li>
+                            <li><a href="https://www.gnu.org/software/coreutils/manual/coreutils.html" target="_blank" rel="noopener noreferrer">GNU Coreutils Manual</a></li>
+                            <li><a href="https://www.gnu.org/software/coreutils/manual/html_node/Basic-operations.html" target="_blank" rel="noopener noreferrer">GNU Coreutils — Operaciones básicas</a></li>
+                            <li><a href="https://www.gnu.org/software/coreutils/manual/html_node/ln-invocation.html" target="_blank" rel="noopener noreferrer"><code>ln</code> — enlaces entre archivos</a></li>
+                            <li><a href="https://www.debian.org/doc/manuals/debian-reference/ch01.en.html#_the_filesystem" target="_blank" rel="noopener noreferrer">Debian Reference — The filesystem</a></li>
+                            <li><a href="https://manpages.debian.org/trixie/systemd-sysv/shutdown.8.en.html" target="_blank" rel="noopener noreferrer"><code>shutdown(8)</code> — Debian Manpages</a></li>
+                        </ul>
+                    </small>
+                </section>
+            </section>
+
+            <!-- SECCIÓN FINAL -->
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <!-- Logos en el footer -->
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image"></span>
+        </div>
+
+        <script type="text/javascript">
+            window.addEventListener("load", function () {
+
+                revealDiv = document.querySelector("body div.reveal")
+                footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+
+    <!-- Script de Socket.io para Reveal Multiplex -->
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+
+
+    <script>
+        // More info about initialization & config:
+        // - https://revealjs.com/initialization/
+        // - https://revealjs.com/config/
+
+        // Para eventos personalizados. Indica que está en la presentación
+
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            //element.style.display = "none";
+            // element.style.display = "table";
+            element.style.opacity = "15%";
+        });
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!",
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: "",
+            },
+
+            // Multiplex (cliente: secret en null)
+            multiplex: {
+                secret: null,
+                id: '7b0917d41c6a3bf43a6a45f82e1e3d0a3b7cafee14437efc073f990f1fb25328',
+                url: 'https://multiplex.up.railway.app'
+            },
+
+            // Learn about plugins: https://revealjs.com/plugins/
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom]
+        });
+
+
+
+        // ── Theme Toggle Logic ──
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+
+            // Original light background gradients to restore
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                // Update slide backgrounds with gradients
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                // Force Reveal to re-sync backgrounds only if Reveal is initialized and ready
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            // Initialize from saved preference
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <!-- Plugin Cliente de Multiplex -->
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+    <!-- <script src="https://multiplex.up.railway.app/master.js"></script> -->
+
+</body>
+
+</html>
