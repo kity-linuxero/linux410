@@ -4,110 +4,176 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="color-scheme" content="light dark">
 	<title>Administración de Servidores GNU/Linux - IDEP Informática</title>
+	<script>
+		try {
+			if (localStorage.getItem('reveal-theme') === 'dark') {
+				document.documentElement.classList.add('dark-theme');
+			}
+		} catch (error) {
+			// Si el navegador bloquea el almacenamiento, se mantiene el tema claro.
+		}
+	</script>
 	<link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body>
+	<body>
+		<header class="header">
+			<div class="container header-container">
+				<a href="index.html" class="brand" aria-label="Página principal del curso">
+					<img src="img/logos/IDEPInformaticaLogo.png" alt="" class="logo">
+					<span class="header-text">
+						<strong>Administración de Servidores GNU/Linux</strong>
+						<span>Orientación a Seguridad Informática</span>
+					</span>
+				</a>
 
-	<!-- Encabezado con espacio para logo y título -->
-	<header class="header">
-		<div class="container header-container">
-			<div class="logo-container">
-				<!-- Reemplaza "img/idep-logo.png" por la ruta real de tu imagen -->
-				<img src="img/logos/IDEPInformaticaLogo.png" alt="IDEP Informática Logo" class="logo">
+				<button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar a tema oscuro"
+					aria-pressed="false">
+					<svg class="theme-icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+						stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<circle cx="12" cy="12" r="5"></circle>
+						<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+					</svg>
+					<svg class="theme-icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+						stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+						<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+					</svg>
+				</button>
 			</div>
-			<div class="header-text">
-				<h1>Administración de Servidores GNU/Linux</h1>
-				<p class="subtitle">Orientación a Seguridad Informática</p>
+		</header>
+
+	<main class="container main-content">
+		<nav class="quick-links" aria-label="Accesos rápidos">
+			<a href="https://campus.idepba.com.ar" target="_blank" rel="noopener noreferrer" class="quick-link">
+				<span aria-hidden="true">🎓</span>
+				Campus Virtual
+			</a>
+			<a href="https://github.com/kity-linuxero/linux410-labs/blob/main/README.md" target="_blank"
+				rel="noopener noreferrer" class="quick-link">
+				<span aria-hidden="true">🧪</span>
+				Guía de Laboratorios
+			</a>
+		</nav>
+
+		<div class="course-layout">
+			<div class="course-sidebar">
+				<section aria-labelledby="featuredLabel">
+					<a href="clase5.html" class="featured-class" id="featuredClass">
+						<span class="eyebrow" id="featuredLabel">Última clase disponible</span>
+						<div class="featured-number" aria-hidden="true" id="featuredNumber">05</div>
+						<div class="featured-copy">
+							<h1 id="featuredTitle">Navegación y operaciones con archivos</h1>
+							<p id="featuredDescription">Bash, ayuda, historial, rutas y operaciones con archivos</p>
+							<span class="featured-action">Abrir clase <span aria-hidden="true">→</span></span>
+						</div>
+					</a>
+				</section>
+
+				<aside class="upcoming-preview" aria-labelledby="upcomingTitle">
+					<div class="upcoming-number" aria-hidden="true" id="upcomingNumber">06</div>
+					<div class="upcoming-copy">
+						<span class="status-badge">Próximamente</span>
+						<h2 id="upcomingTitle">Próxima clase del curso</h2>
+						<p>El tema y el material se publicarán próximamente.</p>
+					</div>
+				</aside>
 			</div>
+
+			<section class="course-route" aria-labelledby="routeTitle">
+			<div class="section-heading">
+				<div>
+					<span class="eyebrow">Todas las clases</span>
+					<h2 id="routeTitle">Recorrido del curso</h2>
+				</div>
+				<p>Organizado por módulos</p>
+			</div>
+
+			<details class="course-module" open>
+				<summary>
+					<span>
+						<strong>Módulo 1</strong>
+						<small>Fundamentos y primeros pasos en la terminal</small>
+					</span>
+					<span class="module-count">5 clases + presentación</span>
+				</summary>
+
+				<div class="module-classes">
+					<!-- Para publicar una clase nueva, agrega otra tarjeta con data-status="available". -->
+					<a href="clase5.html" class="route-card" data-class="5" data-status="available"
+						data-title="Navegación y operaciones con archivos"
+						data-description="Bash, ayuda, historial, rutas y operaciones con archivos">
+						<span class="route-number">05</span>
+						<span class="route-copy">
+							<strong>Navegación y operaciones con archivos</strong>
+							<small>Bash, ayuda, historial, rutas y operaciones con archivos</small>
+						</span>
+						<span class="route-status" data-route-status>Última</span>
+						<span class="route-arrow" aria-hidden="true">→</span>
+					</a>
+
+					<a href="clase4.html" class="route-card" data-class="4" data-status="available"
+						data-title="Primer contacto con el servidor"
+						data-description="Init y systemd, login e identidad, post-instalación y acceso por SSH">
+						<span class="route-number">04</span>
+						<span class="route-copy">
+							<strong>Primer contacto con el servidor</strong>
+							<small>Init y systemd, login e identidad, post-instalación y acceso por SSH</small>
+						</span>
+						<span class="route-status" data-route-status>Disponible</span>
+						<span class="route-arrow" aria-hidden="true">→</span>
+					</a>
+
+					<a href="clase3.html" class="route-card" data-class="3" data-status="available"
+						data-title="Instalación del sistema" data-description="Arranque, particiones y FHS">
+						<span class="route-number">03</span>
+						<span class="route-copy">
+							<strong>Instalación del sistema</strong>
+							<small>Arranque, particiones y FHS</small>
+						</span>
+						<span class="route-status" data-route-status>Disponible</span>
+						<span class="route-arrow" aria-hidden="true">→</span>
+					</a>
+
+					<a href="clase2.html" class="route-card" data-class="2" data-status="available"
+						data-title="Virtualización"
+						data-description="Hipervisores, máquinas virtuales y entorno de laboratorio">
+						<span class="route-number">02</span>
+						<span class="route-copy">
+							<strong>Virtualización</strong>
+							<small>Hipervisores, máquinas virtuales y entorno de laboratorio</small>
+						</span>
+						<span class="route-status" data-route-status>Disponible</span>
+						<span class="route-arrow" aria-hidden="true">→</span>
+					</a>
+
+					<a href="clase1.html" class="route-card" data-class="1" data-status="available"
+						data-title="Introducción a Linux" data-description="Historia, fundamentos y ecosistema Linux">
+						<span class="route-number">01</span>
+						<span class="route-copy">
+							<strong>Introducción a Linux</strong>
+							<small>Historia, fundamentos y ecosistema Linux</small>
+						</span>
+						<span class="route-status" data-route-status>Disponible</span>
+						<span class="route-arrow" aria-hidden="true">→</span>
+					</a>
+
+					<a href="clase0.html" class="route-card" data-class="0" data-status="available"
+						data-title="Presentación del curso"
+						data-description="Presentación del curso, objetivos, metodología y evaluación">
+						<span class="route-number">00</span>
+						<span class="route-copy">
+							<strong>Presentación del curso</strong>
+							<small>Objetivos, metodología y evaluación</small>
+						</span>
+						<span class="route-status" data-route-status>Disponible</span>
+						<span class="route-arrow" aria-hidden="true">→</span>
+					</a>
+				</div>
+			</details>
+			</section>
 		</div>
-	</header>
-
-	<main class="container">
-		<!-- Accesos rápidos al Campus y Laboratorio -->
-		<section class="quick-links">
-			<a href="https://campus.idepba.com.ar" target="_blank" class="btn btn-primary">
-				🎓 Campus Virtual
-			</a>
-			<a href="https://github.com/kity-linuxero/linux410-labs/blob/main/README.md" class="btn btn-secondary" target="_blank">
-				🧪 Guía de Laboratorios
-			</a>
-		</section>
-
-		<!-- Listado de Clases -->
-		<section class="classes-section">
-			<h2>Clases del Curso</h2>
-			<div class="classes-grid">
-
-
-				<!-- Clase 1 -->
-				<article class="class-card">
-					<div class="class-number">Presentación</div>
-					<div class="class-info">
-						<h3>Presentación del Curso</h3>
-						<p>Presentación del curso, objetivos, metodologías y evaluación.</p>
-					</div>
-					<a href="clase0.html" class="class-link">Acceder &rarr;</a>
-				</article>
-
-				<!-- Clase 1 -->
-				<article class="class-card">
-					<div class="class-number">Clase 01</div>
-					<div class="class-info">
-						<h3>Introducción a Linux</h3>
-						<p>Historia, Fundamentos y Ecosistema Linux</p>
-					</div>
-					<a href="clase1.html" class="class-link">Acceder &rarr;</a>
-				</article>
-
-				<!-- Clase 2 (Ejemplo para duplicar) -->
-				<article class="class-card">
-					<div class="class-number">Clase 02</div>
-					<div class="class-info">
-						<h3>Virtualización</h3>
-						<p>Hipervisores, Maquinas Virtuales y Entorno de Laboratorio</p>
-					</div>
-					<!-- <span class="class-status">Próximamente</span> -->
-					<a href="clase2.html" class="class-link">Acceder &rarr;</a>
-				</article>
-
-				<!-- Clase 3 -->
-				<article class="class-card">
-					<div class="class-number">Clase 03</div>
-					<div class="class-info">
-						<h3>Instalación del sistema</h3>
-						<p>Arranque, Particiones y FHS</p>
-					</div>
-					<a href="clase3.html" class="class-link">Acceder &rarr;</a>
-				</article>
-
-				<!-- Clase 4 -->
-				<article class="class-card">
-					<div class="class-number">Clase 04</div>
-					<div class="class-info">
-						<h3>Primer contacto con el servidor</h3>
-						<p>Init y systemd, login e identidad, post-instalación y acceso por SSH</p>
-					</div>
-					<a href="clase4.html" class="class-link">Acceder &rarr;</a>
-				</article>
-
-				<!-- Clase 5 -->
-				<article class="class-card">
-					<div class="class-number">Clase 05</div>
-					<div class="class-info">
-						<h3>Navegación y operaciones con archivos</h3>
-						<p>Bash, rutas, comodines, archivos, enlaces y apagado del sistema</p>
-					</div>
-					<a href="clase5.html" class="class-link">Acceder &rarr;</a>
-				</article>
-
-
-
-				<!-- Agrega más bloques .class-card según avances -->
-
-			</div>
-		</section>
 	</main>
 
 	<footer class="footer">
@@ -116,6 +182,48 @@
 		</div>
 	</footer>
 
+	<script>
+		(function () {
+			var html = document.documentElement;
+			var themeToggle = document.getElementById('themeToggle');
+
+			function setTheme(isDark) {
+				html.classList.toggle('dark-theme', isDark);
+				themeToggle.setAttribute('aria-pressed', String(isDark));
+				themeToggle.setAttribute('aria-label', isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
+
+				try {
+					localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+				} catch (error) {
+					// El cambio visual sigue funcionando aunque no se pueda guardar.
+				}
+			}
+
+			setTheme(html.classList.contains('dark-theme'));
+
+			themeToggle.addEventListener('click', function () {
+				setTheme(!html.classList.contains('dark-theme'));
+			});
+
+			var availableClasses = Array.from(document.querySelectorAll('.route-card[data-status="available"]'));
+			var latestClass = availableClasses.reduce(function (latest, current) {
+				return Number(current.dataset.class) > Number(latest.dataset.class) ? current : latest;
+			});
+
+			availableClasses.forEach(function (classCard) {
+				var status = classCard.querySelector('[data-route-status]');
+				status.textContent = classCard === latestClass ? 'Última' : 'Disponible';
+				classCard.classList.toggle('is-latest', classCard === latestClass);
+			});
+
+			var featuredClass = document.getElementById('featuredClass');
+			featuredClass.href = latestClass.href;
+			document.getElementById('featuredNumber').textContent = String(latestClass.dataset.class).padStart(2, '0');
+			document.getElementById('featuredTitle').textContent = latestClass.dataset.title;
+			document.getElementById('featuredDescription').textContent = latestClass.dataset.description;
+			document.getElementById('upcomingNumber').textContent = String(Number(latestClass.dataset.class) + 1).padStart(2, '0');
+		})();
+	</script>
 </body>
 
 </html>

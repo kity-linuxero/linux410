@@ -1040,6 +1040,8 @@ Revierto a Snapshot 1
     <script src="dist/plugin/highlight.js"></script>
     <script src="dist/plugin/zoom.js"></script>
     <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
 
     <!-- Script de Socket.io para Reveal Multiplex -->
     <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
@@ -1114,7 +1116,7 @@ Revierto a Snapshot 1
             },
 
             // Learn about plugins: https://revealjs.com/plugins/
-            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom]
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, CopyCode]
         });
 
 

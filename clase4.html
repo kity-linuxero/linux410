@@ -372,7 +372,7 @@
                             </tbody>
                         </table>
                     </small>
-                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                        <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 systemctl get-default   # target predeterminado del sistema
                         </code></pre>
                     
@@ -380,7 +380,7 @@ systemctl get-default   # target predeterminado del sistema
 
                 <section id="systemctl_minimo" data-state="no_footer">
                     <h3>systemd: info básica</h3>
-                    <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                    <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 systemctl status            # estado general del sistema
 systemctl status ssh        # estado del servicio SSH
 systemctl list-units --type=service # lista servicios activos
@@ -476,7 +476,7 @@ cristian@lab2-vm:~$
                             <code>PS1</code>, normalmente desde <code>~/.bashrc</code>.
                         </p>
                     </small>
-                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                        <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 echo "$PS1"     # Ver la configuración actual del prompt
                         </code></pre>
                         <small>
@@ -506,7 +506,7 @@ echo "$PS1"     # Ver la configuración actual del prompt
                             cuenta personal y se recurre a <code>sudo</code> solo cuando la tarea requiere permisos
                             administrativos.</p>
                     </small>
-                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                        <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 id              # UID, GID y grupos del usuario actual
 groups          # grupos a los que pertenece el usuario
                         </code></pre>
@@ -555,7 +555,7 @@ groups          # grupos a los que pertenece el usuario
                             </tbody>
                         </table>
                     </small>
-                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                        <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 su -            # sesión completa como root (clave de root)
 sudo apt update # un solo comando elevado (pide tu clave)
 sudo -i         # sesión interactiva como root vía sudo
@@ -632,7 +632,7 @@ sudo -i         # sesión interactiva como root vía sudo
                         <p>Antes de modificar el sistema, conviene identificar la máquina y revisar su estado general.
                         </p>
                     </small>
-                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                        <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 cat /etc/os-release # distribución y versión
 uname -a            # kernel y arquitectura
 hostnamectl         # nombre, SO, kernel, tipo de máquina
@@ -652,7 +652,7 @@ df -h               # espacio en disco
                         <p>Un <strong>locale</strong> define idioma, codificación de caracteres, formato de fecha,
                             separador decimal y orden alfabético.</p>
                     </small>
-                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                        <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 locale                          # ver la configuración actual
 sudo dpkg-reconfigure locales   # generar y elegir locales
                         </code></pre>
@@ -690,7 +690,7 @@ sudo dpkg-reconfigure locales   # generar y elegir locales
                         <p>La distribución del teclado es independiente del locale. Determina qué carácter corresponde a
                             cada tecla en la consola local.</p>
                     </small>
-                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                        <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 sudo dpkg-reconfigure keyboard-configuration
 sudo setupcon       # aplicar sin reiniciar
                         </code></pre>
@@ -710,7 +710,7 @@ sudo setupcon       # aplicar sin reiniciar
                 <section id="hora" data-state="no_footer">
                     <h3>4. Hora y zona horaria</h3>
                     
-                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                        <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 timedatectl                     # estado actual
 sudo timedatectl set-timezone America/Argentina/Buenos_Aires
 sudo timedatectl set-ntp true   # sincronización automática
@@ -750,7 +750,7 @@ sudo timedatectl set-ntp true   # sincronización automática
                 <section id="apt_update" data-state="no_footer">
                     <h3>5. Actualización del sistema</h3>
                     
-                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                        <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 sudo apt update  # actualizar la lista de paquetes disponibles
 sudo apt upgrade # instalar las actualizaciones
                         </code></pre>
@@ -811,7 +811,7 @@ sudo apt upgrade # instalar las actualizaciones
                             <code>tasksel</code>. Podemos comprobar su estado con los siguientes comandos:
                         </p>
                     </small>
-                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                        <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 systemctl status ssh        # ¿está corriendo?
 systemctl is-enabled ssh    # ¿arranca solo?
 ss -tlnp | grep :22         # ¿escucha en el puerto 22?
@@ -864,7 +864,7 @@ ss -tlnp | grep :22         # ¿escucha en el puerto 22?
                 <section id="conectarse" data-state="no_footer">
                     <h3>Conectarse desde el anfitrión</h3>
                     
-                        <pre class="codigo_shadow" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
+                        <pre class="codigo_shadow clipboard" data-id="code-animation"><code class="bash codigo-redondo" data-trim>
 ssh -p 2222 usuario@localhost
                         </code></pre>
                         <small>
@@ -1006,6 +1006,8 @@ ssh -p 2222 usuario@localhost
     <script src="dist/plugin/highlight.js"></script>
     <script src="dist/plugin/zoom.js"></script>
     <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
 
     <!-- Script de Socket.io para Reveal Multiplex -->
     <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
@@ -1080,7 +1082,7 @@ ssh -p 2222 usuario@localhost
             },
 
             // Learn about plugins: https://revealjs.com/plugins/
-            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom]
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, CopyCode]
         });
 
 

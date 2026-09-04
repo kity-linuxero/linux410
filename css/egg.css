@@ -193,6 +193,11 @@
   border-radius: 5px;
 }
 
+html.dark-theme .codigo_shadow,
+html.dark-theme .hardware_img_clase1 {
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.65));
+}
+
 .codigo-redondo{
   border-radius: 5px;
 }
