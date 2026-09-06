@@ -217,6 +217,8 @@
                             <li><a href="#/diff1">Comparación con <code>diff</code></a></li>
                             <li><a href="#/find1">Búsqueda por nombre con <code>find</code></a></li>
                             <li><a href="#/grep1">Búsqueda por contenido y tuberías</a></li>
+                            <br>
+                            <li><a href="#/labs_clase">Actividad práctica</a></li>
                         </ul>
                         <p><a href="?print-pdf">Exportar a PDF</a></p>
                     </small>
@@ -762,6 +764,25 @@ grep -in 'tcp' /etc/services | head -n 5
                     </small>
                 </section>
 
+                <section id="tee" data-state="no_footer">
+                    <h3><code>tee</code>: mostrar y guardar</h3>
+                    <small><p><code>tee</code> recibe datos por la entrada estándar y los envía a dos lugares: la terminal y uno o más archivos.</p></small>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+comando | tee archivo
+                    </code></pre>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+head -n 5 /etc/services | tee muestra.txt
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><code>head</code> produce las cinco líneas.</li>
+                            <li><code>tee</code> las muestra y también las guarda en <code>muestra.txt</code>.</li>
+                            <li>Sin opciones, reemplaza el contenido del archivo. Con <code>-a</code>, agrega al final.</li>
+                        </ul>
+                        <blockquote>Su nombre recuerda a una conexión en T: una entrada continúa por dos salidas.</blockquote>
+                    </small>
+                </section>
+
                 <section id="cat_grep" data-state="no_footer">
                     <h3>Cuando <code>cat</code> no aporta</h3>
                     <div class="two-columns" style="align-items:center;">
@@ -787,7 +808,7 @@ grep -w 'ssh' servicios
                 </section>
             </section>
 
-            <!-- SECCIÓN 8: CIERRE Y REFERENCIAS -->
+            <!-- SECCIÓN 8: CIERRE, ACCESO AL LABORATORIO Y REFERENCIAS -->
             <section>
                 <section id="resumen" data-state="no_footer">
                     <h3>Resumen de la clase</h3>
@@ -800,7 +821,17 @@ grep -w 'ssh' servicios
                             <li><code>head</code>, <code>tail</code> y <code>wc</code> ayudan a observar y medir.</li>
                             <li><code>diff -u</code> muestra diferencias con contexto y <code>--color</code> facilita su lectura.</li>
                             <li><code>find</code> busca objetos; <code>grep</code> busca líneas.</li>
-                            <li>Una tubería conecta la salida de un comando con la entrada del siguiente.</li>
+                            <li>Una tubería conecta comandos; <code>tee</code> permite mostrar y guardar la salida.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="labs_clase" data-state="no_footer">
+                    <h3>Actividad práctica</h3>
+                    <small>
+                        <ul>
+                            <li><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab5/lab5.md"
+                                    target="_blank" rel="noopener noreferrer">Laboratorio 5</a>: lectura, comparación y búsqueda de archivos</li>
                         </ul>
                     </small>
                 </section>
