@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 6</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 64vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .hljs-addition {
+            color: #86efac !important;
+            background: rgba(22, 163, 74, 0.18);
+        }
+
+        .reveal .hljs-deletion {
+            color: #fca5a5 !important;
+            background: rgba(220, 38, 38, 0.16);
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        html.dark-theme .reveal .hljs-addition {
+            color: #86efac !important;
+        }
+
+        html.dark-theme .reveal .hljs-deletion {
+            color: #fca5a5 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SECCIÓN 1: PORTADA, TEMAS Y OBJETIVOS -->
+            <section>
+                <section id="inicio" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Administración de servidores GNU/Linux</h3>
+                    <h4>Clase 6: Lectura, comparación y búsqueda de archivos</h4>
+                    <small><p>Módulo 1 — Primeros pasos en la shell</p></small>
+                </section>
+
+                <section id="index" data-state="no_footer">
+                    <h3>Temas de clase 6</h3>
+                    <small>
+                        <ul>
+                            <li><a href="#/comodines1">Comodines y comillas</a></li>
+                            <li><a href="#/lectura1">Identificación y lectura de archivos</a></li>
+                            <li><a href="#/partes1">Principio, final y conteos</a></li>
+                            <li><a href="#/diff1">Comparación con <code>diff</code></a></li>
+                            <li><a href="#/find1">Búsqueda por nombre con <code>find</code></a></li>
+                            <li><a href="#/grep1">Búsqueda por contenido y tuberías</a></li>
+                        </ul>
+                        <p><a href="?print-pdf">Exportar a PDF</a></p>
+                    </small>
+                </section>
+
+                <section id="objetivos" data-state="no_footer">
+                    <h3>Objetivos de la clase</h3>
+                    <small>
+                        <p>Al finalizar esta clase vas a poder:</p>
+                        <ul>
+                            <li>Seleccionar nombres con comodines y controlar su interpretación con comillas.</li>
+                            <li>Elegir cómo consultar un archivo según su tipo y tamaño.</li>
+                            <li>Observar una parte del contenido y obtener conteos básicos.</li>
+                            <li>Comparar archivos y leer una diferencia unificada.</li>
+                            <li>Buscar archivos por nombre y líneas por contenido.</li>
+                            <li>Conectar dos comandos mediante una tubería.</li>
+                        </ul>
+                        <blockquote><strong>Por qué vemos este tema:</strong> para administrar un servidor necesitamos localizar configuraciones, consultar logs y comparar versiones sin modificar los archivos.</blockquote>
+                    </small>
+                </section>
+
+                <section id="elegir_herramienta" data-state="no_footer">
+                    <h3>Elegir según la tarea</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Necesidad</th><th>Herramienta</th></tr></thead>
+                        <tbody>
+                            <tr><td>Identificar un archivo</td><td><code>file</code></td></tr>
+                            <tr><td>Mostrar o recorrer contenido</td><td><code>cat</code> / <code>less</code></td></tr>
+                            <tr><td>Ver el comienzo o el final</td><td><code>head</code> / <code>tail</code></td></tr>
+                            <tr><td>Contar contenido</td><td><code>wc</code></td></tr>
+                            <tr><td>Comparar dos versiones</td><td><code>diff</code></td></tr>
+                            <tr><td>Buscar un nombre</td><td><code>find</code></td></tr>
+                            <tr><td>Buscar texto</td><td><code>grep</code></td></tr>
+                        </tbody>
+                    </table>
+                    <small><p>Primero definimos qué necesitamos. Después elegimos el comando.</p></small>
+                </section>
+            </section>
+
+            <!-- SECCIÓN 2: COMODINES Y COMILLAS -->
+            <section>
+                <section id="comodines1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Comodines y comillas</h3>
+                    <h4>Seleccionar nombres antes de ejecutar</h4>
+                </section>
+
+                <section id="expansion_nombres" data-state="no_footer">
+                    <h3>Un patrón no es un nombre literal</h3>
+                    <small><p>Supongamos que el directorio contiene:</p></small>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+acceso-01.log
+acceso-02.log
+acceso-final.log
+error-01.log
+inventario.txt
+                    </code></pre>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+ls acceso-*.log
+                    </code></pre>
+                    <small>
+                        <p>Bash expande el patrón antes de ejecutar <code>ls</code>.</p>
+                        <blockquote><code>ls</code> recibe los nombres encontrados, no el asterisco.</blockquote>
+                    </small>
+                </section>
+
+                <section id="comodines_basicos" data-state="no_footer">
+                    <h3>Los comodines básicos</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Patrón</th><th>Coincide con</th><th>Ejemplo</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>*</code></td><td>Cero o más caracteres</td><td><code>*.log</code></td></tr>
+                            <tr><td><code>?</code></td><td>Exactamente un carácter</td><td><code>acceso-0?.log</code></td></tr>
+                            <tr><td><code>[abc]</code></td><td>Un carácter de la lista</td><td><code>informe-[abc].txt</code></td></tr>
+                            <tr><td><code>[0-9]</code></td><td>Un carácter del rango</td><td><code>acceso-0[1-9].log</code></td></tr>
+                        </tbody>
+                    </table>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+ls *.log
+ls acceso-??.log
+ls acceso-0[12].log
+ls archivo*[0-3]
+                    </code></pre>
+                    <small><p>Los comodines se pueden combinar. <code>archivo*[0-3]</code> comienza con <code>archivo</code> y termina con un dígito del 0 al 3.</p></small>
+                </section>
+
+                <section id="alcance_comodines" data-state="no_footer">
+                    <h3>Alcance y nombres ocultos</h3>
+                    <small>
+                        <ul>
+                            <li>Los comodines trabajan sobre nombres, no sobre el contenido.</li>
+                            <li><code>logs/*.log</code> busca dentro de <code>logs</code>, pero no recorre sus subdirectorios.</li>
+                            <li><code>*</code> no incluye normalmente nombres que comienzan con punto.</li>
+                        </ul>
+                    </small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+ls *
+ls .*
+ls -a
+                    </code></pre>
+                    <small><p>Para observar archivos ocultos suele ser más claro utilizar <code>ls -a</code>.</p></small>
+                </section>
+
+                <section id="sin_coincidencias" data-state="no_footer">
+                    <h3>Cuando no hay coincidencias</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+ls *.respaldo
+                    </code></pre>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+ls: cannot access '*.respaldo': No such file or directory
+                    </code></pre>
+                    <small>
+                        <p>En la configuración habitual de Bash, el patrón sin coincidencias queda sin expandir.</p>
+                        <p>Antes de operar sobre varios nombres, conviene revisar la selección:</p>
+                    </small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+ls -- logs/*.log
+                    </code></pre>
+                </section>
+
+                <section id="comillas" data-state="no_footer">
+                    <h3>Comillas y barra invertida</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+ls '*.log'
+ls "*.log"
+ls \*.log
+                    </code></pre>
+                    <small>
+                        <p>En los tres casos, Bash protege el asterisco y no lo expande.</p>
+                        <ul>
+                            <li><strong>Comillas simples:</strong> conservan literalmente todo su contenido.</li>
+                            <li><strong>Comillas dobles:</strong> conservan espacios y comodines, pero permiten expansiones como <code>$VARIABLE</code>.</li>
+                            <li><strong>Barra invertida:</strong> protege solamente el carácter siguiente.</li>
+                        </ul>
+                    </small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+ls "Documentos del curso"
+ls Documentos\ del\ curso
+                    </code></pre>
+                </section>
+
+                <section id="preguntas_comodines" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small>Patrón → expansión de Bash → coincidencias → previsualización</small></p>
+                </section>
+            </section>
+
+            <!-- SECCIÓN 3: IDENTIFICAR Y LEER -->
+            <section>
+                <section id="lectura1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Identificar y leer archivos</h3>
+                    <h4>Consultar sin modificar</h4>
+                </section>
+
+                <section id="file" data-state="no_footer">
+                    <h3>No todo archivo contiene texto legible</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+file /etc/os-release
+file /bin/ls
+file /usr/share/man/man1/ls.1.gz
+                    </code></pre>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+/etc/os-release: symbolic link to ../usr/lib/os-release
+/bin/ls: ELF 64-bit LSB pie executable ...
+/usr/share/man/man1/ls.1.gz: gzip compressed data ...
+                    </code></pre>
+                    <small>
+                        <p><code>file</code> inspecciona el contenido y otros indicios. No decide solamente por la extensión.</p>
+                        <blockquote>Primero identificamos el archivo. Después elegimos cómo consultarlo.</blockquote>
+                    </small>
+                </section>
+
+                <section id="cat" data-state="no_footer">
+                    <h3><code>cat</code>: mostrar contenido archivos</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+cat /etc/os-release
+cat /etc/hostname /etc/hosts
+cat -n /etc/os-release
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>Su nombre proviene de <em>concatenate</em>.</li>
+                            <li>Con varios archivos, muestra sus contenidos en orden.</li>
+                            <li><code>-n</code> agrega números a las líneas.</li>
+                        </ul>
+                        <p>Resulta adecuado cuando el contenido entra en la pantalla. Para archivos extensos conviene <code>less</code>.</p>
+                        <blockquote><code>cat</code> muestra la salida. No modifica el archivo.</blockquote>
+                    </small>
+                </section>
+
+                <section id="less" data-state="no_footer">
+                    <h3><code>less</code>: recorrer sin editar</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+less /etc/services
+                    </code></pre>
+                    <div class="two-columns">
+                        <table style="font-size:62%;">
+                            <tbody>
+                                <tr><td><code>↓</code> o <code>j</code></td><td>Avanzar una línea</td></tr>
+                                <tr><td><code>↑</code> o <code>k</code></td><td>Retroceder una línea</td></tr>
+                                <tr><td><code>Espacio</code></td><td>Avanzar una pantalla</td></tr>
+                                <tr><td><code>b</code></td><td>Retroceder una pantalla</td></tr>
+                            </tbody>
+                        </table>
+                        <table style="font-size:62%;">
+                            <tbody>
+                                <tr><td><code>g</code> / <code>G</code></td><td>Comienzo / final</td></tr>
+                                <tr><td><code>/texto</code></td><td>Buscar</td></tr>
+                                <tr><td><code>n</code></td><td>Repetir la búsqueda</td></tr>
+                                <tr><td><code>q</code></td><td>Salir</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <small><p><code>less</code> permite recorrer y buscar dentro de configuraciones o logs extensos sin abrirlos en un editor.</p></small>
+                </section>
+
+                <section id="more" data-state="no_footer">
+                    <h3><code>less</code> y <code>more</code></h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+more /etc/services
+                    </code></pre>
+                    <small>
+                        <p><code>more</code> también muestra texto por pantallas.</p>
+                        <ul>
+                            <li>Ofrece una implementación más sencilla.</li>
+                            <li>Tiene menos posibilidades de navegación.</li>
+                            <li>Puede aparecer en otros sistemas o procedimientos.</li>
+                        </ul>
+                        <blockquote>En el curso utilizaremos <code>less</code> como visor principal.</blockquote>
+                    </small>
+                </section>
+
+                <section id="gzip" data-state="no_footer">
+                    <h3>Archivos <code>.gz</code></h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+cp /etc/services servicios.txt
+gzip -k servicios.txt
+
+zcat servicios.txt.gz
+zless servicios.txt.gz
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><code>gzip -k</code> crea <code>servicios.txt.gz</code> y conserva el original.</li>
+                            <li><code>zcat</code> envía el contenido descomprimido a la terminal.</li>
+                            <li><code>zless</code> abre ese contenido en el visor paginado.</li>
+                        </ul>
+                        <p><code>gzip</code> comprime archivos individuales. El empaquetado de directorios con <code>tar</code> se verá más adelante.</p>
+                    </small>
+                </section>
+
+                <section id="preguntas_lectura" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small>Identificar → archivo breve o extenso → texto normal o comprimido</small></p>
+                </section>
+            </section>
+
+            <!-- SECCIÓN 4: PRINCIPIO, FINAL Y CONTEOS -->
+            <section>
+                <section id="partes1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Principio, final y conteos</h3>
+                    <h4>Consultar solo lo necesario</h4>
+                </section>
+
+                <section id="head" data-state="no_footer">
+                    <h3>El comienzo con <code>head</code></h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+head /etc/passwd
+head -n 5 /etc/passwd
+head -n 3 /etc/hosts /etc/services
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>Sin opciones, muestra las primeras diez líneas.</li>
+                            <li><code>-n</code> permite elegir otra cantidad.</li>
+                            <li>Con varios archivos, agrega un encabezado para cada bloque.</li>
+                        </ul>
+                        <p>Es útil para comprobar rápidamente el formato y las primeras entradas.</p>
+                    </small>
+                </section>
+
+                <section id="tail" data-state="no_footer">
+                    <h3>El final con <code>tail</code></h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+tail /var/log/dpkg.log
+tail -n 20 /var/log/dpkg.log
+tail -f /var/log/dpkg.log
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>Sin opciones, muestra las últimas diez líneas.</li>
+                            <li><code>-n</code> permite elegir otra cantidad.</li>
+                            <li><code>-f</code> espera y muestra las nuevas líneas que recibe el archivo.</li>
+                        </ul>
+                        <blockquote><strong>Ctrl + C</strong> interrumpe el seguimiento y devuelve el prompt.</blockquote>
+                    </small>
+                </section>
+
+                <section id="wc" data-state="no_footer">
+                    <h3>Contar con <code>wc</code></h3>
+                    <small><p><code>wc</code> viene de <em>word count</em>, “conteo de palabras”. Sin opciones informa líneas, palabras y bytes.</p></small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+wc /etc/passwd
+wc -l /etc/passwd
+wc -w /etc/services
+wc -c /etc/hosts
+                    </code></pre>
+                    <table class="compact-table">
+                        <thead><tr><th>Opción</th><th>Cuenta</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>-l</code></td><td>Líneas</td></tr>
+                            <tr><td><code>-w</code></td><td>Palabras</td></tr>
+                            <tr><td><code>-c</code></td><td>Bytes</td></tr>
+                            <tr><td><code>-m</code></td><td>Caracteres</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="bytes_caracteres" data-state="no_footer">
+                    <h3>Bytes y caracteres</h3>
+                    <small>
+                        <p>Un carácter Unicode puede ocupar más de un byte. Por eso <code>wc -c</code> y <code>wc -m</code> no siempre coinciden.</p>
+                    </small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+wc -c /etc/hosts
+wc -m /etc/hosts
+wc -l /etc/hosts /etc/passwd
+                    </code></pre>
+                    <small>
+                        <p>Con varios archivos, <code>wc</code> informa cada conteo y agrega un total.</p>
+                        <blockquote>Contar líneas no explica qué significa cada entrada.</blockquote>
+                    </small>
+                </section>
+
+                <section id="preguntas_partes" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small>Comienzo → final → seguimiento → conteo</small></p>
+                </section>
+            </section>
+
+            <!-- SECCIÓN 5: COMPARAR ARCHIVOS -->
+            <section>
+                <section id="diff1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Comparar archivos</h3>
+                    <h4>Ver qué cambió entre dos versiones</h4>
+                </section>
+
+                <section id="diff_basico" data-state="no_footer">
+                    <h3><code>diff</code>: ver qué cambió</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+diff archivo-anterior.conf archivo-actual.conf
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><code>diff</code> compara el contenido de ambos archivos.</li>
+                            <li>Si son iguales, no muestra diferencias.</li>
+                            <li>Una salida vacía puede ser un resultado válido.</li>
+                        </ul>
+                        <blockquote>El orden importa: primero la versión anterior y después la actual.</blockquote>
+                    </small>
+                </section>
+
+                <section id="diff_unificado" data-state="no_footer">
+                    <h3>Diferencia unificada</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+diff -u archivo-anterior.conf archivo-actual.conf
+diff --color -u archivo-anterior.conf archivo-actual.conf
+                    </code></pre>
+                    <pre class="codigo_shadow"><code class="diff codigo-redondo" data-trim>
+--- archivo-anterior.conf
++++ archivo-actual.conf
+@@ -1,2 +1,2 @@
+ puerto=22
+-acceso_root=si
++acceso_root=no
+                    </code></pre>
+                    <small>
+                        <p><code>-u</code> agrega contexto. En GNU <code>diff</code>, <code>--color</code> resalta la salida cuando se muestra en una terminal.</p>
+                    </small>
+                </section>
+
+                <section id="leer_diff" data-state="no_footer">
+                    <h3>Cómo leer la salida</h3>
+                    <small>
+                        <ul>
+                            <li><code>---</code> identifica el primer archivo.</li>
+                            <li><code>+++</code> identifica el segundo.</li>
+                            <li>Una línea con <code>-</code> está en el primero y no en el segundo.</li>
+                            <li>Una línea con <code>+</code> está en el segundo y no en el primero.</li>
+                            <li>Las líneas sin esos signos aportan contexto.</li>
+                        </ul>
+                        <p>El color facilita la lectura, pero los signos conservan el significado.</p>
+                        <blockquote><code>diff</code> describe la diferencia. La decisión sobre cuál versión es correcta sigue siendo nuestra.</blockquote>
+                    </small>
+                </section>
+
+                <section id="diff_directorios" data-state="no_footer">
+                    <h3>Comparar directorios</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+diff directorio-a directorio-b
+diff -r directorio-a directorio-b
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>Sin <code>-r</code>, la comparación no desciende por todos los subdirectorios.</li>
+                            <li>Con <code>-r</code>, compara los archivos correspondientes en ambos árboles.</li>
+                        </ul>
+                        <p>Cambiar el orden invierte los signos <code>-</code> y <code>+</code>.</p>
+                        <blockquote>Comparar no modifica ninguno de los dos lados.</blockquote>
+                    </small>
+                </section>
+
+                <section id="preguntas_diff" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small>Primera versión → segunda versión → diferencias → decisión</small></p>
+                </section>
+            </section>
+
+            <!-- SECCIÓN 6: BUSCAR POR NOMBRE -->
+            <section>
+                <section id="find1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Buscar por nombre</h3>
+                    <h4><code>find</code> recorre un árbol</h4>
+                </section>
+
+                <section id="find_basico" data-state="no_footer">
+                    <h3>Ruta inicial y tipo</h3>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+find ruta criterios
+                    </code></pre>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+find ~/documentos
+find ~/documentos -type f
+find ~/documentos -type d
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>La ruta inicial define desde dónde comienza el recorrido.</li>
+                            <li><code>-type f</code> selecciona archivos regulares.</li>
+                            <li><code>-type d</code> selecciona directorios.</li>
+                        </ul>
+                        <p>Un punto de inicio demasiado amplio puede tardar y encontrar rutas sin permiso de lectura.</p>
+                    </small>
+                </section>
+
+                <section id="find_name" data-state="no_footer">
+                    <h3>Buscar nombres con patrones</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+find ~/documentos -type f -name '*.log'
+find ~/documentos -type f -name 'acceso-??.log'
+find ~/documentos -type f -iname '*.conf'
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><code>-name</code> compara el nombre con el patrón.</li>
+                            <li>Las comillas impiden que Bash expanda el patrón antes de tiempo.</li>
+                            <li><code>-iname</code> ignora diferencias entre mayúsculas y minúsculas.</li>
+                        </ul>
+                        <blockquote>En este caso queremos que <code>find</code>, y no Bash, interprete <code>*.log</code>.</blockquote>
+                    </small>
+                </section>
+
+                <section id="find_criterios" data-state="no_footer">
+                    <h3>Reducir los resultados</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+find /etc -maxdepth 1 -type f -name '*.conf'
+find ~/documentos -type f -size +10k
+find ~/documentos -type f -mtime -1
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><code>-maxdepth 1</code> limita la profundidad del recorrido.</li>
+                            <li><code>-size +10k</code> selecciona archivos mayores que 10 KiB.</li>
+                            <li><code>-mtime -1</code> selecciona modificaciones de menos de 24 horas.</li>
+                        </ul>
+                        <p>Los criterios se combinan. Cada resultado debe cumplirlos.</p>
+                    </small>
+                </section>
+
+                <section id="preguntas_find" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small>Ruta inicial → recorrido → tipo → nombre o propiedad → resultados</small></p>
+                </section>
+            </section>
+
+            <!-- SECCIÓN 7: GREP Y TUBERÍAS -->
+            <section>
+                <section id="grep1" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Buscar por contenido</h3>
+                    <h4><code>grep</code> y tuberías sencillas</h4>
+                </section>
+
+                <section id="grep_basico" data-state="no_footer">
+                    <h3><code>grep</code> busca líneas</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+grep 'root' /etc/passwd
+grep -n 'root' /etc/passwd
+grep -in 'ssh' /etc/services
+grep -w 'root' /etc/passwd
+                    </code></pre>
+                    <table class="compact-table">
+                        <thead><tr><th>Opción</th><th>Función</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>-n</code></td><td>Muestra el número de línea</td></tr>
+                            <tr><td><code>-i</code></td><td>Ignora mayúsculas y minúsculas</td></tr>
+                            <tr><td><code>-w</code></td><td>Exige una palabra completa</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="find_o_grep" data-state="no_footer">
+                    <h3>Nombre o contenido</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+find /etc -maxdepth 1 -type f -iname '*ssh*'
+grep -in 'ssh' /etc/services
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><code>find</code> busca objetos por su nombre o propiedades.</li>
+                            <li><code>grep</code> busca texto dentro de un archivo.</li>
+                        </ul>
+                        <blockquote>Primero definimos qué estamos buscando: un archivo o una línea de texto.</blockquote>
+                    </small>
+                </section>
+
+                <section id="tuberias" data-state="no_footer">
+                    <h3>Tuberías</h3>
+                    <small><p>El carácter <code>|</code> conecta la salida del comando de la izquierda con la entrada del comando de la derecha.</p></small>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+comando1 | comando2
+                    </code></pre>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+grep -in 'tcp' /etc/services | head -n 5
+                    </code></pre>
+                    <small>
+                        <p><code>grep</code> produce las líneas y <code>head</code> conserva solamente las cinco primeras.</p>
+                        <blockquote>La tubería evita crear un archivo intermedio.</blockquote>
+                    </small>
+                </section>
+
+                <section id="cat_grep" data-state="no_footer">
+                    <h3>Cuando <code>cat</code> no aporta</h3>
+                    <div class="two-columns" style="align-items:center;">
+                        <div>
+                            <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+cat servicios | grep -w 'ssh'
+                            </code></pre>
+                            <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+grep -w 'ssh' servicios
+                            </code></pre>
+                            <small>
+                                <p>Ambas formas funcionan, pero <code>grep</code> ya sabe abrir el archivo.</p>
+                                <p><code>cat</code> sigue siendo útil para mostrar archivos breves o concatenar varios archivos.</p>
+                            </small>
+                        </div>
+                        <img src="img/c6/stop_cat_abuse.jpeg" alt="Meme Stop Cat Abuse: usar grep directamente sobre el archivo" class="meme-image">
+                    </div>
+                </section>
+
+                <section id="preguntas_grep" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small><code>grep</code> → coincidencias → tubería → segundo comando</small></p>
+                </section>
+            </section>
+
+            <!-- SECCIÓN 8: CIERRE Y REFERENCIAS -->
+            <section>
+                <section id="resumen" data-state="no_footer">
+                    <h3>Resumen de la clase</h3>
+                    <small>
+                        <ul>
+                            <li>Bash expande los comodines antes de ejecutar el comando.</li>
+                            <li>Las comillas y la barra invertida controlan la interpretación de caracteres especiales.</li>
+                            <li><code>file</code> identifica el contenido; <code>cat</code> y <code>less</code> permiten consultarlo.</li>
+                            <li><code>gzip -k</code> conserva el original; <code>zcat</code> y <code>zless</code> leen la copia comprimida.</li>
+                            <li><code>head</code>, <code>tail</code> y <code>wc</code> ayudan a observar y medir.</li>
+                            <li><code>diff -u</code> muestra diferencias con contexto y <code>--color</code> facilita su lectura.</li>
+                            <li><code>find</code> busca objetos; <code>grep</code> busca líneas.</li>
+                            <li>Una tubería conecta la salida de un comando con la entrada del siguiente.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="referencias1" data-state="no_footer">
+                    <h3>Referencias</h3>
+                    <small>
+                        <ul>
+                            <li><a href="https://www.gnu.org/software/bash/manual/html_node/Filename-Expansion.html" target="_blank" rel="noopener noreferrer">GNU Bash — Filename Expansion</a></li>
+                            <li><a href="https://www.gnu.org/software/bash/manual/html_node/Quoting.html" target="_blank" rel="noopener noreferrer">GNU Bash — Quoting</a></li>
+                            <li><a href="https://www.gnu.org/software/bash/manual/html_node/Pipelines.html" target="_blank" rel="noopener noreferrer">GNU Bash — Pipelines</a></li>
+                            <li><a href="https://www.gnu.org/software/coreutils/manual/coreutils.html" target="_blank" rel="noopener noreferrer">GNU Coreutils Manual</a></li>
+                            <li><a href="https://www.gnu.org/software/diffutils/manual/diffutils.html" target="_blank" rel="noopener noreferrer">GNU Diffutils Manual</a></li>
+                            <li><a href="https://www.gnu.org/software/findutils/manual/html_mono/find.html" target="_blank" rel="noopener noreferrer">GNU Findutils Manual</a></li>
+                            <li><a href="https://www.gnu.org/software/grep/manual/grep.html" target="_blank" rel="noopener noreferrer">GNU Grep Manual</a></li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="referencias2" data-state="no_footer">
+                    <h3>Debian Manpages</h3>
+                    <small>
+                        <ul>
+                            <li><a href="https://manpages.debian.org/trixie/file/file.1.en.html" target="_blank" rel="noopener noreferrer"><code>file(1)</code></a></li>
+                            <li><a href="https://manpages.debian.org/trixie/less/less.1.en.html" target="_blank" rel="noopener noreferrer"><code>less(1)</code></a></li>
+                            <li><a href="https://manpages.debian.org/trixie/util-linux/more.1.en.html" target="_blank" rel="noopener noreferrer"><code>more(1)</code></a></li>
+                            <li><a href="https://manpages.debian.org/trixie/gzip/gzip.1.en.html" target="_blank" rel="noopener noreferrer"><code>gzip(1)</code></a></li>
+                            <li><a href="https://manpages.debian.org/trixie/gzip/zcat.1.en.html" target="_blank" rel="noopener noreferrer"><code>zcat(1)</code></a></li>
+                            <li><a href="https://manpages.debian.org/trixie/gzip/zless.1.en.html" target="_blank" rel="noopener noreferrer"><code>zless(1)</code></a></li>
+                        </ul>
+                    </small>
+                </section>
+            </section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                secret: null,
+                id: '7b0917d41c6a3bf43a6a45f82e1e3d0a3b7cafee14437efc073f990f1fb25328',
+                url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>
