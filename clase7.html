@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 7</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .mode-flow {
+            font-size: 72%;
+            line-height: 1.8;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- PORTADA, TEMAS Y OBJETIVOS -->
+            <section>
+                <section id="inicio" data-state="customevent" data-transition="slide"
+                    data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                    <h3>Administración de servidores GNU/Linux</h3>
+                    <h4>Clase 7: Edición de archivos de texto en la terminal</h4>
+                    <small><p>Módulo 1 — Operación de Sistemas Operativos GNU/Linux</p></small>
+                </section>
+
+                <section id="index" data-state="no_footer">
+                    <h3>Temas de la clase 7</h3>
+                    <small>
+                        <ul>
+                            <li><a href="#/editar1">Archivos de texto y copias de trabajo</a></li>
+                            <li><a href="#/nano1">Edición con GNU nano</a></li>
+                            <li><a href="#/historia_vi">De Vi a Vim y nvi</a></li>
+                            <li><a href="#/modos_vi">Modos y edición básica con Vi/Vim</a></li>
+                            <li><a href="#/comparacion">Nano y Vi/Vim frente a frente</a></li>
+                            <li><a href="#/sin_editor">Redirecciones y una introducción a <code>sed</code></a></li>
+                            <br>
+                            <li><a href="#/labs_clase">Actividad práctica</a></li>
+                        </ul>
+                        <p><a href="?print-pdf">Exportar a PDF</a></p>
+                    </small>
+                </section>
+
+                <section id="objetivos" data-state="no_footer">
+                    <h3>Objetivos de la clase</h3>
+                    <small>
+                        <p>Al finalizar esta clase vas a poder:</p>
+                        <ul>
+                            <li>Abrir, buscar, modificar y guardar un archivo con Nano.</li>
+                            <li>Reconocer los modos de Vi/Vim y volver al modo normal.</li>
+                            <li>Desplazarte y realizar cambios básicos con Vi/Vim.</li>
+                            <li>Guardar el trabajo o salir descartando los cambios.</li>
+                            <li>Crear y transformar texto sin abrir un editor.</li>
+                            <li>Comparar una versión nueva antes de reemplazar la anterior.</li>
+                        </ul>
+                        <blockquote>En la clase anterior aprendimos a leer y buscar. Ahora vamos a modificar archivos sin perder de vista qué cambió.</blockquote>
+                    </small>
+                </section>
+
+                <section id="elegir_herramienta" data-state="no_footer">
+                    <h3>Una herramienta para cada tarea</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Necesidad</th><th>Herramienta</th></tr></thead>
+                        <tbody>
+                            <tr><td>Recorrer un archivo sin modificarlo</td><td><code>less</code></td></tr>
+                            <tr><td>Editar con atajos visibles</td><td>Nano</td></tr>
+                            <tr><td>Editar mediante modos y órdenes</td><td>Vi/Vim</td></tr>
+                            <tr><td>Crear o agregar una línea conocida</td><td><code>echo</code> con <code>&gt;</code> o <code>&gt;&gt;</code></td></tr>
+                            <tr><td>Repetir una sustitución</td><td><code>sed</code></td></tr>
+                            <tr><td>Comprobar qué cambió</td><td><code>diff -u</code></td></tr>
+                        </tbody>
+                    </table>
+                    <small><p>La práctica se hace con copias dentro de <code>~/laboratorio-clase7</code>.</p></small>
+                </section>
+            </section>
+
+            <!-- EDITAR ARCHIVOS DE TEXTO -->
+            <section>
+                <section id="editar1" data-state="customevent" data-transition="slide">
+                    <h2>Editar archivos de texto</h2>
+                    <p><small>abrir → cambiar → guardar → verificar</small></p>
+                </section>
+
+                <section id="consultar_editar" data-state="no_footer">
+                    <h3>Consultar y editar</h3>
+                    <div class="two-columns">
+                        <div>
+                            <h4>Consultar</h4>
+                            <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+less servidor.conf
+                            </code></pre>
+                            <small><p>El visor recorre el contenido sin cambiarlo.</p></small>
+                        </div>
+                        <div>
+                            <h4>Editar</h4>
+                            <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+nano servidor.conf
+vim servidor.conf
+                            </code></pre>
+                            <small><p>El editor permite modificar el contenido y luego decidir si se guarda.</p></small>
+                        </div>
+                    </div>
+                    <blockquote><small>Abrir un archivo en un editor no obliga a modificarlo.</small></blockquote>
+                </section>
+
+                <section id="texto_configuracion" data-state="no_footer">
+                    <h3>Texto plano y configuración</h3>
+                    <pre class="codigo_shadow"><code class="ini codigo-redondo" data-trim>
+nombre=servidor-aula
+puerto=8080
+entorno=pruebas
+                    </code></pre>
+                    <small>
+                        <p>Muchos servicios guardan su configuración en archivos de texto.</p>
+                        <p>El formato parece sencillo, pero cada nombre, separador y valor tiene un significado.</p>
+                        <blockquote>Un carácter fuera de lugar puede hacer que un servicio rechace la configuración.</blockquote>
+                    </small>
+                </section>
+
+                <section id="antes_editar" data-state="no_footer">
+                    <h3>Antes del primer cambio</h3>
+                    <small>
+                        <ol>
+                            <li>Confirmar el servidor y la ruta del archivo.</li>
+                            <li>Revisar con qué usuario estamos conectados.</li>
+                            <li>Guardar una copia que permita volver atrás.</li>
+                            <li>Definir cómo vamos a comprobar el resultado.</li>
+                        </ol>
+                    </small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+pwd
+whoami
+cp servidor.conf servidor.conf.original
+                    </code></pre>
+                </section>
+
+                <section id="copia_comparacion" data-state="no_footer">
+                    <h3>Una copia para comparar</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+mkdir -p ~/laboratorio-clase7
+cd ~/laboratorio-clase7
+cp servidor.conf servidor.conf.original
+                    </code></pre>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+diff -u servidor.conf.original servidor.conf
+                    </code></pre>
+                    <small>
+                        <p><code>diff -u</code> permite revisar cada línea modificada.</p>
+                        <blockquote>Una copia de trabajo ayuda en la práctica. Un respaldo real necesita otra ubicación y un procedimiento de recuperación.</blockquote>
+                    </small>
+                </section>
+
+                <section id="preguntas_edicion" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small>archivo correcto → copia → edición → comparación</small></p>
+                </section>
+            </section>
+
+            <!-- GNU NANO -->
+            <section>
+                <section id="nano1" data-state="customevent" data-transition="slide">
+                    <h2>GNU nano</h2>
+                    <p><small>Atajos y mensajes a la vista</small></p>
+                </section>
+
+                <section id="nano_abrir" data-state="no_footer">
+                    <h3>Abrir o crear un archivo</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+nano servidor.conf
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li>La barra superior muestra el nombre del archivo.</li>
+                            <li>La parte central contiene el texto.</li>
+                            <li>La zona inferior muestra mensajes y atajos.</li>
+                        </ul>
+                        <p><code>^</code> representa <kbd>Ctrl</kbd>. <code>M-</code> representa Meta, normalmente <kbd>Alt</kbd>.</p>
+                    </small>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+^O  = Ctrl+O       M-U = Alt+U
+                    </code></pre>
+                </section>
+
+                <section id="nano_mover_buscar" data-state="no_footer">
+                    <h3>Moverse y buscar</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Atajo</th><th>Acción</th></tr></thead>
+                        <tbody>
+                            <tr><td>Flechas</td><td>Mover el cursor</td></tr>
+                            <tr><td><code>Ctrl+A</code> / <code>Ctrl+E</code></td><td>Comienzo / final de la línea</td></tr>
+                            <tr><td><code>Ctrl+Y</code> / <code>Ctrl+V</code></td><td>Pantalla anterior / siguiente</td></tr>
+                            <tr><td><code>Ctrl+W</code></td><td>Buscar texto</td></tr>
+                            <tr><td><code>Alt+W</code></td><td>Repetir la búsqueda</td></tr>
+                            <tr><td><code>Alt+G</code></td><td>Ir a una línea y columna</td></tr>
+                        </tbody>
+                    </table>
+                    <small><p>Después de <code>Ctrl+W</code>, Nano pide el texto en la parte inferior.</p></small>
+                </section>
+
+                <section id="nano_editar" data-state="no_footer">
+                    <h3>Cortar, copiar y pegar</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Atajo</th><th>Acción</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>Alt+A</code></td><td>Iniciar o finalizar una selección</td></tr>
+                            <tr><td><code>Alt+6</code></td><td>Copiar la selección o la línea</td></tr>
+                            <tr><td><code>Ctrl+K</code></td><td>Cortar la selección o la línea</td></tr>
+                            <tr><td><code>Ctrl+U</code></td><td>Pegar</td></tr>
+                            <tr><td><code>Alt+U</code> / <code>Alt+E</code></td><td>Deshacer / rehacer</td></tr>
+                        </tbody>
+                    </table>
+                    <small><p>Si la terminal interpreta <kbd>Alt</kbd> de otra manera, la ayuda visible de Nano permite confirmar el atajo.</p></small>
+                </section>
+
+                <section id="nano_guardar" data-state="no_footer">
+                    <h3>Guardar y salir</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Atajo</th><th>Acción</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>Ctrl+O</code></td><td>Guardar. Nano pide el nombre del archivo.</td></tr>
+                            <tr><td><code>Ctrl+X</code></td><td>Salir</td></tr>
+                            <tr><td><code>Ctrl+G</code></td><td>Abrir la ayuda</td></tr>
+                            <tr><td><code>Ctrl+C</code></td><td>Mostrar la posición del cursor</td></tr>
+                        </tbody>
+                    </table>
+                    <small>
+                        <p>Si hay cambios pendientes, Nano pregunta si queremos guardarlos.</p>
+                        <blockquote>Conviene leer la pregunta antes de responder. El editor indica qué acción está por realizar.</blockquote>
+                    </small>
+                </section>
+
+                <section id="preguntas_nano" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small>abrir → buscar → modificar → guardar → salir</small></p>
+                </section>
+            </section>
+
+            <!-- HISTORIA DE VI -->
+            <section>
+                <section id="historia_vi" data-state="customevent" data-transition="slide">
+                    <h2>De Vi a Vim y nvi</h2>
+                    <p><small>Una familia de editores con un núcleo común</small></p>
+                </section>
+
+                <section id="vi_visual" data-state="no_footer">
+                    <h3>Vi nació como editor visual</h3>
+                    <small>
+                        <p>Bill Joy desarrolló Vi en Berkeley durante la década de 1970. El programa surgió a partir de <code>ex</code>, un editor que trabajaba principalmente con líneas.</p>
+                        <p>Las nuevas terminales permitían mover el cursor y actualizar distintas partes de la pantalla. De allí viene el nombre <strong>vi</strong>, abreviatura de <em>visual</em>.</p>
+                    </small>
+                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
+:w
+:q
+                    </code></pre>
+                    <small><p>Las órdenes con <code>:</code> todavía conservan la relación con <code>ex</code>.</p></small>
+                </section>
+
+                <section id="implementaciones_vi" data-state="no_footer">
+                    <h3>Vi no siempre es el mismo programa</h3>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+Vi histórico
+├── nvi     experiencia cercana a ex y vi en sistemas BSD
+└── Vim     compatibilidad con Vi y funciones adicionales
+                    </code></pre>
+                    <small>
+                        <ul>
+                            <li><strong>Vim</strong> significa <em>Vi IMproved</em>. Suma ayuda integrada, deshacer en varios niveles, ventanas y resaltado de sintaxis.</li>
+                            <li><strong>nvi</strong> es una reimplementación de <code>ex</code> y <code>vi</code> desarrollada en el entorno BSD.</li>
+                            <li><strong>Nano</strong> sigue otra historia. Nació como reemplazo libre de Pico.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="vi_debian" data-state="no_footer">
+                    <h3>¿Qué abre <code>vi</code> en Debian?</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+readlink -f /usr/bin/vi
+update-alternatives --display vi
+                    </code></pre>
+                    <small><p>Dentro del editor también podemos consultar la versión:</p></small>
+                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
+:version
+                    </code></pre>
+                    <blockquote><small>Aprenderemos los comandos que comparten Vi y Vim. Las funciones avanzadas de Vim quedan para más adelante.</small></blockquote>
+                </section>
+            </section>
+
+            <!-- MODELO Y COMANDOS DE VI -->
+            <section>
+                <section id="modos_vi" data-state="customevent" data-transition="slide">
+                    <h2>El modelo de Vi/Vim</h2>
+                    <p><small>La misma tecla puede hacer cosas distintas según el modo</small></p>
+                </section>
+
+                <section id="modos" data-state="no_footer">
+                    <h3>Cuatro modos para empezar</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Modo</th><th>Uso</th></tr></thead>
+                        <tbody>
+                            <tr><td>Normal</td><td>Moverse y ejecutar operaciones</td></tr>
+                            <tr><td>Inserción</td><td>Escribir texto</td></tr>
+                            <tr><td>Visual</td><td>Seleccionar texto</td></tr>
+                            <tr><td>Línea de órdenes</td><td>Guardar, salir y ejecutar órdenes con <code>:</code></td></tr>
+                        </tbody>
+                    </table>
+                    <p class="mode-flow"><strong>Normal</strong> <code>i a o</code> → <strong>Inserción</strong> <code>Esc</code> → <strong>Normal</strong> <code>:</code> → <strong>Línea de órdenes</strong></p>
+                    <blockquote><small>Si no sabés en qué modo estás, presioná <kbd>Esc</kbd> para volver al modo normal.</small></blockquote>
+                </section>
+
+                <section id="insertar_vi" data-state="no_footer">
+                    <h3>Entrar en modo inserción</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Comando</th><th>Dónde comienza a escribir</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>i</code></td><td>Antes del cursor</td></tr>
+                            <tr><td><code>a</code></td><td>Después del cursor</td></tr>
+                            <tr><td><code>I</code> / <code>A</code></td><td>Comienzo / final de la línea</td></tr>
+                            <tr><td><code>o</code></td><td>Nueva línea debajo</td></tr>
+                            <tr><td><code>O</code></td><td>Nueva línea arriba</td></tr>
+                        </tbody>
+                    </table>
+                    <small>
+                        <p>Después de escribir, <kbd>Esc</kbd> regresa al modo normal.</p>
+                        <p>“Insert mode” es un estado del editor. No es una orden que se escriba después de <code>:</code>.</p>
+                    </small>
+                </section>
+
+                <section id="movimiento_vi" data-state="no_footer">
+                    <h3>Desplazamiento en modo normal</h3>
+                    <table class="very-compact-table">
+                        <thead><tr><th>Comando</th><th>Movimiento</th><th>Comando</th><th>Movimiento</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>h j k l</code></td><td>Izquierda, abajo, arriba, derecha</td><td><code>w</code> / <code>b</code></td><td>Palabra siguiente / anterior</td></tr>
+                            <tr><td><code>0</code></td><td>Comienzo de la línea</td><td><code>^</code></td><td>Primer carácter visible</td></tr>
+                            <tr><td><code>$</code></td><td>Final de la línea</td><td><code>gg</code> / <code>G</code></td><td>Primera / última línea</td></tr>
+                            <tr><td><code>20G</code></td><td>Línea 20</td><td><code>Ctrl+F</code> / <code>Ctrl+B</code></td><td>Pantalla siguiente / anterior</td></tr>
+                        </tbody>
+                    </table>
+                    <small><p>Las flechas también funcionan. Los movimientos propios de Vi se incorporan de a poco.</p></small>
+                </section>
+
+                <section id="operaciones_vi" data-state="no_footer">
+                    <h3>Borrar, copiar y pegar</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Comando</th><th>Acción</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>x</code></td><td>Borrar el carácter bajo el cursor</td></tr>
+                            <tr><td><code>dd</code></td><td>Cortar la línea</td></tr>
+                            <tr><td><code>yy</code></td><td>Copiar la línea</td></tr>
+                            <tr><td><code>p</code> / <code>P</code></td><td>Pegar después / antes</td></tr>
+                            <tr><td><code>u</code> / <code>Ctrl+R</code></td><td>Deshacer / rehacer</td></tr>
+                            <tr><td><code>.</code></td><td>Repetir la última modificación</td></tr>
+                        </tbody>
+                    </table>
+                    <small><p>Vi llama <em>yank</em> a la copia. Por eso el comando comienza con <code>y</code>.</p></small>
+                </section>
+
+                <section id="gramatica_vi" data-state="no_footer">
+                    <h3>Operación, movimiento y cantidad</h3>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+cantidad + operación + movimiento
+                    </code></pre>
+                    <table class="compact-table">
+                        <thead><tr><th>Comando</th><th>Resultado</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>3dd</code></td><td>Cortar tres líneas</td></tr>
+                            <tr><td><code>2yy</code></td><td>Copiar dos líneas</td></tr>
+                            <tr><td><code>dw</code></td><td>Borrar hasta el final de la palabra</td></tr>
+                            <tr><td><code>d$</code></td><td>Borrar hasta el final de la línea</td></tr>
+                            <tr><td><code>cw</code></td><td>Cambiar una palabra y entrar en inserción</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="visual_vi" data-state="no_footer">
+                    <h3>Selección visual</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Comando</th><th>Acción</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>v</code></td><td>Seleccionar por caracteres</td></tr>
+                            <tr><td><code>V</code></td><td>Seleccionar por líneas</td></tr>
+                            <tr><td><code>y</code></td><td>Copiar la selección</td></tr>
+                            <tr><td><code>d</code></td><td>Cortar la selección</td></tr>
+                            <tr><td><code>Esc</code></td><td>Cancelar la selección</td></tr>
+                        </tbody>
+                    </table>
+                    <small><p>Después de copiar o cortar, <code>p</code> y <code>P</code> pegan el contenido.</p></small>
+                </section>
+
+                <section id="buscar_vi" data-state="no_footer">
+                    <h3>Buscar dentro del archivo</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Comando</th><th>Acción</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>/texto</code></td><td>Buscar hacia adelante</td></tr>
+                            <tr><td><code>?texto</code></td><td>Buscar hacia atrás</td></tr>
+                            <tr><td><code>n</code></td><td>Coincidencia siguiente</td></tr>
+                            <tr><td><code>N</code></td><td>Coincidencia anterior</td></tr>
+                        </tbody>
+                    </table>
+                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
+/puerto
+                    </code></pre>
+                    <small><p>Buscar no modifica el contenido. Desde la coincidencia podemos movernos o iniciar una edición.</p></small>
+                </section>
+
+                <section id="sustituir_vi" data-state="no_footer">
+                    <h3>Sustituciones sencillas</h3>
+                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
+:s/pruebas/produccion/
+                    </code></pre>
+                    <small><p>Reemplaza una coincidencia en la línea actual.</p></small>
+                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
+:%s/pruebas/produccion/gc
+                    </code></pre>
+                    <small>
+                        <p>Recorre todo el archivo y pide confirmación antes de cada reemplazo.</p>
+                        <blockquote>En esta clase usamos búsquedas literales. Las expresiones regulares quedan para más adelante.</blockquote>
+                    </small>
+                </section>
+
+                <section id="salir_meme" data-state="no_footer">
+                    <h3>¿Cómo salir de vi?</h3>
+                    <img src="img/c7/how-to-exit-vim-en-v3.png" alt="Historieta en inglés con tres formas absurdas de salir de Vim" class="meme-image">
+                    <p class="fragment meme-answer"><kbd>Esc</kbd> vuelve al modo normal.</p>
+                    <p class="fragment meme-answer"><code>:q</code> sale cuando no hay cambios pendientes.</p>
+                    <p class="fragment meme-answer"><code>:q!</code> sale descartando los cambios pendientes.</p>
+                </section>
+
+                <section id="guardar_salir_vi" data-state="no_footer">
+                    <h3>Guardar y salir</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Orden</th><th>Acción</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>:w</code></td><td>Guardar</td></tr>
+                            <tr><td><code>:q</code></td><td>Salir si no hay cambios pendientes</td></tr>
+                            <tr><td><code>:q!</code></td><td>Salir y descartar los cambios</td></tr>
+                            <tr><td><code>:wq</code></td><td>Guardar y salir</td></tr>
+                            <tr><td><code>:x</code></td><td>Guardar si hubo cambios y salir</td></tr>
+                            <tr><td><code>:w copia.conf</code></td><td>Guardar con otro nombre</td></tr>
+                        </tbody>
+                    </table>
+                    <small><p>Las órdenes con <code>:</code> se escriben desde el modo normal y se confirman con <kbd>Enter</kbd>.</p></small>
+                    <blockquote><small><code>!</code> fuerza una operación del editor. No concede permisos ni reemplaza a <code>sudo</code>.</small></blockquote>
+                </section>
+
+                <section id="ayuda_vi" data-state="no_footer">
+                    <h3>Ayuda y práctica</h3>
+                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
+:help dd
+:help :write
+                    </code></pre>
+                    <small><p>Para insertar otro archivo debajo de la línea actual:</p></small>
+                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
+:r fragmento.conf
+                    </code></pre>
+                    <small><p>Fuera del editor, Vim incluye un tutorial interactivo:</p></small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+vimtutor
+                    </code></pre>
+                </section>
+
+                <section id="preguntas_vi" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small>modo normal → movimiento u operación → inserción → <kbd>Esc</kbd> → guardar o descartar</small></p>
+                </section>
+            </section>
+
+            <!-- COMPARACIÓN DE EDITORES -->
+            <section>
+                <section id="comparacion" data-state="customevent" data-transition="slide">
+                    <h2>Nano y Vi/Vim</h2>
+                    <p><small>Dos maneras de editar desde la terminal</small></p>
+                </section>
+
+                <section id="nano_vi" data-state="no_footer">
+                    <h3>La misma tarea con otra lógica</h3>
+                    <table class="very-compact-table">
+                        <thead><tr><th>Acción</th><th>Nano</th><th>Vi/Vim</th></tr></thead>
+                        <tbody>
+                            <tr><td>Modelo</td><td>Escritura directa con atajos</td><td>Modos y órdenes</td></tr>
+                            <tr><td>Buscar</td><td><code>Ctrl+W</code></td><td><code>/texto</code></td></tr>
+                            <tr><td>Deshacer</td><td><code>Alt+U</code></td><td><code>u</code></td></tr>
+                            <tr><td>Guardar</td><td><code>Ctrl+O</code></td><td><code>:w</code></td></tr>
+                            <tr><td>Salir</td><td><code>Ctrl+X</code></td><td><code>:q</code></td></tr>
+                            <tr><td>Descartar</td><td>Responder al salir</td><td><code>:q!</code></td></tr>
+                        </tbody>
+                    </table>
+                    <small><p>Nano permite empezar rápido. Vi/Vim ofrece órdenes que se combinan y se repiten.</p></small>
+                </section>
+
+                <section id="supervivencia_vi" data-state="no_footer">
+                    <h3>Lo mínimo para no quedar atrapado</h3>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+Esc       volver al modo normal
+i         comenzar a escribir
+/texto    buscar
+:w        guardar
+:q        salir
+:q!       salir sin guardar
+                    </code></pre>
+                    <blockquote><small>No hace falta elegir un editor para siempre. Sí conviene poder abrir, buscar, cambiar y salir con ambos.</small></blockquote>
+                </section>
+            </section>
+
+            <!-- REDIRECCIONES Y SED -->
+            <section>
+                <section id="sin_editor" data-state="customevent" data-transition="slide">
+                    <h2>No siempre hace falta un editor</h2>
+                    <p><small>Crear o transformar texto desde la shell</small></p>
+                </section>
+
+                <section id="redireccion_crear" data-state="no_footer">
+                    <h3>Crear contenido con <code>&gt;</code></h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+echo 'puerto=8080' > servidor.conf
+                    </code></pre>
+                    <small>
+                        <p>La shell envía la salida de <code>echo</code> al archivo.</p>
+                        <ul>
+                            <li>Si el archivo no existe, lo crea.</li>
+                            <li>Si ya existe, reemplaza todo su contenido.</li>
+                        </ul>
+                    </small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+cat servidor.conf
+                    </code></pre>
+                </section>
+
+                <section id="redireccion_agregar" data-state="no_footer">
+                    <h3>Agregar contenido con <code>&gt;&gt;</code></h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+echo 'entorno=pruebas' >> servidor.conf
+echo 'registro=activo' >> servidor.conf
+                    </code></pre>
+                    <table class="compact-table">
+                        <thead><tr><th>Operador</th><th>Resultado</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>&gt;</code></td><td>Crea el archivo o reemplaza el contenido</td></tr>
+                            <tr><td><code>&gt;&gt;</code></td><td>Crea el archivo o agrega al final</td></tr>
+                        </tbody>
+                    </table>
+                    <blockquote><small>Antes de usar <code>&gt;</code>, revisá el nombre del archivo de destino.</small></blockquote>
+                </section>
+
+                <section id="sed_basico" data-state="no_footer">
+                    <h3>Una sustitución con <code>sed</code></h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+sed 's/puerto=8080/puerto=9090/' servidor.conf
+                    </code></pre>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+s / texto anterior / texto nuevo /
+                    </code></pre>
+                    <small>
+                        <p>La orden muestra el resultado transformado en la terminal.</p>
+                        <p>En este ejemplo, el archivo original no cambia.</p>
+                    </small>
+                </section>
+
+                <section id="sed_comparar" data-state="no_footer">
+                    <h3>Transformar y comparar</h3>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+sed 's/puerto=8080/puerto=9090/' servidor.conf \
+  > servidor.conf.nuevo
+                    </code></pre>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+diff -u servidor.conf servidor.conf.nuevo
+                    </code></pre>
+                    <small><p>Si la comparación muestra exactamente lo esperado, podemos decidir si corresponde reemplazar la versión anterior.</p></small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+mv servidor.conf.nuevo servidor.conf
+                    </code></pre>
+                </section>
+
+                <section id="sed_peligro" data-state="no_footer">
+                    <h3>Entrada y salida con el mismo nombre</h3>
+                    <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+# Incorrecto: puede vaciar el archivo
+sed 's/8080/9090/' servidor.conf > servidor.conf
+                    </code></pre>
+                    <small><p>La shell prepara la redirección antes de iniciar <code>sed</code>. Por eso puede vaciar el archivo antes de que el programa alcance a leerlo.</p></small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+sed 's/8080/9090/' servidor.conf > servidor.conf.nuevo
+                    </code></pre>
+                    <blockquote><small>En esta clase siempre usamos un nombre nuevo y comparamos el resultado.</small></blockquote>
+                </section>
+
+                <section id="elegir_editar_transformar" data-state="no_footer">
+                    <h3>Editar o transformar</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Situación</th><th>Opción</th></tr></thead>
+                        <tbody>
+                            <tr><td>Hay que leer el contexto y hacer varios cambios</td><td>Nano o Vi/Vim</td></tr>
+                            <tr><td>Conocemos todo el contenido</td><td>Redirección con <code>&gt;</code></td></tr>
+                            <tr><td>Solo hay que agregar una línea</td><td>Redirección con <code>&gt;&gt;</code></td></tr>
+                            <tr><td>El reemplazo debe repetirse</td><td><code>sed</code></td></tr>
+                            <tr><td>Queremos revisar antes de reemplazar</td><td>Archivo nuevo y <code>diff -u</code></td></tr>
+                        </tbody>
+                    </table>
+                </section>
+            </section>
+
+            <!-- CIERRE, LABORATORIO Y REFERENCIAS -->
+            <section>
+                <section id="resumen" data-state="no_footer">
+                    <h3>Resumen de la clase</h3>
+                    <small>
+                        <ul>
+                            <li>Nano muestra los atajos y permite escribir de forma directa.</li>
+                            <li>Vi/Vim separa el desplazamiento, la edición y las órdenes mediante modos.</li>
+                            <li><kbd>Esc</kbd> vuelve al modo normal. <code>:w</code>, <code>:q</code> y <code>:q!</code> permiten guardar o salir.</li>
+                            <li>Los movimientos y las operaciones de Vi se pueden combinar y repetir.</li>
+                            <li><code>&gt;</code> reemplaza el contenido. <code>&gt;&gt;</code> agrega al final.</li>
+                            <li><code>sed</code> puede producir una versión transformada sin abrir un editor.</li>
+                            <li>Una copia y <code>diff -u</code> permiten revisar el cambio antes de aceptarlo.</li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="labs_clase" data-state="no_footer">
+                    <h3>Actividad práctica</h3>
+                    <small>
+                        <ul>
+                            <li><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab6/lab6.md"
+                                    target="_blank" rel="noopener noreferrer">Laboratorio 6</a>: edición de archivos de texto en la terminal</li>
+                        </ul>
+                        <p>La práctica usa copias de <code>/etc/services</code> y <code>/etc/hosts</code> dentro de <code>~/laboratorio-clase7</code>.</p>
+                    </small>
+                </section>
+
+                <section id="referencias1" data-state="no_footer">
+                    <h3>Editores de texto</h3>
+                    <small>
+                        <ul>
+                            <li><a href="https://www.nano-editor.org/docs.php" target="_blank" rel="noopener noreferrer">GNU nano — Documentación</a></li>
+                            <li><a href="https://www.nano-editor.org/dist/latest/faq.html" target="_blank" rel="noopener noreferrer">GNU nano — Preguntas frecuentes e historia</a></li>
+                            <li><a href="https://vimhelp.org/intro.txt.html" target="_blank" rel="noopener noreferrer">Vim — Introducción y modos</a></li>
+                            <li><a href="https://vimhelp.org/vi_diff.txt.html" target="_blank" rel="noopener noreferrer">Vim — Diferencias con Vi</a></li>
+                            <li><a href="https://manpages.debian.org/trixie/nvi/index.html" target="_blank" rel="noopener noreferrer">Debian Manpages — nvi</a></li>
+                        </ul>
+                    </small>
+                </section>
+
+                <section id="referencias2" data-state="no_footer">
+                    <h3>Shell y herramientas de texto</h3>
+                    <small>
+                        <ul>
+                            <li><a href="https://www.gnu.org/software/bash/manual/html_node/Redirections.html" target="_blank" rel="noopener noreferrer">GNU Bash — Redirections</a></li>
+                            <li><a href="https://www.gnu.org/software/sed/manual/sed.html" target="_blank" rel="noopener noreferrer">GNU sed Manual</a></li>
+                            <li><a href="https://www.gnu.org/software/diffutils/manual/diffutils.html" target="_blank" rel="noopener noreferrer">GNU Diffutils Manual</a></li>
+                        </ul>
+                    </small>
+                </section>
+            </section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                secret: null,
+                id: '7b0917d41c6a3bf43a6a45f82e1e3d0a3b7cafee14437efc073f990f1fb25328',
+                url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>
