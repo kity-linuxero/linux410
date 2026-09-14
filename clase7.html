@@ -106,9 +106,23 @@
             line-height: 1.15;
         }
 
-        .reveal .mode-flow {
-            font-size: 72%;
-            line-height: 1.8;
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
         }
 
         html.print-pdf .theme-toggle,
@@ -209,12 +223,11 @@
                     <h3>Temas de la clase 7</h3>
                     <small>
                         <ul>
-                            <li><a href="#/editar1">Archivos de texto y copias de trabajo</a></li>
+                            <li><a href="#/editores1">Por qué necesitamos un editor</a></li>
                             <li><a href="#/nano1">Edición con GNU nano</a></li>
-                            <li><a href="#/historia_vi">De Vi a Vim y nvi</a></li>
+                            <li><a href="#/historia_vi">De Vi a Vim</a></li>
                             <li><a href="#/modos_vi">Modos y edición básica con Vi/Vim</a></li>
-                            <li><a href="#/comparacion">Nano y Vi/Vim frente a frente</a></li>
-                            <li><a href="#/sin_editor">Redirecciones y una introducción a <code>sed</code></a></li>
+                            <li><a href="#/sin_editor"><code>more</code>, redirecciones y una introducción a <code>sed</code></a></li>
                             <br>
                             <li><a href="#/labs_clase">Actividad práctica</a></li>
                         </ul>
@@ -231,8 +244,8 @@
                             <li>Reconocer los modos de Vi/Vim y volver al modo normal.</li>
                             <li>Desplazarte y realizar cambios básicos con Vi/Vim.</li>
                             <li>Guardar el trabajo o salir descartando los cambios.</li>
+                            <li>Reconocer qué herramientas quedan disponibles en un entorno mínimo.</li>
                             <li>Crear y transformar texto sin abrir un editor.</li>
-                            <li>Comparar una versión nueva antes de reemplazar la anterior.</li>
                         </ul>
                         <blockquote>En la clase anterior aprendimos a leer y buscar. Ahora vamos a modificar archivos sin perder de vista qué cambió.</blockquote>
                     </small>
@@ -240,10 +253,11 @@
 
                 <section id="elegir_herramienta" data-state="no_footer">
                     <h3>Una herramienta para cada tarea</h3>
+                    <small><p>Esta tabla sirve para ubicar las herramientas que ya vimos y las que aparecen hoy.</p></small>
                     <table class="compact-table">
                         <thead><tr><th>Necesidad</th><th>Herramienta</th></tr></thead>
                         <tbody>
-                            <tr><td>Recorrer un archivo sin modificarlo</td><td><code>less</code></td></tr>
+                            <tr><td>Recorrer un archivo sin modificarlo</td><td><code>less</code> / <code>more</code></td></tr>
                             <tr><td>Editar con atajos visibles</td><td>Nano</td></tr>
                             <tr><td>Editar mediante modos y órdenes</td><td>Vi/Vim</td></tr>
                             <tr><td>Crear o agregar una línea conocida</td><td><code>echo</code> con <code>&gt;</code> o <code>&gt;&gt;</code></td></tr>
@@ -251,89 +265,58 @@
                             <tr><td>Comprobar qué cambió</td><td><code>diff -u</code></td></tr>
                         </tbody>
                     </table>
-                    <small><p>La práctica se hace con copias dentro de <code>~/laboratorio-clase7</code>.</p></small>
                 </section>
             </section>
 
-            <!-- EDITAR ARCHIVOS DE TEXTO -->
+            <!-- INTRODUCCIÓN A LOS EDITORES DE TEXTO -->
             <section>
-                <section id="editar1" data-state="customevent" data-transition="slide">
-                    <h2>Editar archivos de texto</h2>
-                    <p><small>abrir → cambiar → guardar → verificar</small></p>
+                <section id="editores1" data-state="customevent" data-transition="slide">
+                    <h2>Editores de texto en Linux</h2>
+                    <p><small>Una herramienta básica para administrar el sistema</small></p>
+                </section>
+
+                <section id="archivos_linux" data-state="no_footer">
+                    <h3>En Linux, casi todo se presenta como archivos</h3>
+                    <small>
+                        <p>La configuración del sistema, los servicios, los usuarios y muchas aplicaciones se describen mediante archivos de texto.</p>
+                        <p>También usamos texto para escribir scripts, documentar cambios y preparar datos que después leerá otro programa.</p>
+                    </small>
+                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
+/etc/ssh/sshd_config
+/etc/hosts
+/etc/fstab
+                    </code></pre>
+                    <blockquote><small>Administrar Linux exige poder leer y editar texto desde la terminal.</small></blockquote>
+                </section>
+
+                <section id="sin_entorno_grafico" data-state="no_footer">
+                    <h3>Cuando no hay entorno gráfico</h3>
+                    <small>
+                        <p>En un servidor solemos trabajar por SSH o desde una consola. En recuperación y en contenedores mínimos podemos tener todavía menos herramientas.</p>
+                        <ul>
+                            <li>A veces está Nano.</li>
+                            <li>Otras veces encontramos Vi o Vim.</li>
+                            <li>En una imagen mínima puede no estar instalado ninguno.</li>
+                        </ul>
+                    </small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+command -v nano vi less more
+                    </code></pre>
+                    <small><p>Antes de depender de una herramienta, conviene comprobar si realmente existe en ese entorno.</p></small>
                 </section>
 
                 <section id="consultar_editar" data-state="no_footer">
-                    <h3>Consultar y editar</h3>
-                    <div class="two-columns">
-                        <div>
-                            <h4>Consultar</h4>
-                            <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
-less servidor.conf
-                            </code></pre>
-                            <small><p>El visor recorre el contenido sin cambiarlo.</p></small>
-                        </div>
-                        <div>
-                            <h4>Editar</h4>
-                            <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
-nano servidor.conf
-vim servidor.conf
-                            </code></pre>
-                            <small><p>El editor permite modificar el contenido y luego decidir si se guarda.</p></small>
-                        </div>
-                    </div>
-                    <blockquote><small>Abrir un archivo en un editor no obliga a modificarlo.</small></blockquote>
-                </section>
-
-                <section id="texto_configuracion" data-state="no_footer">
-                    <h3>Texto plano y configuración</h3>
-                    <pre class="codigo_shadow"><code class="ini codigo-redondo" data-trim>
-nombre=servidor-aula
-puerto=8080
-entorno=pruebas
-                    </code></pre>
-                    <small>
-                        <p>Muchos servicios guardan su configuración en archivos de texto.</p>
-                        <p>El formato parece sencillo, pero cada nombre, separador y valor tiene un significado.</p>
-                        <blockquote>Un carácter fuera de lugar puede hacer que un servicio rechace la configuración.</blockquote>
-                    </small>
-                </section>
-
-                <section id="antes_editar" data-state="no_footer">
-                    <h3>Antes del primer cambio</h3>
-                    <small>
-                        <ol>
-                            <li>Confirmar el servidor y la ruta del archivo.</li>
-                            <li>Revisar con qué usuario estamos conectados.</li>
-                            <li>Guardar una copia que permita volver atrás.</li>
-                            <li>Definir cómo vamos a comprobar el resultado.</li>
-                        </ol>
-                    </small>
-                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
-pwd
-whoami
-cp servidor.conf servidor.conf.original
-                    </code></pre>
-                </section>
-
-                <section id="copia_comparacion" data-state="no_footer">
-                    <h3>Una copia para comparar</h3>
-                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
-mkdir -p ~/laboratorio-clase7
-cd ~/laboratorio-clase7
-cp servidor.conf servidor.conf.original
-                    </code></pre>
-                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
-diff -u servidor.conf.original servidor.conf
-                    </code></pre>
-                    <small>
-                        <p><code>diff -u</code> permite revisar cada línea modificada.</p>
-                        <blockquote>Una copia de trabajo ayuda en la práctica. Un respaldo real necesita otra ubicación y un procedimiento de recuperación.</blockquote>
-                    </small>
-                </section>
-
-                <section id="preguntas_edicion" data-state="no_footer">
-                    <h2>Consultas</h2>
-                    <p><small>archivo correcto → copia → edición → comparación</small></p>
+                    <h3>Leer o editar</h3>
+                    <table class="compact-table">
+                        <thead><tr><th>Tarea</th><th>Opciones</th></tr></thead>
+                        <tbody>
+                            <tr><td>Mostrar un archivo corto</td><td><code>cat</code></td></tr>
+                            <tr><td>Recorrer un archivo largo</td><td><code>less</code> o <code>more</code></td></tr>
+                            <tr><td>Modificar texto</td><td>Nano, Vi, Vim u otro editor</td></tr>
+                            <tr><td>Escribir una línea conocida</td><td><code>echo</code> y una redirección</td></tr>
+                        </tbody>
+                    </table>
+                    <blockquote><small>Primero vemos qué necesitamos hacer. Después elegimos la herramienta disponible.</small></blockquote>
                 </section>
             </section>
 
@@ -345,21 +328,31 @@ diff -u servidor.conf.original servidor.conf
                 </section>
 
                 <section id="nano_abrir" data-state="no_footer">
-                    <h3>Abrir o crear un archivo</h3>
-                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
-nano servidor.conf
-                    </code></pre>
+                    <h3>La pantalla de Nano</h3>
+                    <div class="two-columns" style="align-items:center;">
+                        <div>
+                            <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+nano archivo.txt
+                            </code></pre>
+                            <small>
+                                <ul>
+                                    <li>Arriba aparecen la versión y el nombre del archivo.</li>
+                                    <li>El asterisco indica que hay cambios sin guardar.</li>
+                                    <li>Abajo quedan visibles los atajos principales.</li>
+                                </ul>
+                            </small>
+                        </div>
+                        <img src="img/c7/nano_screenshot.png" alt="Nano editando archivo.txt en una terminal" class="terminal-screenshot screenshot-column">
+                    </div>
+                </section>
+
+                <section id="nano_atajos" data-state="no_footer">
+                    <h3>Los atajos están a la vista</h3>
+                    <img src="img/c7/nano_comandos.png" alt="Atajos principales que Nano muestra al pie de la pantalla" class="shortcut-screenshot">
                     <small>
-                        <ul>
-                            <li>La barra superior muestra el nombre del archivo.</li>
-                            <li>La parte central contiene el texto.</li>
-                            <li>La zona inferior muestra mensajes y atajos.</li>
-                        </ul>
-                        <p><code>^</code> representa <kbd>Ctrl</kbd>. <code>M-</code> representa Meta, normalmente <kbd>Alt</kbd>.</p>
+                        <p><code>^</code> representa <kbd>Ctrl</kbd>. Por ejemplo, <code>^O</code> significa <kbd>Ctrl+O</kbd>.</p>
+                        <p>La ayuda cambia según la versión y el estado del editor. Por eso conviene mirar siempre las dos líneas inferiores.</p>
                     </small>
-                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
-^O  = Ctrl+O       M-U = Alt+U
-                    </code></pre>
                 </section>
 
                 <section id="nano_mover_buscar" data-state="no_footer">
@@ -369,13 +362,15 @@ nano servidor.conf
                         <tbody>
                             <tr><td>Flechas</td><td>Mover el cursor</td></tr>
                             <tr><td><code>Ctrl+A</code> / <code>Ctrl+E</code></td><td>Comienzo / final de la línea</td></tr>
-                            <tr><td><code>Ctrl+Y</code> / <code>Ctrl+V</code></td><td>Pantalla anterior / siguiente</td></tr>
-                            <tr><td><code>Ctrl+W</code></td><td>Buscar texto</td></tr>
-                            <tr><td><code>Alt+W</code></td><td>Repetir la búsqueda</td></tr>
-                            <tr><td><code>Alt+G</code></td><td>Ir a una línea y columna</td></tr>
+                            <tr><td><code>Ctrl+F</code> o <code>Ctrl+W</code></td><td>Buscar texto</td></tr>
+                            <tr><td><code>Alt+F</code> o <code>Alt+W</code></td><td>Buscar la coincidencia siguiente</td></tr>
+                            <tr><td><code>Ctrl+C</code></td><td>Mostrar la posición del cursor</td></tr>
                         </tbody>
                     </table>
-                    <small><p>Después de <code>Ctrl+W</code>, Nano pide el texto en la parte inferior.</p></small>
+                    <small>
+                        <p>Desde Nano 8, <code>Ctrl+F</code> inicia la búsqueda hacia adelante. <code>Ctrl+W</code> también funciona y aparece en muchas versiones anteriores.</p>
+                        <p>Después del atajo, Nano pide el texto en la barra inferior.</p>
+                    </small>
                 </section>
 
                 <section id="nano_editar" data-state="no_footer">
@@ -419,8 +414,8 @@ nano servidor.conf
             <!-- HISTORIA DE VI -->
             <section>
                 <section id="historia_vi" data-state="customevent" data-transition="slide">
-                    <h2>De Vi a Vim y nvi</h2>
-                    <p><small>Una familia de editores con un núcleo común</small></p>
+                    <h2>De Vi a Vim</h2>
+                    <p><small>Una idea de los años setenta que todavía usamos</small></p>
                 </section>
 
                 <section id="vi_visual" data-state="no_footer">
@@ -436,33 +431,20 @@ nano servidor.conf
                     <small><p>Las órdenes con <code>:</code> todavía conservan la relación con <code>ex</code>.</p></small>
                 </section>
 
-                <section id="implementaciones_vi" data-state="no_footer">
-                    <h3>Vi no siempre es el mismo programa</h3>
-                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
-Vi histórico
-├── nvi     experiencia cercana a ex y vi en sistemas BSD
-└── Vim     compatibilidad con Vi y funciones adicionales
-                    </code></pre>
-                    <small>
-                        <ul>
-                            <li><strong>Vim</strong> significa <em>Vi IMproved</em>. Suma ayuda integrada, deshacer en varios niveles, ventanas y resaltado de sintaxis.</li>
-                            <li><strong>nvi</strong> es una reimplementación de <code>ex</code> y <code>vi</code> desarrollada en el entorno BSD.</li>
-                            <li><strong>Nano</strong> sigue otra historia. Nació como reemplazo libre de Pico.</li>
-                        </ul>
-                    </small>
-                </section>
-
-                <section id="vi_debian" data-state="no_footer">
-                    <h3>¿Qué abre <code>vi</code> en Debian?</h3>
-                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
-readlink -f /usr/bin/vi
-update-alternatives --display vi
-                    </code></pre>
-                    <small><p>Dentro del editor también podemos consultar la versión:</p></small>
-                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
-:version
-                    </code></pre>
-                    <blockquote><small>Aprenderemos los comandos que comparten Vi y Vim. Las funciones avanzadas de Vim quedan para más adelante.</small></blockquote>
+                <section id="vi_en_vm" data-state="no_footer">
+                    <h3>En nuestra VM, <code>vi</code> abre Vim</h3>
+                    <div class="two-columns" style="align-items:center;">
+                        <div>
+                            <pre class="codigo_shadow"><code class="bash codigo-redondo" data-trim>
+vi archivo.txt
+                            </code></pre>
+                            <small>
+                                <p><strong>Vim</strong> significa <em>Vi IMproved</em>. Conserva el modelo y los comandos básicos de Vi, pero agrega funciones más modernas.</p>
+                                <p>Esto puede cambiar en otro sistema. Incluso una imagen mínima como <code>debian:latest</code> puede no traer <code>vi</code> instalado.</p>
+                            </small>
+                        </div>
+                        <img src="img/c7/vim_screenshot.png" alt="Pantalla inicial de Vim al ejecutar vi en la máquina virtual" class="terminal-screenshot screenshot-column">
+                    </div>
                 </section>
             </section>
 
@@ -475,17 +457,30 @@ update-alternatives --display vi
 
                 <section id="modos" data-state="no_footer">
                     <h3>Cuatro modos para empezar</h3>
-                    <table class="compact-table">
-                        <thead><tr><th>Modo</th><th>Uso</th></tr></thead>
+                    <table class="very-compact-table">
+                        <thead><tr><th>Modo</th><th>Para qué sirve</th><th>Cómo entrar</th><th>Cómo volver a Normal</th></tr></thead>
                         <tbody>
-                            <tr><td>Normal</td><td>Moverse y ejecutar operaciones</td></tr>
-                            <tr><td>Inserción</td><td>Escribir texto</td></tr>
-                            <tr><td>Visual</td><td>Seleccionar texto</td></tr>
-                            <tr><td>Línea de órdenes</td><td>Guardar, salir y ejecutar órdenes con <code>:</code></td></tr>
+                            <tr><td>Normal</td><td>Moverse y ejecutar acciones</td><td>Al abrir Vim o con <kbd>Esc</kbd></td><td>Ya estamos en Normal</td></tr>
+                            <tr><td>Inserción</td><td>Escribir texto</td><td><code>i</code>, <code>a</code> u <code>o</code></td><td><kbd>Esc</kbd></td></tr>
+                            <tr><td>Visual</td><td>Seleccionar texto</td><td><code>v</code> o <code>V</code></td><td><kbd>Esc</kbd></td></tr>
+                            <tr><td>Línea de órdenes</td><td>Guardar, salir y otras órdenes</td><td><code>:</code></td><td><kbd>Enter</kbd> ejecuta; <kbd>Esc</kbd> cancela</td></tr>
                         </tbody>
                     </table>
-                    <p class="mode-flow"><strong>Normal</strong> <code>i a o</code> → <strong>Inserción</strong> <code>Esc</code> → <strong>Normal</strong> <code>:</code> → <strong>Línea de órdenes</strong></p>
-                    <blockquote><small>Si no sabés en qué modo estás, presioná <kbd>Esc</kbd> para volver al modo normal.</small></blockquote>
+                    <blockquote><small>Vim interpreta las teclas según el modo activo. Si no sabés dónde estás, presioná <kbd>Esc</kbd> y volvés al modo normal.</small></blockquote>
+                </section>
+
+                <section id="reconocer_modo" data-state="no_footer">
+                    <h3>El modo cambia lo que hace el teclado</h3>
+                    <div class="two-columns" style="align-items:center;">
+                        <div>
+                            <small>
+                                <p>En <strong>modo normal</strong>, escribir <code>x</code> borra un carácter. No escribe la letra «x».</p>
+                                <p>Con <code>i</code> entramos en <strong>modo inserción</strong>. Vim suele mostrar <code>-- INSERT --</code> en la parte inferior.</p>
+                                <p>Con <kbd>Esc</kbd> dejamos de escribir y volvemos al modo normal.</p>
+                            </small>
+                        </div>
+                        <img src="img/c7/vim_screenshot2.png" alt="Vim con un archivo abierto para practicar sus modos" class="terminal-screenshot screenshot-column">
+                    </div>
                 </section>
 
                 <section id="insertar_vi" data-state="no_footer">
@@ -495,9 +490,7 @@ update-alternatives --display vi
                         <tbody>
                             <tr><td><code>i</code></td><td>Antes del cursor</td></tr>
                             <tr><td><code>a</code></td><td>Después del cursor</td></tr>
-                            <tr><td><code>I</code> / <code>A</code></td><td>Comienzo / final de la línea</td></tr>
                             <tr><td><code>o</code></td><td>Nueva línea debajo</td></tr>
-                            <tr><td><code>O</code></td><td>Nueva línea arriba</td></tr>
                         </tbody>
                     </table>
                     <small>
@@ -508,13 +501,13 @@ update-alternatives --display vi
 
                 <section id="movimiento_vi" data-state="no_footer">
                     <h3>Desplazamiento en modo normal</h3>
-                    <table class="very-compact-table">
-                        <thead><tr><th>Comando</th><th>Movimiento</th><th>Comando</th><th>Movimiento</th></tr></thead>
+                    <table class="compact-table">
+                        <thead><tr><th>Comando</th><th>Movimiento</th></tr></thead>
                         <tbody>
-                            <tr><td><code>h j k l</code></td><td>Izquierda, abajo, arriba, derecha</td><td><code>w</code> / <code>b</code></td><td>Palabra siguiente / anterior</td></tr>
-                            <tr><td><code>0</code></td><td>Comienzo de la línea</td><td><code>^</code></td><td>Primer carácter visible</td></tr>
-                            <tr><td><code>$</code></td><td>Final de la línea</td><td><code>gg</code> / <code>G</code></td><td>Primera / última línea</td></tr>
-                            <tr><td><code>20G</code></td><td>Línea 20</td><td><code>Ctrl+F</code> / <code>Ctrl+B</code></td><td>Pantalla siguiente / anterior</td></tr>
+                            <tr><td>Flechas</td><td>Mover el cursor en las cuatro direcciones</td></tr>
+                            <tr><td><code>h j k l</code></td><td>Izquierda, abajo, arriba y derecha</td></tr>
+                            <tr><td><code>0</code> / <code>$</code></td><td>Comienzo / final de la línea</td></tr>
+                            <tr><td><code>gg</code> / <code>G</code></td><td>Primera / última línea</td></tr>
                         </tbody>
                     </table>
                     <small><p>Las flechas también funcionan. Los movimientos propios de Vi se incorporan de a poco.</p></small>
@@ -528,44 +521,22 @@ update-alternatives --display vi
                             <tr><td><code>x</code></td><td>Borrar el carácter bajo el cursor</td></tr>
                             <tr><td><code>dd</code></td><td>Cortar la línea</td></tr>
                             <tr><td><code>yy</code></td><td>Copiar la línea</td></tr>
-                            <tr><td><code>p</code> / <code>P</code></td><td>Pegar después / antes</td></tr>
-                            <tr><td><code>u</code> / <code>Ctrl+R</code></td><td>Deshacer / rehacer</td></tr>
-                            <tr><td><code>.</code></td><td>Repetir la última modificación</td></tr>
+                            <tr><td><code>p</code></td><td>Pegar después del cursor</td></tr>
+                            <tr><td><code>u</code></td><td>Deshacer</td></tr>
                         </tbody>
                     </table>
                     <small><p>Vi llama <em>yank</em> a la copia. Por eso el comando comienza con <code>y</code>.</p></small>
                 </section>
 
-                <section id="gramatica_vi" data-state="no_footer">
-                    <h3>Operación, movimiento y cantidad</h3>
-                    <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>
-cantidad + operación + movimiento
-                    </code></pre>
-                    <table class="compact-table">
-                        <thead><tr><th>Comando</th><th>Resultado</th></tr></thead>
-                        <tbody>
-                            <tr><td><code>3dd</code></td><td>Cortar tres líneas</td></tr>
-                            <tr><td><code>2yy</code></td><td>Copiar dos líneas</td></tr>
-                            <tr><td><code>dw</code></td><td>Borrar hasta el final de la palabra</td></tr>
-                            <tr><td><code>d$</code></td><td>Borrar hasta el final de la línea</td></tr>
-                            <tr><td><code>cw</code></td><td>Cambiar una palabra y entrar en inserción</td></tr>
-                        </tbody>
-                    </table>
-                </section>
-
                 <section id="visual_vi" data-state="no_footer">
                     <h3>Selección visual</h3>
-                    <table class="compact-table">
-                        <thead><tr><th>Comando</th><th>Acción</th></tr></thead>
-                        <tbody>
-                            <tr><td><code>v</code></td><td>Seleccionar por caracteres</td></tr>
-                            <tr><td><code>V</code></td><td>Seleccionar por líneas</td></tr>
-                            <tr><td><code>y</code></td><td>Copiar la selección</td></tr>
-                            <tr><td><code>d</code></td><td>Cortar la selección</td></tr>
-                            <tr><td><code>Esc</code></td><td>Cancelar la selección</td></tr>
-                        </tbody>
-                    </table>
-                    <small><p>Después de copiar o cortar, <code>p</code> y <code>P</code> pegan el contenido.</p></small>
+                    <ol>
+                        <li>Desde el modo normal, <code>v</code> selecciona caracteres y <code>V</code> selecciona líneas completas.</li>
+                        <li>Movemos el cursor para ampliar la selección.</li>
+                        <li><code>y</code> copia, <code>d</code> corta y <kbd>Esc</kbd> cancela.</li>
+                        <li>De vuelta en modo normal, <code>p</code> pega.</li>
+                    </ol>
+                    <blockquote><small>El modo visual no es un editor separado: es una forma de seleccionar antes de ejecutar una acción.</small></blockquote>
                 </section>
 
                 <section id="buscar_vi" data-state="no_footer">
@@ -574,7 +545,6 @@ cantidad + operación + movimiento
                         <thead><tr><th>Comando</th><th>Acción</th></tr></thead>
                         <tbody>
                             <tr><td><code>/texto</code></td><td>Buscar hacia adelante</td></tr>
-                            <tr><td><code>?texto</code></td><td>Buscar hacia atrás</td></tr>
                             <tr><td><code>n</code></td><td>Coincidencia siguiente</td></tr>
                             <tr><td><code>N</code></td><td>Coincidencia anterior</td></tr>
                         </tbody>
@@ -583,21 +553,6 @@ cantidad + operación + movimiento
 /puerto
                     </code></pre>
                     <small><p>Buscar no modifica el contenido. Desde la coincidencia podemos movernos o iniciar una edición.</p></small>
-                </section>
-
-                <section id="sustituir_vi" data-state="no_footer">
-                    <h3>Sustituciones sencillas</h3>
-                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
-:s/pruebas/produccion/
-                    </code></pre>
-                    <small><p>Reemplaza una coincidencia en la línea actual.</p></small>
-                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
-:%s/pruebas/produccion/gc
-                    </code></pre>
-                    <small>
-                        <p>Recorre todo el archivo y pide confirmación antes de cada reemplazo.</p>
-                        <blockquote>En esta clase usamos búsquedas literales. Las expresiones regulares quedan para más adelante.</blockquote>
-                    </small>
                 </section>
 
                 <section id="salir_meme" data-state="no_footer">
@@ -618,56 +573,10 @@ cantidad + operación + movimiento
                             <tr><td><code>:q!</code></td><td>Salir y descartar los cambios</td></tr>
                             <tr><td><code>:wq</code></td><td>Guardar y salir</td></tr>
                             <tr><td><code>:x</code></td><td>Guardar si hubo cambios y salir</td></tr>
-                            <tr><td><code>:w copia.conf</code></td><td>Guardar con otro nombre</td></tr>
                         </tbody>
                     </table>
                     <small><p>Las órdenes con <code>:</code> se escriben desde el modo normal y se confirman con <kbd>Enter</kbd>.</p></small>
                     <blockquote><small><code>!</code> fuerza una operación del editor. No concede permisos ni reemplaza a <code>sudo</code>.</small></blockquote>
-                </section>
-
-                <section id="ayuda_vi" data-state="no_footer">
-                    <h3>Ayuda y práctica</h3>
-                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
-:help dd
-:help :write
-                    </code></pre>
-                    <small><p>Para insertar otro archivo debajo de la línea actual:</p></small>
-                    <pre class="codigo_shadow"><code class="vim codigo-redondo" data-trim>
-:r fragmento.conf
-                    </code></pre>
-                    <small><p>Fuera del editor, Vim incluye un tutorial interactivo:</p></small>
-                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
-vimtutor
-                    </code></pre>
-                </section>
-
-                <section id="preguntas_vi" data-state="no_footer">
-                    <h2>Consultas</h2>
-                    <p><small>modo normal → movimiento u operación → inserción → <kbd>Esc</kbd> → guardar o descartar</small></p>
-                </section>
-            </section>
-
-            <!-- COMPARACIÓN DE EDITORES -->
-            <section>
-                <section id="comparacion" data-state="customevent" data-transition="slide">
-                    <h2>Nano y Vi/Vim</h2>
-                    <p><small>Dos maneras de editar desde la terminal</small></p>
-                </section>
-
-                <section id="nano_vi" data-state="no_footer">
-                    <h3>La misma tarea con otra lógica</h3>
-                    <table class="very-compact-table">
-                        <thead><tr><th>Acción</th><th>Nano</th><th>Vi/Vim</th></tr></thead>
-                        <tbody>
-                            <tr><td>Modelo</td><td>Escritura directa con atajos</td><td>Modos y órdenes</td></tr>
-                            <tr><td>Buscar</td><td><code>Ctrl+W</code></td><td><code>/texto</code></td></tr>
-                            <tr><td>Deshacer</td><td><code>Alt+U</code></td><td><code>u</code></td></tr>
-                            <tr><td>Guardar</td><td><code>Ctrl+O</code></td><td><code>:w</code></td></tr>
-                            <tr><td>Salir</td><td><code>Ctrl+X</code></td><td><code>:q</code></td></tr>
-                            <tr><td>Descartar</td><td>Responder al salir</td><td><code>:q!</code></td></tr>
-                        </tbody>
-                    </table>
-                    <small><p>Nano permite empezar rápido. Vi/Vim ofrece órdenes que se combinan y se repiten.</p></small>
                 </section>
 
                 <section id="supervivencia_vi" data-state="no_footer">
@@ -680,7 +589,12 @@ i         comenzar a escribir
 :q        salir
 :q!       salir sin guardar
                     </code></pre>
-                    <blockquote><small>No hace falta elegir un editor para siempre. Sí conviene poder abrir, buscar, cambiar y salir con ambos.</small></blockquote>
+                    <blockquote><small>Con esto alcanza para abrir un archivo, hacer un cambio sencillo y salir con control.</small></blockquote>
+                </section>
+
+                <section id="preguntas_vi" data-state="no_footer">
+                    <h2>Consultas</h2>
+                    <p><small>modo normal → movimiento u operación → inserción → <kbd>Esc</kbd> → guardar o descartar</small></p>
                 </section>
             </section>
 
@@ -688,7 +602,22 @@ i         comenzar a escribir
             <section>
                 <section id="sin_editor" data-state="customevent" data-transition="slide">
                     <h2>No siempre hace falta un editor</h2>
-                    <p><small>Crear o transformar texto desde la shell</small></p>
+                    <p><small>Leer, crear o transformar texto con lo que haya disponible</small></p>
+                </section>
+
+                <section id="entorno_minimo" data-state="no_footer">
+                    <h3>En un contenedor mínimo</h3>
+                    <small>
+                        <p>En una imagen como <code>debian:latest</code> podemos encontrarnos sin Nano, sin Vi y hasta sin <code>less</code>.</p>
+                    </small>
+                    <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
+command -v nano vi less more
+more /etc/os-release
+                    </code></pre>
+                    <small>
+                        <p><code>more</code> es más sencillo que <code>less</code>, pero alcanza para recorrer un archivo pantalla por pantalla. Para un archivo corto también podemos usar <code>cat</code>.</p>
+                        <p>Además, la shell y sus redirecciones permiten crear o agregar contenido sin abrir un editor.</p>
+                    </small>
                 </section>
 
                 <section id="redireccion_crear" data-state="no_footer">
@@ -704,7 +633,7 @@ echo 'puerto=8080' > servidor.conf
                         </ul>
                     </small>
                     <pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>
-cat servidor.conf
+more servidor.conf
                     </code></pre>
                 </section>
 
@@ -771,6 +700,7 @@ sed 's/8080/9090/' servidor.conf > servidor.conf.nuevo
                     <table class="compact-table">
                         <thead><tr><th>Situación</th><th>Opción</th></tr></thead>
                         <tbody>
+                            <tr><td>Solo necesitamos leer y no está <code>less</code></td><td><code>cat</code> o <code>more</code></td></tr>
                             <tr><td>Hay que leer el contexto y hacer varios cambios</td><td>Nano o Vi/Vim</td></tr>
                             <tr><td>Conocemos todo el contenido</td><td>Redirección con <code>&gt;</code></td></tr>
                             <tr><td>Solo hay que agregar una línea</td><td>Redirección con <code>&gt;&gt;</code></td></tr>
@@ -787,10 +717,12 @@ sed 's/8080/9090/' servidor.conf > servidor.conf.nuevo
                     <h3>Resumen de la clase</h3>
                     <small>
                         <ul>
+                            <li>Muchos aspectos del sistema se administran mediante archivos de texto.</li>
+                            <li>En una terminal remota o un contenedor mínimo, las herramientas disponibles pueden cambiar.</li>
                             <li>Nano muestra los atajos y permite escribir de forma directa.</li>
                             <li>Vi/Vim separa el desplazamiento, la edición y las órdenes mediante modos.</li>
                             <li><kbd>Esc</kbd> vuelve al modo normal. <code>:w</code>, <code>:q</code> y <code>:q!</code> permiten guardar o salir.</li>
-                            <li>Los movimientos y las operaciones de Vi se pueden combinar y repetir.</li>
+                            <li><code>cat</code> y <code>more</code> permiten consultar archivos sin abrir un editor.</li>
                             <li><code>&gt;</code> reemplaza el contenido. <code>&gt;&gt;</code> agrega al final.</li>
                             <li><code>sed</code> puede producir una versión transformada sin abrir un editor.</li>
                             <li>Una copia y <code>diff -u</code> permiten revisar el cambio antes de aceptarlo.</li>
@@ -817,7 +749,6 @@ sed 's/8080/9090/' servidor.conf > servidor.conf.nuevo
                             <li><a href="https://www.nano-editor.org/dist/latest/faq.html" target="_blank" rel="noopener noreferrer">GNU nano — Preguntas frecuentes e historia</a></li>
                             <li><a href="https://vimhelp.org/intro.txt.html" target="_blank" rel="noopener noreferrer">Vim — Introducción y modos</a></li>
                             <li><a href="https://vimhelp.org/vi_diff.txt.html" target="_blank" rel="noopener noreferrer">Vim — Diferencias con Vi</a></li>
-                            <li><a href="https://manpages.debian.org/trixie/nvi/index.html" target="_blank" rel="noopener noreferrer">Debian Manpages — nvi</a></li>
                         </ul>
                     </small>
                 </section>
