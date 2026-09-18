@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 8</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .reveal .slide-copy { font-size: 60%; line-height: 1.3; }
+        .reveal .slide-copy p { margin: 0.6em 0; }
+        .reveal .slide-copy blockquote { width: 92%; }
+        .reveal .slide-copy ul, .reveal .slide-copy ol { margin-bottom: 0.4em; }
+        .reveal .slide-copy code { white-space: nowrap; }
+        #herramientas_para_administrar_cuentas td:nth-child(2) { white-space: nowrap; }
+        .reveal .account-table { width: 90%; font-size: 60%; line-height: 1.25; }
+        .reveal .account-table th, .reveal .account-table td { padding: 0.22em 0.45em; }
+        .reveal .account-table td:first-child { white-space: nowrap; }
+        #etc_passwd_datos_de_la_cuenta pre, #etc_group_datos_del_grupo pre { width: 90%; font-size: 48%; }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+<section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 8: Usuarios, grupos e identidad</h4><small><p>Módulo 1 — Operación de Sistemas Operativos GNU/Linux</p></small></section>
+
+<section id="index" data-state="no_footer"><h3>Temas de la clase 8</h3><small><ul><li><a href="#/identidad_en_linux">Identidad: UID, GID, root y sudo</a></li><li><a href="#/la_base_de_datos_de_cuentas">Archivos de cuentas y consultas con getent</a></li><li><a href="#/usuarios_grupos_y_sesiones">Usuarios, grupos y sesiones</a></li><li><a href="#/cuentas_de_servicio">Cuentas de servicio y menor privilegio</a></li><li><a href="#/permisos_tradicionales_de_unix">Permisos tradicionales de Unix y UGO</a></li><li><a href="#/labs_clase">Actividad práctica</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></small></section>
+
+<section id="objetivos" data-state="no_footer"><h3>Objetivos de la clase</h3>
+<div class="slide-copy"><p>Al finalizar esta clase vas a poder:</p>
+</div>
+
+<div class="slide-copy"><ul>
+<li>Explicar cómo identifica Linux a un usuario y a un grupo.</li>
+<li>Distinguir la función de <code>/etc/passwd</code>, <code>/etc/shadow</code> y <code>/etc/group</code>.</li>
+<li>Reconocer las herramientas para crear cuentas y administrar pertenencias.</li>
+<li>Diferenciar los grupos registrados para una cuenta de los grupos de una sesión existente.</li>
+<li>Interpretar la identidad asociada a un archivo y sus permisos básicos.</li>
+</ul>
+</div>
+
+<div class="slide-copy"><blockquote>
+<p>Venimos navegando, leyendo y editando archivos. Ahora vamos a entender cómo se relacionan las cuentas con el acceso a esos archivos. La aplicación de estos conceptos se realiza en el laboratorio 8.</p>
+</blockquote>
+</div>
+</section>
+
+<section id="algo_que_venimos_usando" data-state="no_footer"><h3>Algo que venimos usando</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ls -l /etc/hosts</code></pre>
+
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>-rw-r--r-- 1 root root 221 sep 16 10:12 /etc/hosts</code></pre>
+
+<div class="slide-copy"><p><strong>Owner significa propietario: es el usuario al que pertenece el archivo.</strong> De aquí en adelante lo llamaremos <strong>owner</strong>.</p>
+</div>
+
+<div class="slide-copy"><p>Hasta ahora miramos principalmente el nombre, la fecha y el tamaño. Hoy vamos a interpretar también <strong>el tipo, el owner, el grupo y los permisos</strong>.</p>
+</div>
+</section>
+</section>
+
+<section>
+<section id="identidad_en_linux" data-state="customevent"><h2>Identidad en Linux</h2>
+<div class="slide-copy"><p>El sistema trabaja con números y nos muestra nombres</p>
+</div>
+</section>
+
+<section id="reconocer_la_sesion_en_el_prompt" data-state="no_footer"><h3>Reconocer la sesión en el prompt</h3>
+<div class="slide-copy"><p>El prompt, según cómo esté configurado, puede mostrar el usuario y el equipo:</p>
+</div>
+
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>usuario@hostname:~$</code></pre>
+
+<div class="slide-copy"><p>Podemos confirmar la identidad con comandos.</p>
+</div>
+</section>
+
+<section id="quien_sos_para_el_sistema" data-state="no_footer"><h3>Quién sos para el sistema</h3>
+<div class="slide-copy"><p>Comandos para saber quiénes somos:</p>
+</div>
+
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>whoami
+id</code></pre>
+
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>uid=1000(cristian) gid=1000(cristian) groups=1000(cristian),27(sudo)</code></pre>
+<div class="slide-copy"><ul>
+<li><strong>UID:</strong> identificador del usuario.</li>
+<li><strong>GID:</strong> identificador del grupo principal de la sesión.</li>
+<li><strong>Grupos suplementarios:</strong> otras pertenencias de esa sesión.</li>
+</ul>
+</div>
+
+<div class="slide-copy"><p><code>groups</code> también permite consultar los grupos. En la salida de <code>id</code>, la lista <code>groups</code> incluye el principal.</p>
+</div>
+
+<div class="slide-copy"><blockquote>
+<p>Estar en el grupo <code>sudo</code> permite solicitar las acciones autorizadas por su configuración. La cuenta sigue siendo un usuario común mientras no eleva privilegios.</p>
+</blockquote>
+</div>
+</section>
+
+<section id="repaso_root_y_sudo" data-state="no_footer"><h3>Repaso: root y sudo</h3>
+<div class="slide-copy"><ul>
+<li><strong>root</strong> es la cuenta administrativa, con UID <code>0</code>.</li>
+<li><strong>sudo</strong> permite ejecutar un comando como otro usuario, normalmente root, según las autorizaciones configuradas.</li>
+<li>Tener permiso para usar sudo no convierte nuestra cuenta en root.</li>
+</ul>
+</div>
+
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>whoami       # cristian
+sudo whoami  # root
+whoami       # cristian</code></pre>
+
+<div class="slide-copy"><blockquote>
+<p>Para comprobar qué puede hacer Ana o Bruno, probamos con su identidad, sin elevar privilegios.</p>
+</blockquote>
+</div>
+</section>
+
+<section id="numeros_y_nombres" data-state="no_footer"><h3>Números y nombres</h3>
+<div class="slide-copy"><p>Los archivos almacenan el UID de su owner y un GID. Los programas consultan las bases de datos del sistema para mostrar los nombres correspondientes.</p>
+</div>
+
+<div class="slide-copy"><p>Si se elimina una cuenta, un archivo puede conservar su UID aunque ya no exista un nombre que mostrar. Eliminar la cuenta no transfiere automáticamente sus archivos a otro usuario.</p>
+</div>
+
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ls -l /etc/hosts
+ls -ln /etc/hosts</code></pre>
+
+<div class="slide-copy"><p><code>-n</code> muestra UID y GID sin traducirlos a nombres.</p>
+</div>
+<aside class="notes"><p>comparar estas dos salidas y localizar lo que cambia:</p></aside>
+</section>
+
+<section id="rangos_habituales_de_uid" data-state="no_footer"><h3>Rangos habituales de UID</h3>
+<div class="slide-copy"><ul>
+<li>UID <code>0</code> corresponde a root.</li>
+<li>En Debian son habituales los UID bajos para cuentas de sistema.</li>
+<li>Las cuentas comunes creadas con <code>adduser</code> suelen empezar en <code>1000</code>.</li>
+</ul>
+</div>
+
+<div class="slide-copy"><p>Los rangos son convenciones configurables. <strong>El número por sí solo no demuestra si una cuenta corresponde a una persona o a un servicio.</strong></p>
+</div>
+</section>
+
+<section id="consultas" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><p>UID → GID → nombres → identidad de la sesión</p>
+</div>
+</section>
+</section>
+
+<section>
+<section id="la_base_de_datos_de_cuentas" data-state="customevent"><h2>La base de datos de cuentas</h2>
+<div class="slide-copy"><p>Qué contiene cada archivo y para qué se consulta</p>
+</div>
+</section>
+
+<section id="etc_passwd_datos_de_la_cuenta" data-state="no_footer"><h3>Datos de la cuenta</h3>
+<div class="slide-copy"><p><code>/etc/passwd</code> · campos separados por <code>:</code></p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>cristian:x:1000:1000:Cristian,,,:/home/cristian:/bin/bash</code></pre>
+
+<table class="account-table">
+<thead>
+<tr>
+<th>Valor</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cristian</code></td>
+<td>Nombre de la cuenta.</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td>Información de contraseña en <code>/etc/shadow</code>.</td>
+</tr>
+<tr>
+<td><code>1000</code></td>
+<td>UID.</td>
+</tr>
+<tr>
+<td><code>1000</code></td>
+<td>GID del grupo principal.</td>
+</tr>
+<tr>
+<td><code>Cristian,,,</code></td>
+<td>Descripción.</td>
+</tr>
+<tr>
+<td><code>/home/cristian</code></td>
+<td>Directorio personal.</td>
+</tr>
+<tr>
+<td><code>/bin/bash</code></td>
+<td>Intérprete de la cuenta.</td>
+</tr>
+</tbody></table>
+
+<div class="slide-copy"><p>El grupo principal de la cuenta se identifica en este archivo, mediante su GID.</p>
+</div>
+</section>
+
+<section id="etc_shadow_informacion_de_contrasena" data-state="no_footer"><h3>Información de contraseña</h3>
+<div class="slide-copy"><p><code>/etc/passwd</code> es normalmente legible por los usuarios. <code>/etc/shadow</code> restringe el acceso a la información de contraseñas y su vigencia.</p>
+</div>
+
+<div class="slide-copy"><p>Shadow puede guardar un <strong>hash</strong>, que permite verificar una contraseña. No es la contraseña en texto legible ni un cifrado que se descifre para recuperarla.</p>
+</div>
+
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>ana:$y$...:20347:0:99999:7:::</code></pre>
+
+<div class="slide-copy"><p>Esta línea es ficticia. Nos interesa entender la función del archivo, sin memorizar todos sus campos.</p>
+</div>
+
+<div class="slide-copy"><blockquote>
+<p>Restringir la lectura del hash reduce su exposición a intentos de adivinación fuera del sistema. También importan el algoritmo y la fortaleza de la contraseña.</p>
+</blockquote>
+</div>
+</section>
+
+<section id="estados_de_una_contrasena" data-state="no_footer"><h3>Estados de una contraseña</h3>
+<table class="very-compact-table">
+<thead>
+<tr>
+<th>Campo en shadow</th>
+<th>Qué permite concluir</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hash válido, por ejemplo con prefijo <code>$y$</code></td>
+<td>Hay un hash utilizable para verificar la contraseña.</td>
+</tr>
+<tr>
+<td>Comienza con <code>!</code></td>
+<td>La contraseña está bloqueada.</td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>No es un hash válido para autenticarse con contraseña; no describe la historia de la cuenta.</td>
+</tr>
+<tr>
+<td>Vacío</td>
+<td>No hay contraseña; la aceptación del ingreso depende del mecanismo de autenticación y su política.</td>
+</tr>
+</tbody></table>
+
+<div class="slide-copy"><p><strong>Bloquear una contraseña no equivale a deshabilitar todas las formas de acceso.</strong> Una clave SSH podría seguir permitiendo el ingreso según la configuración.</p>
+</div>
+
+<div class="slide-copy"><p><code>passwd -S</code> consulta el estado sin mostrar el hash: <code>L</code> indica contraseña bloqueada, <code>P</code> contraseña utilizable y <code>NP</code> ausencia de contraseña.</p>
+</div>
+</section>
+
+<section id="etc_group_datos_del_grupo" data-state="no_footer"><h3>Datos del grupo</h3>
+<div class="slide-copy"><p><code>/etc/group</code> · campos separados por <code>:</code></p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>sudo:x:27:cristian</code></pre>
+
+<table class="account-table">
+<thead>
+<tr>
+<th>Valor</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sudo</code></td>
+<td>Nombre del grupo.</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td>Marcador del campo de contraseña de grupo; no lo administramos en esta clase.</td>
+</tr>
+<tr>
+<td><code>27</code></td>
+<td>GID.</td>
+</tr>
+<tr>
+<td><code>cristian</code></td>
+<td>Miembros suplementarios registrados.</td>
+</tr>
+</tbody></table>
+
+<div class="slide-copy"><p>La pertenencia por grupo principal <strong>no necesita aparecer en esta lista</strong>. No encontrar allí un nombre no alcanza para concluir que no pertenece al grupo.</p>
+</div>
+</section>
+
+<section id="consultar_con_getent" data-state="no_footer"><h3>Consultar con <code>getent</code></h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>getent passwd cristian
+getent group sudo</code></pre>
+
+<div class="slide-copy"><p><code>getent</code> consulta las fuentes de cuentas configuradas en el sistema. En nuestra VM son locales; en otro servidor pueden incluir un directorio central.</p>
+</div>
+
+<table class="compact-table">
+<thead>
+<tr>
+<th>Consulta</th>
+<th>Alcance</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Leer <code>/etc/passwd</code></td>
+<td>Contenido del archivo local.</td>
+</tr>
+<tr>
+<td><code>getent passwd usuario</code></td>
+<td>Entrada de la cuenta en las fuentes configuradas.</td>
+</tr>
+<tr>
+<td><code>getent group grupo</code></td>
+<td>Entrada del grupo en las fuentes configuradas.</td>
+</tr>
+</tbody></table>
+
+<div class="slide-copy"><p>El comando <code>getent</code> nos puede servir como alternativa al clásico <code>grep usuario /etc/passwd</code>, por ejempo.</p>
+</div>
+</section>
+
+<section id="consultas_2" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><p><code>passwd</code>: cuenta → <code>shadow</code>: contraseña → <code>group</code>: grupo → <code>getent</code>: consulta</p>
+</div>
+</section>
+</section>
+
+<section>
+<section id="usuarios_grupos_y_sesiones" data-state="customevent"><h2>Usuarios, grupos y sesiones</h2>
+<div class="slide-copy"><p>Una cuenta puede pertenecer a varios grupos</p>
+</div>
+</section>
+
+<section id="grupo_principal_y_suplementarios" data-state="no_footer"><h3>Grupo principal y suplementarios</h3>
+<div class="slide-copy"><ul>
+<li>La cuenta tiene un grupo principal configurado.</li>
+<li>Puede pertenecer además a grupos suplementarios.</li>
+<li>Ambos intervienen en el acceso por grupo.</li>
+<li>Habitualmente, un archivo nuevo recibe el grupo efectivo del proceso que lo crea. Los directorios con SGID son una excepción que veremos en la clase 9.</li>
+</ul>
+</div>
+
+<div class="slide-copy"><p>Debian suele crear un grupo con el mismo nombre que cada usuario común. Ese grupo privado organiza pertenencias, pero <strong>no garantiza por sí solo privacidad</strong>: también cuentan los permisos del archivo y de la ruta.</p>
+</div>
+</section>
+
+<section id="herramientas_para_administrar_cuentas" data-state="no_footer"><h3>Administrar cuentas</h3>
+<table class="very-compact-table">
+<thead>
+<tr>
+<th>Necesidad</th>
+<th>Herramienta y ejemplo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Crear una cuenta común</td>
+<td><code>sudo adduser ana</code></td>
+</tr>
+<tr>
+<td>Crear un grupo</td>
+<td><code>sudo addgroup desarrollo</code></td>
+</tr>
+<tr>
+<td>Agregar una cuenta a un grupo</td>
+<td><code>sudo adduser ana desarrollo</code></td>
+</tr>
+<tr>
+<td>Cambiar la contraseña propia</td>
+<td><code>passwd</code></td>
+</tr>
+<tr>
+<td>Consultar la identidad registrada de una cuenta</td>
+<td><code>id ana</code></td>
+</tr>
+</tbody></table>
+
+<div class="slide-copy"><p>Con la configuración habitual de Debian, <code>adduser</code> prepara el home, el grupo del mismo nombre y solicita una contraseña.</p>
+</div>
+
+<div class="slide-copy"><p>Los ejemplos muestran la función de cada herramienta. La creación de Ana, Bruno y el grupo de trabajo se realiza en el laboratorio.</p>
+</div>
+</section>
+
+<section id="agregar_no_es_reemplazar" data-state="no_footer"><h3>Agregar no es reemplazar</h3>
+<div class="slide-copy"><p>En documentación también aparece esta forma de agregar una cuenta a un grupo:</p>
+</div>
+
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo usermod -aG desarrollo ana</code></pre>
+
+<div class="slide-copy"><ul>
+<li><code>-G</code> establece la lista de grupos suplementarios.</li>
+<li><code>-a</code> indica que se agregan a las pertenencias existentes.</li>
+</ul>
+</div>
+
+<div class="slide-copy"><blockquote>
+<p>Sin <code>-a</code>, <code>-G</code> reemplaza la lista. Se puede perder una pertenencia importante, como <code>sudo</code>.</p>
+</blockquote>
+</div>
+</section>
+
+<section id="la_cuenta_cambio_la_sesion_todavia_no" data-state="no_footer"><h3>Cuenta y sesión</h3>
+<div class="slide-copy"><p>Los grupos de una sesión se cargan al iniciarla. Cambiar la pertenencia registrada no actualiza automáticamente los procesos que ya estaban abiertos.</p>
+</div>
+
+<table class="compact-table">
+<thead>
+<tr>
+<th>Consulta</th>
+<th>Qué muestra</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code> en una sesión de Ana que ya estaba abierta</td>
+<td>Los grupos que conserva esa sesión.</td>
+</tr>
+<tr>
+<td><code>id ana</code></td>
+<td>La información registrada para la cuenta.</td>
+</tr>
+<tr>
+<td><code>id</code> en una sesión nueva de Ana</td>
+<td>Los grupos obtenidos al iniciar esa nueva sesión.</td>
+</tr>
+</tbody></table>
+
+<div class="slide-copy"><p>Por eso alguien puede estar agregado correctamente a un grupo y necesitar <strong>iniciar una sesión nueva</strong> para usar esa pertenencia.</p>
+</div>
+</section>
+
+<section id="consultas_3" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><p>Grupo principal → grupos suplementarios → cuenta registrada → sesión existente</p>
+</div>
+</section>
+</section>
+
+<section>
+<section id="cuentas_de_servicio" data-state="customevent"><h2>Cuentas de servicio</h2>
+<div class="slide-copy"><p>No todas las cuentas representan personas</p>
+</div>
+</section>
+
+<section id="una_identidad_para_un_servicio" data-state="no_footer"><h3>Una identidad para un servicio</h3>
+<div class="slide-copy"><p>Cuentas como <code>www-data</code> permiten ejecutar tareas del sistema con una identidad específica.</p>
+</div>
+
+<div class="slide-copy"><p>El propósito de la cuenta, su home y su intérprete ayudan a interpretarla. <code>nologin</code> es una señal habitual de que no se espera una sesión interactiva; no impide que existan procesos con esa identidad.</p>
+</div>
+
+<div class="slide-copy"><blockquote>
+<p>Los UID bajos son frecuentes en cuentas de sistema, pero no alcanzan para identificarlas por sí solos.</p>
+</blockquote>
+</div>
+</section>
+
+<section id="menor_privilegio" data-state="no_footer"><h3>Menor privilegio</h3>
+<div class="slide-copy"><p>Un servicio debe ejecutar cada tarea con los privilegios que necesita. Algunas partes pueden requerir privilegios administrativos y otras ejecutarse con una cuenta dedicada.</p>
+</div>
+
+<div class="slide-copy"><p>Limitar sus permisos reduce el alcance de un fallo o de un compromiso. No garantiza por sí solo que cualquier ataque quede contenido.</p>
+</div>
+
+<div class="slide-copy"><p>Cuando instalemos servicios, comprobaremos <strong>con qué usuario corre cada proceso</strong>.</p>
+</div>
+</section>
+</section>
+
+<section>
+<section id="permisos_tradicionales_de_unix" data-state="customevent"><h2>Permisos tradicionales</h2>
+<div class="slide-copy"><p>Unix: owner, grupo y otros (UGO)</p>
+</div>
+</section>
+
+<section id="tres_conjuntos_de_permisos" data-state="no_footer"><h3>Tres conjuntos de permisos</h3>
+<div class="slide-copy"><p>Cada archivo tiene un owner y un grupo asociado. Los <strong>permisos tradicionales de Unix</strong> establecen qué puede hacer el owner, qué pueden hacer los miembros del grupo y qué pueden hacer los demás.</p>
+</div>
+
+<div class="slide-copy"><p>En cada conjunto se indican los permisos de lectura, escritura y ejecución: <strong><code>r</code>, <code>w</code> y <code>x</code></strong>.</p>
+</div>
+</section>
+
+<section id="una_linea_de_ls_l" data-state="no_footer"><h3>Una línea de <code>ls -l</code></h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>-rw-r----- 1 ana desarrollo 18 sep 17 10:00 informe.txt</code></pre>
+
+<table class="compact-table">
+<thead>
+<tr>
+<th>Parte</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-</code></td>
+<td>Tipo: archivo regular. <code>d</code> identifica un directorio y <code>l</code> un enlace.</td>
+</tr>
+<tr>
+<td><code>rw-r-----</code></td>
+<td>Permisos</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>Cantidad de enlaces; se explicará en almacenamiento.</td>
+</tr>
+<tr>
+<td><code>ana</code></td>
+<td>Owner.</td>
+</tr>
+<tr>
+<td><code>desarrollo</code></td>
+<td>Grupo asociado al archivo.</td>
+</tr>
+<tr>
+<td><code>18</code></td>
+<td>Tamaño en bytes en este ejemplo.</td>
+</tr>
+<tr>
+<td>Fecha y hora</td>
+<td>Última modificación del contenido.</td>
+</tr>
+<tr>
+<td><code>informe.txt</code></td>
+<td>Nombre.</td>
+</tr>
+</tbody></table>
+
+</section>
+
+<section id="ugo_una_ayuda_para_recordar_el_orden" data-state="no_footer"><h3>UGO: tres conjuntos</h3>
+<div class="slide-copy"><p><strong>UGO = User / Group / Others.</strong></p>
+</div>
+
+<table class="compact-table">
+<thead>
+<tr>
+<th>Letra</th>
+<th>Nombre</th>
+<th>A quién representa</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>U</strong> (<code>u</code>)</td>
+<td><strong>User</strong></td>
+<td>El <strong>owner</strong> del archivo.</td>
+</tr>
+<tr>
+<td><strong>G</strong> (<code>g</code>)</td>
+<td><strong>Group</strong></td>
+<td>El grupo asociado al archivo.</td>
+</tr>
+<tr>
+<td><strong>O</strong> (<code>o</code>)</td>
+<td><strong>Others</strong></td>
+<td>Los demás usuarios.</td>
+</tr>
+</tbody></table>
+
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>    U     G     O
+   rw-   r--   ---
+  User group others</code></pre>
+
+<div class="slide-copy"><blockquote>
+<p>En UGO, <strong>user es el owner</strong>; la letra <strong>o corresponde a others</strong>. Estas letras reaparecen en la notación simbólica de <code>chmod</code>, que veremos en la clase 9.</p>
+</blockquote>
+</div>
+</section>
+
+<section id="rwx_que_operacion_permite_cada_bit" data-state="no_footer"><h3>Permisos <code>rwx</code></h3>
+<div class="slide-copy"><p>En un archivo regular:</p>
+</div>
+
+<table class="compact-table">
+<thead>
+<tr>
+<th>Bit</th>
+<th>Permite</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>r</code> — read</td>
+<td>Leer contenido.</td>
+</tr>
+<tr>
+<td><code>w</code> — write</td>
+<td>Modificar contenido.</td>
+</tr>
+<tr>
+<td><code>x</code> — execute</td>
+<td>Ejecutar, si el formato y las demás condiciones lo permiten.</td>
+</tr>
+</tbody></table>
+
+<div class="slide-copy"><p>Un guion indica que ese bit no está habilitado. Los permisos de los directorios tienen otro significado y se desarrollan en la clase 9.</p>
+</div>
+</section>
+
+<section id="que_conjunto_se_aplica" data-state="no_footer"><h3>Qué conjunto se aplica</h3>
+<div class="slide-copy"><p>En este modelo, para un usuario común y un archivo cuya ruta es accesible:</p>
+</div>
+
+<div class="slide-copy"><ol>
+<li>Si es el <strong>owner</strong>, se aplican los bits de <strong>U</strong>.</li>
+<li>Si no es el owner y pertenece al grupo del archivo, se aplican los bits de <strong>G</strong>.</li>
+<li>En otro caso, se aplican los bits de <strong>O</strong>.</li>
+</ol>
+</div>
+
+<div class="slide-copy"><p><strong>Los tres conjuntos no se suman.</strong> Se selecciona el que corresponde a esa identidad.</p>
+</div>
+</section>
+
+<section id="un_ejemplo_para_interpretar" data-state="no_footer"><h3>Un ejemplo para interpretar</h3>
+<div class="slide-copy"><p>Para el archivo de Ana con grupo <code>desarrollo</code> y permisos <code>rw-r-----</code>:</p>
+</div>
+
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>-rw-r----- 1 ana desarrollo 18 sep 17 10:00 informe.txt</code></pre>
+
+<table class="compact-table">
+<thead>
+<tr>
+<th>Cuenta</th>
+<th>Conjunto</th>
+<th>Lectura</th>
+<th>Escritura</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ana, owner</td>
+<td>U: <code>rw-</code></td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Bruno, miembro de <code>desarrollo</code></td>
+<td>G: <code>r--</code></td>
+<td>Sí</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Otro usuario común, fuera del grupo</td>
+<td>O: <code>---</code></td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody></table>
+
+<div class="slide-copy"><p>El ejemplo supone que la ruta es accesible.</p>
+</div>
+<aside class="notes"><p>con el archivo ya preparado, mostrar que Ana puede escribir y Bruno puede leer, pero su escritura produce `Permission denied`. La preparación y la reproducción por los estudiantes quedan en el laboratorio.</p><p>Preparar un archivo regular sin ACL extendida, con owner Ana y grupo desarrollo. La sesión de Bruno debe incluir ese grupo. El diagnóstico de directorios y los casos especiales quedan para la clase 9.</p></aside>
+</section>
+
+<section id="consultas_4" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><p>Owner → UGO → <code>rwx</code> → elegir un conjunto según la identidad</p>
+</div>
+</section>
+</section>
+
+<section>
+<section id="resumen" data-state="no_footer"><h3>Resumen de la clase</h3>
+<div class="slide-copy"><ul>
+<li>UID y GID son identificadores numéricos; el sistema resuelve los nombres mediante sus bases de datos.</li>
+<li><code>/etc/passwd</code> describe la cuenta, <code>/etc/shadow</code> su información de contraseña y <code>/etc/group</code> los grupos.</li>
+<li><code>getent</code> consulta las fuentes configuradas.</li>
+<li>Grupo principal y suplementarios intervienen en el acceso; las sesiones existentes conservan sus grupos.</li>
+<li>Las cuentas de servicio permiten asignar privilegios según la tarea.</li>
+<li><strong>UGO</strong> recuerda el orden: <strong>user —el owner—, group, others</strong>.</li>
+<li><code>rwx</code> describe las operaciones permitidas; los conjuntos de UGO no se suman.</li>
+</ul>
+</div>
+</section>
+</section>
+
+<section>
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica</h3><div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab8/lab8.md" target="_blank" rel="noopener noreferrer">Laboratorio 8 — Usuarios, grupos e identidad</a></p><ul><li>Crear Ana, Bruno y el grupo <code>desarrollo</code>.</li><li>Comparar los grupos de una sesión existente con los de una nueva.</li><li>Comprobar lectura y escritura según UGO.</li></ul><p>Continuamos sobre la VM de los laboratorios anteriores. La cuenta administradora realiza las altas; Ana y Bruno trabajan sin sudo. Conservamos las cuentas para la clase 9.</p></div></section>
+
+<section id="referencias" data-state="no_footer"><h3>Referencias técnicas</h3>
+<div class="slide-copy"><ul>
+<li><a href="https://www.debian.org/doc/debian-policy/ch-opersys.html#users-and-groups">Debian Policy — Usuarios, grupos y rangos</a></li>
+<li><a href="https://manpages.debian.org/trixie/adduser/adduser.8.en.html">Debian 13 — adduser(8)</a></li>
+<li><a href="https://manpages.debian.org/trixie/passwd/passwd.1.en.html">Debian 13 — passwd(1)</a></li>
+<li><a href="https://manpages.debian.org/trixie/passwd/shadow.5.en.html">Debian 13 — shadow(5)</a></li>
+<li><a href="https://manpages.debian.org/trixie/manpages/path_resolution.7.en.html">Debian 13 — Resolución de rutas y permisos</a></li>
+</ul>
+</div></section>
+</section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                secret: null,
+                id: '7b0917d41c6a3bf43a6a45f82e1e3d0a3b7cafee14437efc073f990f1fb25328',
+                url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>
