@@ -899,8 +899,6 @@ grep -w 'ssh' servicios
     <script src="plugin/copycode/copycode.js"></script>
     <script src="js/clipboard.js"></script>
 
-    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
-
     <script>
         Reveal.on('customevent', function () {
             var element = document.getElementById("logos-footer");
@@ -952,12 +950,6 @@ grep -w 'ssh' servicios
                 clipboardjspath: ""
             },
 
-            multiplex: {
-                secret: null,
-                id: '7b0917d41c6a3bf43a6a45f82e1e3d0a3b7cafee14437efc073f990f1fb25328',
-                url: 'https://multiplex.up.railway.app'
-            },
-
             plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
         });
 
@@ -1007,7 +999,6 @@ grep -w 'ssh' servicios
         })();
     </script>
 
-    <script src="https://multiplex.up.railway.app/client.js"></script>
 </body>
 
 </html>
