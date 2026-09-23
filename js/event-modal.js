@@ -7,7 +7,7 @@
         // Habilitar el modal.
         enabled: true,
         campaignId: 'enredate-2026',
-        imageSrc: 'img/enredate26.jpeg',
+        imageSrc: 'img/enredate26-2.jpeg',
         imageAlt: 'Enredate 26, encuentro de informáticos: viernes 2 de octubre a las 19 horas en el CDP de ATE de La Plata',
         linkUrl: 'https://forms.gle/t8WgTYbPiEKgu42X7',
         dialogLabel: 'Invitación a Enredate 26',
