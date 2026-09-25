@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 9</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .reveal .slide-copy { font-size: 60%; line-height: 1.3; }
+        .reveal .slide-copy p { margin: 0.6em 0; }
+        .reveal .slide-copy blockquote { width: 92%; }
+        .reveal .slide-copy ul, .reveal .slide-copy ol { margin-bottom: 0.4em; }
+        .reveal .slide-copy code { white-space: nowrap; }
+        .reveal .account-table th, .reveal .account-table td { padding: 0.22em 0.45em; }
+
+        /* Clase 9: tablas y ejemplos más densos. */
+        .reveal .compact-table { width: 94%; font-size: 62%; line-height: 1.18; margin: 0.3em auto; }
+        .reveal .compact-table th, .reveal .compact-table td { padding: 0.18em 0.4em; }
+        .reveal pre { width: 90%; font-size: 52%; margin: 0.45em auto; }
+        .reveal pre code { max-height: none; }
+        #de_tres_bits_a_un_digito_octal .compact-table { font-size: 46%; width: 96%; }
+        #de_tres_bits_a_un_digito_octal .slide-copy { font-size: 49%; }
+        #de_tres_bits_a_un_digito_octal h3 { margin-bottom: 0.15em; }
+        #listar_no_es_atravesar .slide-copy { font-size: 51%; }
+        #chmod_forma_simbolica .compact-table { font-size: 55%; }
+        #interpretar_antes_de_aplicar .compact-table { font-size: 57%; }
+        #sgid_y_umask_trabajan_juntos .compact-table { font-size: 58%; }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+<section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 9: Permisos y propiedad</h4><small><p>Módulo 1 — Operación de Sistemas Operativos GNU/Linux</p></small></section>
+
+<section id="index" data-state="no_footer"><h3>Temas de la clase 9</h3>
+<div class="slide-copy"><ul><li><a href="#/archivos_y_directorios">Permisos en archivos y directorios</a></li><li><a href="#/cambiar_permisos_y_propiedad">Modificación de permisos, owner y grupo</a></li><li><a href="#/diagnosticar_el_acceso">Diagnóstico de una ruta</a></li><li><a href="#/permisos_de_creacion">Permisos de creación: umask</a></li><li><a href="#/directorios_compartidos">SGID en directorios y bit sticky</a></li><li><a href="#/labs_clase">Directorio compartido entre Ana y Bruno</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+</section>
+
+<section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
+<div class="slide-copy"><p>Al finalizar vas a poder:</p></div>
+<div class="slide-copy"><ul>
+<li>Explicar por qué una operación recibe «Permiso denegado».</li>
+<li>Cambiar permisos y propiedad según la necesidad.</li>
+<li>Distinguir editar un archivo de borrarlo.</li>
+<li>Configurar y verificar un directorio de trabajo compartido.</li>
+</ul></div>
+</section>
+
+<section id="retomamos_la_clase_8" data-state="no_footer"><h3>Retomamos la clase 8</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>-rw-r----- 1 ana desarrollo ... informe.txt</code></pre>
+<div class="slide-copy"><ul>
+<li>Ana puede leer y escribir como owner.</li>
+<li>Bruno puede leer por el grupo desarrollo.</li>
+<li>Un usuario ajeno al grupo no tiene acceso al contenido.</li>
+</ul></div>
+<div class="slide-copy"><p>La ruta debe ser accesible y las sesiones deben tener los grupos correspondientes.</p></div>
+<aside class="notes"><p>el archivo anterior está en <code>/srv/laboratorio-clase8</code>. Conservarlo. Los ejemplos nuevos se preparan en un espacio separado; los bloques de esta presentación ilustran conceptos, no son una guía consecutiva de ejecución.</p>
+</aside></section>
+
+<section id="los_permisos_del_propietario_y_del_grupo_no_se_suman" data-state="no_footer"><h3>Los permisos del propietario y del grupo no se suman</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>-r--rw---- 1 ana desarrollo ... informe.txt</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Cuenta</th>
+<th>Se aplica</th>
+<th>¿Puede escribir?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ana, owner</td>
+<td>U: r--</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Bruno, miembro de desarrollo</td>
+<td>G: rw-</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p><strong>Los conjuntos no se suman.</strong></p></div>
+<aside class="notes"><p>ejemplo sin ACL extendida y con la ruta accesible. Ana puede cambiar el modo como owner; eso no significa que el modo actual le permita escribir.</p>
+</aside></section>
+</section>
+
+<section>
+<section id="archivos_y_directorios" data-state="customevent"><h2>Archivos y directorios</h2>
+<div class="slide-copy"><p>La misma letra permite operaciones diferentes.</p></div>
+</section>
+
+<section id="permisos_en_un_archivo" data-state="no_footer"><h3>Permisos en un archivo</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Bit</th>
+<th>Operación</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r</td>
+<td>Leer contenido</td>
+</tr>
+<tr>
+<td>w</td>
+<td>Modificar contenido</td>
+</tr>
+<tr>
+<td>x</td>
+<td>Ejecutar, si el formato y las demás condiciones lo permiten</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>El permiso de escritura <strong>no decide por sí solo si podemos borrar el archivo</strong>.</p></div>
+</section>
+
+<section id="permisos_en_un_directorio" data-state="no_footer"><h3>Permisos en un directorio</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Bit</th>
+<th>Operación</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r</td>
+<td>Leer la lista de nombres</td>
+</tr>
+<tr>
+<td>w</td>
+<td>Modificar entradas, junto con x</td>
+</tr>
+<tr>
+<td>x</td>
+<td>Buscar nombres y atravesar el directorio</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Crear, borrar y renombrar requieren normalmente <strong>w + x en el directorio padre</strong>.</p></div>
+<aside class="notes"><p>el bit sticky y otros controles pueden restringir esas operaciones. Para renombrar entre directorios se consideran ambos padres.</p>
+</aside></section>
+
+<section id="listar_no_es_atravesar" data-state="no_footer"><h3>Listar no es atravesar</h3>
+<div class="slide-copy"><p><strong>Atravesar un directorio es usarlo como parte de una ruta para llegar a un archivo o subdirectorio.</strong> Por ejemplo, abrir <code>/srv/equipo/informe.txt</code> requiere <code>x</code> en <code>/</code>, <code>/srv</code> y <code>/srv/equipo</code>, aunque no entremos antes con <code>cd</code>.</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Permisos disponibles</th>
+<th>Qué podemos hacer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r sin x</td>
+<td>Obtener nombres; no acceder a esos objetos por esa ruta</td>
+</tr>
+<tr>
+<td>x sin r</td>
+<td>Acceder a un nombre conocido, si sus permisos lo permiten; no enumerar el directorio</td>
+</tr>
+<tr>
+<td>r + x</td>
+<td>Listar y buscar; cada archivo conserva sus permisos</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>mostrar la diferencia con un directorio de prueba. <code>ls -l</code> necesita resolver los nombres para obtener sus metadatos; con r sin x puede mostrar errores aunque sea posible listar nombres.</p>
+</aside></section>
+
+<section id="leer_requiere_una_ruta_accesible" data-state="no_footer"><h3>Leer requiere una ruta accesible</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>/srv/equipo/informe.txt</code></pre>
+<div class="slide-copy"><p>Para abrir <code>informe.txt</code> necesitamos:</p></div>
+<div class="slide-copy"><ul>
+<li><strong>x</strong> en <code>/</code>, <code>/srv</code> y <code>/srv/equipo</code>.</li>
+<li><strong>r</strong> en <code>informe.txt</code> para leerlo.</li>
+</ul></div>
+<div class="slide-copy"><p>Un archivo legible puede quedar inaccesible por un directorio intermedio.</p></div>
+</section>
+
+<section id="editar_y_borrar_son_operaciones_distintas" data-state="no_footer"><h3>Editar y borrar son operaciones distintas</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Operación</th>
+<th>Dónde miramos</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Agregar una línea</td>
+<td>Escritura en el archivo y búsqueda en la ruta</td>
+</tr>
+<tr>
+<td>Crear un archivo</td>
+<td>Escritura y búsqueda en el directorio padre</td>
+</tr>
+<tr>
+<td>Borrar un nombre</td>
+<td>Escritura y búsqueda en el padre, más las restricciones aplicables</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Ana puede borrar <code>prueba2.txt</code> de Bruno si tiene <strong>w+x en <code>/srv/prueba</code></strong> y no hay una restricción adicional. <code>rm</code> quita el nombre del directorio; el owner del archivo no decide por sí solo.</p></div>
+<div class="slide-copy"><p>Para verificarlo: <code>id</code> y <code>ls -ld /srv/prueba</code>. El bit sticky puede limitar el borrado.</p></div>
+</section>
+
+<section id="consultas" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>¿Qué falta si puedo listar nombres pero no abrir los archivos?</li>
+<li>¿Por qué quitar w de un archivo no garantiza que nadie lo borre?</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="cambiar_permisos_y_propiedad" data-state="customevent"><h2>Cambiar permisos y propiedad</h2>
+<div class="slide-copy"><p>Definir quién necesita hacer qué.</p></div>
+</section>
+
+<section id="chmod_forma_simbolica" data-state="no_footer"><h3>chmod: forma simbólica</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>chmod +x script.sh       # Agregar ejecución
+chmod +w informe.txt     # Agregar escritura
+chmod g+w informe.txt    # Agregar escritura al grupo
+chmod u=rw,g=r,o= informe.txt</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Parte</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>u, g, o, a</td>
+<td>Owner, grupo, otros, todos</td>
+</tr>
+<tr>
+<td>+</td>
+<td>Agregar</td>
+</tr>
+<tr>
+<td>-</td>
+<td>Quitar</td>
+</tr>
+<tr>
+<td>=</td>
+<td>Establecer</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Sin <code>u</code>, <code>g</code>, <code>o</code> o <code>a</code>, <strong>la umask filtra qué bits se modifican</strong>. <code>+w</code> no siempre equivale a <code>a+w</code>.</p></div>
+<aside class="notes"><p>ejemplos independientes como owner. Con umask 022, +x agrega x a U/G/O; +w agrega w solo a U. Con a+w se solicita escritura para U/G/O sin ese filtro. Anticipar esta diferencia y retomarla al explicar umask.</p>
+</aside></section>
+
+<section id="de_tres_bits_a_un_digito_octal" data-state="no_footer"><h3>De tres bits a un dígito octal</h3>
+<div class="slide-copy"><p>Cada permiso es un bit: <strong>1 = habilitado · 0 = deshabilitado</strong>.
+Las posiciones de <code>rwx</code> valen <strong>2² = 4, 2¹ = 2 y 2⁰ = 1</strong>.</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Permisos</th>
+<th align="center">r · 4</th>
+<th align="center">w · 2</th>
+<th align="center">x · 1</th>
+<th>Suma de los valores activos</th>
+<th align="center">Octal</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>---</code></td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td>0</td>
+<td align="center"><strong>0</strong></td>
+</tr>
+<tr>
+<td><code>--x</code></td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td>1</td>
+<td align="center"><strong>1</strong></td>
+</tr>
+<tr>
+<td><code>-w-</code></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td>2</td>
+<td align="center"><strong>2</strong></td>
+</tr>
+<tr>
+<td><code>-wx</code></td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td>2 + 1</td>
+<td align="center"><strong>3</strong></td>
+</tr>
+<tr>
+<td><code>r--</code></td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td>4</td>
+<td align="center"><strong>4</strong></td>
+</tr>
+<tr>
+<td><code>r-x</code></td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">1</td>
+<td>4 + 1</td>
+<td align="center"><strong>5</strong></td>
+</tr>
+<tr>
+<td><code>rw-</code></td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td>4 + 2</td>
+<td align="center"><strong>6</strong></td>
+</tr>
+<tr>
+<td><code>rwx</code></td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td align="center">1</td>
+<td>4 + 2 + 1</td>
+<td align="center"><strong>7</strong></td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p><strong><code>rw-</code> → <code>110₂</code> → 1×4 + 1×2 + 0×1 → <code>6₈</code></strong></p></div>
+<div class="slide-copy"><p>Tres bits tienen ocho combinaciones: cada grupo U, G u O se representa con un dígito octal de <strong>0 a 7</strong>.</p></div>
+<aside class="notes"><p>recorrer la fila rw-: se suman los valores de las posiciones activas, no los unos. Repetir con r-x y enlazar con los tres grupos de <code>chmod 640</code> en la siguiente diapositiva.</p>
+</aside></section>
+
+<section id="chmod_forma_octal" data-state="no_footer"><h3>chmod: forma octal</h3>
+<div class="slide-copy"><p><strong>r = 4 · w = 2 · x = 1</strong></p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>rw- = 4 + 2 = 6
+r-x = 4 + 1 = 5
+rwx = 4 + 2 + 1 = 7
+--- = 0</code></pre>
+<div class="slide-copy"><p>Tres dígitos: <strong>U · G · O</strong>.</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>chmod 640 informe.txt</code></pre>
+<div class="slide-copy"><p>Owner: rw- · Grupo: r-- · Otros: ---</p></div>
+</section>
+
+<section id="interpretar_antes_de_aplicar" data-state="no_footer"><h3>Interpretar antes de aplicar</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Modo</th>
+<th>Permisos</th>
+<th>Uso ilustrativo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>600</td>
+<td>rw-------</td>
+<td>Archivo privado</td>
+</tr>
+<tr>
+<td>640</td>
+<td>rw-r-----</td>
+<td>Archivo legible por el grupo</td>
+</tr>
+<tr>
+<td>660</td>
+<td>rw-rw----</td>
+<td>Archivo editable por el grupo</td>
+</tr>
+<tr>
+<td>750</td>
+<td>rwxr-x---</td>
+<td>Directorio consultable por el grupo</td>
+</tr>
+<tr>
+<td>770</td>
+<td>rwxrwx---</td>
+<td>Directorio modificable por el grupo</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>El acceso también depende de la identidad y de la ruta.</p></div>
+</section>
+
+<section id="quien_puede_cambiar_los_permisos" data-state="no_footer"><h3>Quién puede cambiar los permisos</h3>
+<div class="slide-copy"><p>Puede hacerlo el <strong>owner</strong> o un proceso con los privilegios necesarios.</p></div>
+<div class="slide-copy"><p>Poder escribir por el grupo no convierte a Bruno en owner.</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ls -l informe.txt
+chmod g+w informe.txt
+ls -l informe.txt</code></pre>
+<div class="slide-copy"><p>Inspeccionar → cambiar → verificar.</p></div>
+<aside class="notes"><p>ejecutar como owner. Evitar cambios recursivos generales; el mismo modo no siempre sirve para archivos y directorios.</p>
+</aside></section>
+
+<section id="chmod_cambios_recursivos" data-state="no_footer"><h3>chmod: cambios recursivos</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>chmod -R g+w proyecto</code></pre>
+<div class="slide-copy"><p><strong><code>-R</code> aplica el cambio al directorio y a todo su contenido</strong>, incluidos archivos ocultos y subdirectorios.</p></div>
+<div class="slide-copy"><p>El ejemplo agrega escritura al grupo; no cambia owner ni grupo.</p></div>
+<div class="slide-copy"><p>Un mismo modo numérico puede no servir para todo: <code>660</code> deja directorios sin búsqueda; <code>770</code> vuelve ejecutables los archivos de datos.</p></div>
+<aside class="notes"><p>usar un árbol de práctica propio. Revisar la ruta y los permisos antes de aplicar el cambio. Poder escribir en el directorio no autoriza a cambiar los permisos de archivos ajenos.</p>
+</aside></section>
+
+<section id="x_mayuscula_directorios_y_ejecutables" data-state="no_footer"><h3>X mayúscula: directorios y ejecutables</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>chmod -R g+rwX proyecto</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Objeto</th>
+<th>Qué agrega al grupo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Directorio</td>
+<td>Lectura, escritura y búsqueda (<code>rwx</code>)</td>
+</tr>
+<tr>
+<td>Archivo sin ejecución</td>
+<td>Lectura y escritura (<code>rw</code>)</td>
+</tr>
+<tr>
+<td>Archivo que ya tiene algún bit de ejecución</td>
+<td>Lectura, escritura y ejecución (<code>rwx</code>)</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p><strong><code>X</code> no vuelve ejecutables todos los archivos.</strong> Este comando agrega permisos; conserva los demás.</p></div>
+<aside class="notes"><p><code>X</code> evalúa si es directorio o si ya hay ejecución en U, G u O. No elimina ejecución existente ni fija modos exactos. El resultado depende de los permisos iniciales; el laboratorio parte de directorios 2700 y un archivo 600.</p>
+</aside></section>
+
+<section id="chown_y_chgrp" data-state="no_footer"><h3>chown y chgrp</h3>
+<div class="slide-copy"><p>Desde la cuenta administradora:</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo chown ana informe.txt
+sudo chgrp desarrollo informe.txt
+sudo chown ana:desarrollo informe.txt</code></pre>
+<div class="slide-copy"><ul>
+<li><code>chown</code>: cambiar owner; también admite owner y grupo juntos.</li>
+<li><code>chgrp</code>: cambiar el grupo.</li>
+<li>Ninguno reemplaza a <code>chmod</code>.</li>
+</ul></div>
+<aside class="notes"><p>son alternativas ilustrativas. Transferir owner requiere privilegios; el owner puede cambiar el grupo a uno del que sea miembro. Asignar desarrollo al directorio no modifica archivos que ya existen dentro.</p>
+</aside></section>
+
+<section id="consultas_2" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>¿Qué diferencia hay entre <code>chmod g+w</code> y <code>chgrp desarrollo</code>?</li>
+<li>¿Bruno puede cambiar el modo de un archivo de Ana solo porque puede escribirlo?</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="diagnosticar_el_acceso" data-state="customevent"><h2>Diagnosticar el acceso</h2>
+<div class="slide-copy"><p>Primero identificar la operación y la sesión.</p></div>
+</section>
+
+<section id="una_ruta_completa" data-state="no_footer"><h3>Una ruta completa</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>id
+ls -l /srv/equipo/informe.txt
+ls -ld /srv/equipo
+namei -l /srv/equipo/informe.txt</code></pre>
+<div class="slide-copy"><ul>
+<li><code>id</code>: identidad y grupos de esta sesión.</li>
+<li><code>ls -l</code>: datos del archivo.</li>
+<li><code>ls -ld</code>: datos del directorio mismo.</li>
+<li><code>namei -l</code>: componentes y permisos de la ruta.</li>
+</ul></div>
+<aside class="notes"><p><code>namei</code> ayuda a localizar restricciones; no evalúa todos los controles. Repetir la operación desde la sesión del usuario afectado después de corregirla.</p>
+</aside></section>
+
+<section id="una_correccion_con_alcance_concreto" data-state="no_footer"><h3>Una corrección con alcance concreto</h3>
+<div class="slide-copy"><p>Si Bruno necesita escribir un informe del grupo:</p></div>
+<div class="slide-copy"><ol>
+<li>Comprobar que su sesión tenga desarrollo.</li>
+<li>Revisar el grupo del archivo y el acceso a la ruta.</li>
+<li>Como owner, agregar la escritura necesaria con <code>chmod g+w</code>.</li>
+<li>Probar nuevamente como Bruno.</li>
+</ol></div>
+<div class="slide-copy"><p>Dar <code>777</code> abre permisos a otros usuarios y puede ocultar la causa del problema.</p></div>
+</section>
+</section>
+
+<section>
+<section id="permisos_de_creacion" data-state="customevent"><h2>Permisos de creación</h2>
+<div class="slide-copy"><p>¿Con qué permisos nace un archivo?</p></div>
+</section>
+
+<section id="umask_decidir_como_nacen_los_archivos" data-state="no_footer"><h3>umask: decidir cómo nacen los archivos</h3>
+<div class="slide-copy"><p>Ana crea un informe nuevo y Bruno necesita editarlo. Si nace con <code>644</code>, el grupo solo puede leerlo.</p></div>
+<div class="slide-copy"><p><strong>Umask permite definir permisos de creación adecuados sin corregir cada archivo después.</strong></p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>umask       # Consultar la máscara de esta shell
+umask 007   # Quitar los permisos de otros al crear</code></pre>
+<div class="slide-copy"><p><code>chmod</code> cambia un archivo existente; <code>umask</code> limita los permisos solicitados para los nuevos.</p></div>
+<aside class="notes"><p>cambiar umask no altera archivos existentes. Para compartir escritura, el archivo debe tener también el grupo adecuado; lo resolveremos con SGID en directorios.</p>
+</aside></section>
+
+<section id="ejemplos_habituales" data-state="no_footer"><h3>Ejemplos habituales</h3>
+<div class="slide-copy"><p>Para creaciones habituales que solicitan 666 en archivos y 777 en directorios:</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>umask</th>
+<th>Archivo</th>
+<th>Directorio</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>022</td>
+<td>644</td>
+<td>755</td>
+</tr>
+<tr>
+<td>002</td>
+<td>664</td>
+<td>775</td>
+</tr>
+<tr>
+<td>007</td>
+<td>660</td>
+<td>770</td>
+</tr>
+<tr>
+<td>077</td>
+<td>600</td>
+<td>700</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>En <strong>007</strong>, cada dígito indica qué quitar: U → nada, G → nada, O → todo.</p></div>
+<div class="slide-copy"><p>Para nuestro equipo: archivos nuevos <code>660</code>, con escritura para el grupo adecuado.</p></div>
+<div class="slide-copy"><p>En Debian, Ubuntu... por ejemplo con <code>umask</code>, suele verse <code>0002</code>.</p></div>
+<aside class="notes"><p>ejemplo sin ACL predeterminada. No enseñar la máscara como una resta general; se quitan bits. Un programa que solicita 600 no se convierte en 660 por usar 007.</p>
+</aside></section>
+
+<!-- <section id="una_prueba_acotada" data-state="no_footer"><h3>Una prueba acotada</h3>
+<div class="slide-copy"><p>Dentro del directorio de práctica, con nombres nuevos:</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>(
+    umask 007
+    touch archivo-nuevo.txt
+    mkdir directorio-nuevo
+    ls -ld archivo-nuevo.txt directorio-nuevo
+)</code></pre>
+<div class="slide-copy"><p>Esperamos <strong>660</strong> para el archivo y <strong>770</strong> para el directorio.</p></div>
+<div class="slide-copy"><p>Los paréntesis conservan la umask de la shell exterior.</p></div>
+<aside class="notes"><p>preparar una ruta sin ACL predeterminada. Si los nombres ya existen, la prueba no demuestra los permisos de creación.</p>
+</aside></section> -->
+</section>
+
+<section>
+<section id="directorios_compartidos" data-state="customevent"><h2>Directorios compartidos</h2>
+<div class="slide-copy"><p>Conservar el grupo y controlar el borrado.</p></div>
+</section>
+
+<section id="sgid_en_un_directorio" data-state="no_footer"><h3>SGID en un directorio</h3>
+<div class="slide-copy"><p>Con el directorio ya creado, desde la cuenta administradora:</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo chown root:desarrollo /srv/equipo
+sudo chmod 2770 /srv/equipo
+ls -ld /srv/equipo</code></pre>
+<div class="slide-copy"><p>Permisos esperados:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>drwxrws---</code></pre>
+<div class="slide-copy"><p>El <strong>2</strong> activa SGID: los objetos nuevos toman el grupo del directorio.</p></div>
+</section>
+
+<section id="sgid_y_umask_trabajan_juntos" data-state="no_footer"><h3>SGID y umask trabajan juntos</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Configuración</th>
+<th>Qué resuelve</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Grupo desarrollo</td>
+<td>Qué grupo comparte el espacio</td>
+</tr>
+<tr>
+<td>Directorio 2770</td>
+<td>Acceso grupal y grupo de objetos nuevos</td>
+</tr>
+<tr>
+<td>umask 007 en ambas sesiones</td>
+<td>Conserva escritura grupal solicitada y quita permisos a otros</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Con creaciones habituales, los archivos nuevos quedan con grupo desarrollo y modo 660.</p></div>
+<div class="slide-copy"><p><strong>SGID no agrega escritura por sí solo.</strong></p></div>
+<aside class="notes"><p>no modifica archivos existentes. Un archivo movido desde otro directorio puede conservar su grupo y modo; no confundir mover con crear.</p>
+</aside></section>
+
+<!-- <section id="bit_sticky_y_tmp" data-state="no_footer"><h3>Bit sticky: activar y verificar</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo chmod +t /srv/equipo
+ls -ld /srv/equipo</code></pre>
+<div class="slide-copy"><p>Si el directorio era <code>2770</code>, quedará <code>3770</code>: <code>drwxrws--T</code>. La <strong>T</strong> indica sticky sin <code>x</code> para otros; en <code>/tmp</code> suele verse <strong>t</strong> porque otros sí tienen <code>x</code>.</p></div>
+<div class="slide-copy"><p>Con sticky, solo el owner del archivo, el owner del directorio o un proceso privilegiado pueden borrarlo o renombrarlo. No quita escritura al archivo; otra protección, <code>protected_regular</code>, puede bloquear redirecciones como <code>&gt;&gt;</code>.</p></div>
+<aside class="notes"><p>observar <code>/tmp</code> con <code>ls -ld /tmp</code>, sin cambiarlo. En <code>/srv/equipo</code>, que pertenece a root, usar <code>sudo</code>; el owner de otro directorio puede activar sticky sin <code>sudo</code>. <code>chmod +t</code> conserva SGID y los permisos existentes.</p>
+</aside></section> -->
+
+<section id="consultas_3" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>¿Por qué SGID no garantiza que Bruno pueda editar cada archivo nuevo?</li>
+<!-- <li>¿El bit sticky evita que cambien el contenido de mi archivo?</li> -->
+</ul></div>
+</section>
+
+<section id="resumen_de_la_clase" data-state="no_footer"><h3>Resumen de la clase</h3>
+<div class="slide-copy"><ul>
+<li>Identidad y UGO determinan qué permisos se evalúan.</li>
+<li>Archivos y directorios controlan operaciones diferentes.</li>
+<li><code>chmod</code> cambia permisos; <code>chown</code> y <code>chgrp</code>, propiedad.</li>
+<li><code>namei -l</code> ayuda a revisar toda la ruta.</li>
+<li>Umask limita permisos de creación; SGID conserva el grupo.</li>
+<li>El bit sticky restringe el borrado de archivos ajenos en directorios compartidos.</li>
+</ul></div>
+</section>
+
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorio 8</h3>
+<div class="slide-copy"><p><strong>Objetivo:</strong> dejar funcionando un directorio compartido entre Ana y Bruno.</p></div>
+<div class="slide-copy"><ul>
+<li>Preparar Ana, Bruno y desarrollo si faltan; reutilizarlos si ya existen.</li>
+<li>Configurar grupo, permisos y SGID del directorio.</li>
+<li>Crear archivos con permisos adecuados desde ambas sesiones.</li>
+<li>Comprobar lectura, escritura y rechazo a usuarios ajenos.</li>
+</ul></div>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab8/lab8.md">Laboratorio 8 — Borrador para revisión</a></p></div>
+<aside class="notes"><p>guía independiente del Laboratorio 7, con preparación inicial de cuentas y grupo si faltan. Reservar aproximadamente una hora, más la preparación para quienes la necesiten. Recorrido de permisos probado en VM con cuentas existentes; revisión docente y prueba con cuentas ausentes pendientes. Enlace al archivo local, sin publicación acreditada.</p>
+</aside></section>
+
+<section id="referencias" data-state="no_footer"><h3>Referencias</h3>
+<div class="slide-copy"><ul>
+<li><a href="https://www.gnu.org/software/coreutils/manual/html_node/chmod-invocation.html" target="_blank" rel="noopener noreferrer">GNU Coreutils: chmod</a>, <a href="https://www.gnu.org/software/coreutils/manual/html_node/chown-invocation.html" target="_blank" rel="noopener noreferrer">chown</a> y <a href="https://www.gnu.org/software/coreutils/manual/html_node/chgrp-invocation.html" target="_blank" rel="noopener noreferrer">chgrp</a>.</li>
+<li><a href="https://man7.org/linux/man-pages/man7/inode.7.html" target="_blank" rel="noopener noreferrer">Linux: permisos y bits especiales</a>.</li>
+<li><a href="https://man7.org/linux/man-pages/man2/umask.2.html" target="_blank" rel="noopener noreferrer">Linux: umask</a>.</li>
+<li>Ayuda local: <code>man namei</code>, <code>help umask</code>.</li>
+</ul></div>
+</section>
+</section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            // multiplex: {
+            //     secret: null,
+            //     id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
+            //     url: 'https://multiplex.up.railway.app'
+            // },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <!-- <script src="https://multiplex.up.railway.app/client.js"></script> -->
+</body>
+
+</html>
