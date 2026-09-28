@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 10</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .reveal .slide-copy { font-size: 60%; line-height: 1.3; }
+        .reveal .slide-copy p { margin: 0.6em 0; }
+        .reveal .slide-copy blockquote { width: 92%; }
+        .reveal .slide-copy ul, .reveal .slide-copy ol { margin-bottom: 0.4em; }
+        .reveal .slide-copy code { white-space: nowrap; }
+        .reveal .account-table th, .reveal .account-table td { padding: 0.22em 0.45em; }
+
+        /* Clase 10: tablas, código y capturas. */
+        .reveal .compact-table { width: 94%; font-size: 60%; line-height: 1.18; margin: 0.3em auto; }
+        .reveal .compact-table th, .reveal .compact-table td { padding: 0.18em 0.4em; }
+        .reveal .compact-table code { white-space: nowrap; }
+        /* El botón de copiar se ubica en la esquina de .codeblock: el contenedor
+           tiene que medir lo mismo que el bloque para que el botón quede adentro. */
+        .reveal pre { width: 92%; font-size: 50%; margin: 0.4em auto; }
+        .reveal pre code { max-height: none; }
+        .reveal .codeblock { width: 92%; margin: 0.4em auto; }
+        .reveal .codeblock > pre { width: 100%; margin: 0; }
+        .reveal .codeblock > button { transform: scale(0.75); transform-origin: top right; }
+        /* Capturas: la sombra la pone el filtro y respeta las esquinas redondeadas. */
+        .reveal .terminal-screenshot { display: block; margin: 0.3em auto; max-height: 450px; max-width: 90%; width: auto; filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.25)); }
+        #htop .terminal-screenshot { max-height: 340px; }
+        .reveal .recorte { position: relative; overflow: hidden; width: 88%; margin: 0.2em auto 0.4em; border-radius: 0.4rem; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); }
+        .reveal .recorte img { position: absolute; max-width: none; max-height: none; margin: 0; }
+        #top_la_cabecera .compact-table, #top_las_columnas .compact-table { font-size: 48%; }
+        #top_la_cabecera .slide-copy, #top_las_columnas .slide-copy { font-size: 52%; }
+        .reveal .salida-nota { font-size: 80%; opacity: 0.7; margin: 0.1em 0 !important; }
+        #jerarquia_de_procesos pre { font-size: 40%; }
+        #jerarquia_de_procesos pre, #jerarquia_de_procesos .codeblock { width: 98%; }
+        #ps_una_foto_del_momento pre, #leer_systemctl_status pre { font-size: 44%; }
+        #diagnostico_inicial pre { font-size: 42%; }
+        #ps_una_foto_del_momento pre, #leer_systemctl_status pre, #diagnostico_inicial pre,
+        #ps_una_foto_del_momento .codeblock, #leer_systemctl_status .codeblock, #diagnostico_inicial .codeblock { width: 96%; }
+        #ps_una_foto_del_momento pre code, #leer_systemctl_status pre code { white-space: pre-wrap; }
+        #ps_una_foto_del_momento .codeblock > pre, #leer_systemctl_status .codeblock > pre, #diagnostico_inicial .codeblock > pre, #jerarquia_de_procesos .codeblock > pre { width: 100%; }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+<section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 10: Procesos y servicios</h4><small><p>Módulo 1 — Operación de Sistemas Operativos GNU/Linux</p></small></section>
+
+<section id="index" data-state="no_footer"><h3>Temas de la clase 10</h3>
+<div class="slide-copy"><ul><li><a href="#/procesos">Procesos</a></li><li><a href="#/consumo_en_tiempo_real">Consumo en tiempo real</a></li><li><a href="#/terminar_un_proceso">Terminar un proceso</a></li><li><a href="#/primer_y_segundo_plano">Primer y segundo plano</a></li><li><a href="#/servicios_con_systemd">Servicios con systemd</a></li><li><a href="#/cuando_un_servicio_falla">Cuando un servicio falla</a></li><li><a href="#/apagado_y_reinicio">Apagado y reinicio</a></li><li><a href="#/revision_minima_de_un_servidor">Revisión mínima de un servidor</a></li><li><a href="#/labs_clase">Actividad práctica — Laboratorio 9</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+</section>
+
+<section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
+<div class="slide-copy"><p>Al finalizar vas a poder:</p></div>
+<div class="slide-copy"><ul>
+<li>Identificar qué procesos corren y con qué usuario.</li>
+<li>Encontrar y terminar un proceso que consume recursos.</li>
+<li>Controlar trabajos en primer y segundo plano.</li>
+<li>Iniciar, detener, habilitar y consultar un servicio.</li>
+<li>Apagar y reiniciar el servidor de forma ordenada.</li>
+</ul></div>
+</section>
+
+<section id="retomamos_la_clase_4" data-state="no_footer"><h3>Retomamos la clase 4</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>systemctl status ssh
+systemctl is-enabled ssh</code></pre>
+<div class="slide-copy"><ul>
+<li>systemd es el <strong>PID 1</strong>, el primer proceso del sistema.</li>
+<li>Inicia el resto y organiza el arranque con <em>targets</em>.</li>
+<li>Hasta ahora solo lo consultamos. Hoy vamos a administrar servicios.</li>
+</ul></div>
+<aside class="notes"><p>recordar también <code>timedatectl</code> del Lab 3. El servicio de la práctica es el que mantiene en hora ese reloj.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="procesos" data-state="customevent"><h2>Procesos</h2>
+<div class="slide-copy"><p>Qué corre en el servidor y con qué usuario.</p></div>
+</section>
+
+<section id="programa_y_proceso" data-state="no_footer"><h3>Programa y proceso</h3>
+<div class="slide-copy"><p>Un programa es un archivo, por ejemplo <code>/usr/bin/sleep</code>. Un proceso es una ejecución de ese programa.</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Dato</th>
+<th>Para qué sirve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PID</td>
+<td>Identificar el proceso; se usa con <code>kill</code></td>
+</tr>
+<tr>
+<td>Usuario</td>
+<td>Saber con qué identidad corre</td>
+</tr>
+<tr>
+<td>Comando</td>
+<td>Saber qué programa es</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>El usuario del proceso decide a qué archivos puede acceder, como vimos en la clase 9.</p></div>
+<aside class="notes"><p>cada comando que escribimos crea un proceso con la identidad de la shell. El «Permiso denegado» que recibía Bruno en la clase 9 era el de su proceso <code>cat</code>.</p>
+</aside>
+</section>
+
+<section id="jerarquia_de_procesos" data-state="no_footer"><h3>Jerarquía de procesos</h3>
+<div class="slide-copy"><p>Cada proceso tiene un padre (PPID). En la raíz está systemd, PID 1.</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>pstree -p        # árbol completo con PID
+pstree -sp $$    # camino desde PID 1 hasta mi shell</code></pre>
+<div class="slide-copy"><p><code>$$</code> es el PID de la shell actual.</p></div>
+<div class="slide-copy"><p>Debian no trae <code>pstree</code>. Hay que instalar el paquete <strong>psmisc</strong>:</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo apt install psmisc</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>systemd(1)───sshd(714)───sshd-session(890)───sshd-session(897)───bash(898)───pstree(…)</code></pre>
+<div class="slide-copy"><p>La conexión SSH aparece dos veces porque una parte corre como root y otra con tu usuario.</p></div>
+<aside class="notes"><p>el camino se armó con los PID reales de la VM. En el laboratorio, <code>psmisc</code> se instala junto con <code>htop</code>. Sin <code>-s</code>, <code>pstree -p $$</code> muestra solo lo que cuelga de la shell. Sirve para ver de qué servicio viene una sesión o qué procesos lanzó un servicio.</p>
+</aside>
+</section>
+
+<section id="ps_una_foto_del_momento" data-state="no_footer"><h3>ps: una foto del momento</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ps -ef                  # todos los procesos
+ps -ef | grep python    # los que tienen «python» en su línea
+ps -u cristian          # procesos de un usuario</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>UID          PID    PPID  C STIME TTY          TIME CMD
+root           1       0  0 22:39 ?        00:00:00 /sbin/init
+root         714       1  0 22:39 ?        00:00:00 sshd: /usr/sbin/sshd -D …
+cristian     810     788  0 22:39 ?        00:00:00 sshd-session: cristian@pts/0
+cristian     812     810  0 22:39 pts/0    00:00:00 -bash</code></pre>
+<div class="slide-copy"><p>Las columnas que más usamos son UID (usuario), PID y CMD (comando).</p></div>
+<aside class="notes"><p>salida real de la VM, recortada. El guion de <code>-bash</code> indica una shell de inicio de sesión. <code>ps -ef | grep x</code> muestra también la línea del propio <code>grep</code> y cualquier proceso que tenga <code>x</code> en su línea de comando, así que hay que leer bien antes de terminar algo. <code>ps aux</code> es la otra forma habitual: agrega %CPU, %MEM y estado, y por eso se lee peor en pantalla. El consumo lo miramos con <code>top</code> y <code>htop</code>.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="consumo_en_tiempo_real" data-state="customevent"><h2>Consumo en tiempo real</h2>
+<div class="slide-copy"><p><code>ps</code> saca una foto; <code>top</code> muestra una película.</p></div>
+</section>
+
+<section id="top" data-state="no_footer"><h3>top</h3>
+<img src="img/c10/s_top.png" alt="top en la VM del curso" class="terminal-screenshot">
+<div class="slide-copy"><p><code>top</code> muestra arriba el estado general del equipo y debajo los procesos, ordenados por consumo de CPU. Se actualiza cada pocos segundos y se sale con <code>q</code>.</p></div>
+<aside class="notes"><p>captura real de la VM, donde <code>top</code> sale en español. La cabecera, las columnas y la prioridad se recorren en las diapositivas siguientes.</p>
+</aside>
+</section>
+
+<section id="top_la_cabecera" data-state="no_footer"><h3>top: la cabecera</h3>
+<div class="recorte" style="aspect-ratio: 1900 / 265;"><img src="img/c10/s_top.png" alt="Cabecera de top en la VM" style="width: 116.737%; left: 0.000%; top: -35.849%;"></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Dato</th>
+<th>Qué leer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>up 3:12</code></td>
+<td>Tiempo encendido</td>
+</tr>
+<tr>
+<td><code>1 user</code></td>
+<td>Usuarios conectados</td>
+</tr>
+<tr>
+<td><code>load average</code></td>
+<td>Carga de 1, 5 y 15 minutos; se compara con la cantidad de CPU (<code>nproc</code>)</td>
+</tr>
+<tr>
+<td><code>Tareas</code></td>
+<td>Procesos por estado, incluidos los zombis</td>
+</tr>
+<tr>
+<td><code>%Cpu(s)</code></td>
+<td><code>us</code> programas, <code>sy</code> kernel, <code>id</code> ocioso, <code>wa</code> espera de disco</td>
+</tr>
+<tr>
+<td><code>MiB Mem</code></td>
+<td>RAM total, libre, usada y en búfer/caché</td>
+</tr>
+<tr>
+<td><code>dispon Mem</code></td>
+<td>Memoria disponible: la que dice si falta memoria</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Con una CPU, una carga de 1 es ocupación plena. Si la carga es alta, la CPU está ociosa y <code>wa</code> es alto, el problema está en el disco.</p></div>
+<aside class="notes"><p>«hibernar» traduce <em>sleeping</em>, el estado de un proceso que espera. <code>ni</code> es CPU de procesos con prioridad baja; <code>hi</code> y <code>si</code>, atención de interrupciones; <code>st</code>, tiempo que el hipervisor le quita a la VM. Linux usa la memoria libre como búfer y caché y la libera cuando hace falta, así que un «libre» bajo no alcanza para decir que falta memoria. <code>up</code> sirve para saber si el servidor se reinició.</p>
+</aside>
+</section>
+
+<section id="top_las_columnas" data-state="no_footer"><h3>top: las columnas</h3>
+<div class="recorte" style="aspect-ratio: 2010 / 215;"><img src="img/c10/s_top.png" alt="Columnas y primeras filas de top en la VM" style="width: 110.348%; left: 0.000%; top: -183.721%;"></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Columna</th>
+<th>Qué indica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PID</td>
+<td>Número del proceso</td>
+</tr>
+<tr>
+<td>USUARIO</td>
+<td>Con qué usuario corre</td>
+</tr>
+<tr>
+<td>PR, NI</td>
+<td>Prioridad del proceso</td>
+</tr>
+<tr>
+<td>VIRT</td>
+<td>Memoria que el proceso tiene reservada</td>
+</tr>
+<tr>
+<td>RES</td>
+<td>Memoria RAM que usa de verdad</td>
+</tr>
+<tr>
+<td>SHR</td>
+<td>Parte de RES compartida con otros procesos</td>
+</tr>
+<tr>
+<td>S</td>
+<td>Estado</td>
+</tr>
+<tr>
+<td>%CPU</td>
+<td>Porcentaje de CPU que usó en el último intervalo</td>
+</tr>
+<tr>
+<td>%MEM</td>
+<td>RES como porcentaje de la RAM total</td>
+</tr>
+<tr>
+<td>HORA+</td>
+<td>Tiempo de CPU acumulado, no la hora del día</td>
+</tr>
+<tr>
+<td>ORDEN</td>
+<td>Comando</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Para ver quién consume memoria se mira RES o %MEM. VIRT suele ser mucho más grande y no indica un problema.</p></div>
+<aside class="notes"><p>HORA+ confunde por la traducción: es el tiempo de CPU que usó el proceso.</p>
+</aside>
+</section>
+
+<section id="top_la_prioridad" data-state="no_footer"><h3>top: la prioridad</h3>
+<div class="slide-copy"><p>La prioridad se ve en NI y va de <strong>-20 a 19</strong>:</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>NI</th>
+<th>Prioridad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-20</td>
+<td>La más alta: cuando varios compiten, recibe más CPU</td>
+</tr>
+<tr>
+<td>0</td>
+<td>La normal; casi todos los procesos tienen 0</td>
+</tr>
+<tr>
+<td>19</td>
+<td>La más baja: cuando varios compiten, recibe menos CPU</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>PR es 20 + NI, así que un proceso normal muestra <code>PR 20</code> y <code>NI 0</code>. Los <code>kworker</code> de la captura muestran <code>PR 0</code> y <code>NI -20</code>: son hilos del kernel con la prioridad más alta. Algunos procesos del kernel muestran <code>rt</code> en PR, porque son de tiempo real. Cómo cambiar la prioridad (<code>nice</code>, <code>renice</code>) no entra en la clase.</p>
+</aside>
+</section>
+
+<section id="top_estados_y_teclas" data-state="no_footer"><h3>top: estados y teclas</h3>
+<div class="slide-copy"><p>La columna S muestra el estado:</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Estado</th>
+<th>Lectura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R, S</td>
+<td>Normal: ejecutando o esperando</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>Zombi: ya terminó; mirar el proceso padre</td>
+</tr>
+<tr>
+<td>D</td>
+<td>Esperando disco: muchos, con carga alta, indican un problema de disco</td>
+</tr>
+</tbody></table>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Tecla</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>P</code></td>
+<td>Ordenar por CPU</td>
+</tr>
+<tr>
+<td><code>M</code></td>
+<td>Ordenar por memoria</td>
+</tr>
+<tr>
+<td><code>u</code></td>
+<td>Mostrar un usuario</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>Una línea por CPU</td>
+</tr>
+<tr>
+<td><code>q</code></td>
+<td>Salir</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Un proceso que ocupa una CPU entera muestra cerca de 100 % en %CPU.</p></div>
+<aside class="notes"><p>las líneas <code>kworker</code> en estado <code>I</code> son hilos del kernel y no hay que hacer nada con ellas. La tabla completa de estados está en el apunte, por si preguntan.</p>
+</aside>
+</section>
+
+<section id="htop" data-state="no_footer"><h3>htop</h3>
+<img src="img/c10/s_htop.png" alt="htop en la VM del curso" class="terminal-screenshot">
+<div class="slide-copy"><ul>
+<li>Muestra lo mismo que <code>top</code>, con barras, colores y desplazamiento.</li>
+<li><code>F3</code> busca, <code>F4</code> filtra, <code>F5</code> muestra el árbol, <code>F6</code> ordena, y <code>q</code> o <code>F10</code> salen.</li>
+<li>No viene instalado. Lo instalamos en el laboratorio con <code>sudo apt install htop</code>.</li>
+</ul></div>
+<div class="slide-copy"><p>Otra alternativa es <code><a href="https://github.com/aristocratos/btop">btop</a></code>, que se instala con <code>sudo apt install btop</code>.</p></div>
+<aside class="notes"><p>captura real de la VM. Es el único anticipo de la clase 11: alcanza con decir que <code>apt</code> instala programas desde los repositorios de Debian. <code>psmisc</code> trae <code>pstree</code> y <code>killall</code>, que tampoco vienen instalados. En USER se ve <code>systemd-ti</code>, el nombre recortado de <code>systemd-timesync</code>, que es la cuenta del servicio de la práctica. Las líneas de otro color del mismo programa son hilos, y <code>H</code> los oculta. <code>F9</code> en <code>htop</code> y <code>k</code> en <code>top</code> también terminan procesos, pero en clase usamos <code>kill</code>.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="terminar_un_proceso" data-state="customevent"><h2>Terminar un proceso</h2>
+<div class="slide-copy"><p>Primero se le pide que termine; forzarlo es el último recurso.</p></div>
+</section>
+
+<section id="como_obtengo_el_pid" data-state="no_footer"><h3>¿Cómo obtengo el PID?</h3>
+<div class="slide-copy"><p>Antes de terminar un proceso hay que saber su PID.</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>pgrep -a python          # PID y comando de los procesos «python»
+ps -ef | grep python     # lo mismo, con usuario y más columnas
+jobs -l                  # trabajos lanzados desde esta shell</code></pre>
+<div class="slide-copy"><p>En <code>top</code> y <code>htop</code> está en la columna PID. En <code>htop</code>, <code>F3</code> busca por nombre.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ pgrep -a sleep
+951 sleep 200
+952 sleep 201
+$ kill 951
+$ pgrep -a sleep
+952 sleep 201</code></pre>
+<aside class="notes"><p>salida real de la VM. <code>pgrep -a</code> es lo más limpio porque no se muestra a sí mismo. <code>ps -ef | grep</code> también trae otros procesos que tienen la palabra en su línea de comando, así que hay que mirar usuario y comando antes de terminar nada. El PID de un servicio aparece en <code>systemctl status</code> (Main PID), pero el servicio se detiene con <code>systemctl stop</code>.</p>
+</aside>
+</section>
+
+<section id="kill_y_killall" data-state="no_footer"><h3>kill y killall</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>kill 1234         # pedir al proceso 1234 que termine
+kill -9 1234      # forzarlo: último recurso
+killall sleep     # terminar todos los procesos llamados sleep</code></pre>
+<div class="slide-copy"><ul>
+<li><code>kill</code> usa el PID que sacamos de <code>ps</code>, <code>top</code> o <code>htop</code>.</li>
+<li>Con <code>-9</code>, el programa no puede cerrar ordenadamente.</li>
+<li><code>killall</code> actúa por nombre, así que conviene revisar antes con <code>pgrep -a sleep</code>.</li>
+<li><code>killall</code> viene en el paquete <strong>psmisc</strong>, igual que <code>pstree</code>, y hay que instalarlo.</li>
+</ul></div>
+<div class="slide-copy"><p>Después hay que comprobar que terminó: <code>ps -p 1234</code>.</p></div>
+<aside class="notes"><p>alcance básico. <code>kill</code> envía una señal, y la que usa por omisión pide terminar. No desarrollar tipos de señales, <code>kill -l</code> ni <code>pkill</code>. Sin <code>psmisc</code>, la VM responde <code>-bash: killall: orden no encontrada</code>.</p>
+</aside>
+</section>
+
+<section id="quien_puede_terminar_que" data-state="no_footer"><h3>¿Quién puede terminar qué?</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Proceso</th>
+<th>Sin sudo</th>
+<th>Con sudo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Propio</td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>De otro usuario o de root</td>
+<td>No: «Operación no permitida»</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Un servicio se detiene con <code>systemctl stop</code>.</p></div>
+<div class="slide-copy"><p>Para terminar un proceso: identificarlo, usar <code>kill</code>, comprobar, y usar <code>kill -9</code> solo si sigue vivo.</p></div>
+<aside class="notes"><p>se conecta con la identidad de las clases 8 y 9. Para mostrarlo: <code>sudo -b sleep 300</code>, un <code>kill</code> sin <code>sudo</code> que es rechazado y <code>sudo kill</code> para terminarlo. El mensaje real es <code>kill: (1109) - Operación no permitida</code>. Si se termina con <code>kill</code> el proceso de <code>systemd-timesyncd</code>, systemd lo vuelve a iniciar con otro PID porque la unidad tiene <code>Restart=always</code> (comprobado en la VM). Un <code>sudo killall</code> con un nombre genérico puede cortar procesos de otros usuarios.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="primer_y_segundo_plano" data-state="customevent"><h2>Primer y segundo plano</h2>
+<div class="slide-copy"><p>Cómo recuperar la terminal sin cortar lo que está corriendo.</p></div>
+</section>
+
+<section id="trabajos_de_la_shell" data-state="no_footer"><h3>Trabajos de la shell</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sleep 300 &amp;     # segundo plano: [1] 1234
+jobs            # trabajos de esta shell
+fg %1           # traer al primer plano</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Acción</th>
+<th>Efecto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>comando &amp;</code></td>
+<td>Arranca en segundo plano</td>
+</tr>
+<tr>
+<td><code>Ctrl+C</code></td>
+<td>Interrumpe el de primer plano</td>
+</tr>
+<tr>
+<td><code>Ctrl+Z</code></td>
+<td><strong>Suspende</strong> el de primer plano, sin terminarlo</td>
+</tr>
+<tr>
+<td><code>bg %1</code></td>
+<td>Hace que el trabajo suspendido siga corriendo en segundo plano</td>
+</tr>
+<tr>
+<td><code>fg %1</code></td>
+<td>Lo trae al primer plano</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p><code>[1]</code> es el número de trabajo; <code>1234</code>, el PID.</p></div>
+<aside class="notes"><p>es el caso de «se me colgó el editor» después de un <code>Ctrl+Z</code>: el editor sigue ahí, detenido, y se recupera con <code>fg</code>. Con <code>bg</code> el trabajo sigue corriendo y la terminal queda libre, como si se hubiera lanzado con <code>&amp;</code>. Los trabajos pertenecen a esa shell; otra terminal, o una sesión nueva, no los ve con <code>jobs</code>, pero sí con <code>ps</code> o <code>pgrep</code>.</p>
+</aside>
+</section>
+
+<section id="consultas" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>¿Qué diferencia hay entre <code>Ctrl+Z</code> y <code>Ctrl+C</code>?</li>
+<li>¿Por qué conviene probar <code>kill</code> antes que <code>kill -9</code>?</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="servicios_con_systemd" data-state="customevent"><h2>Servicios con systemd</h2>
+<div class="slide-copy"><p>Procesos que systemd arranca, vigila y detiene.</p></div>
+</section>
+
+<section id="dos_preguntas_distintas" data-state="no_footer"><h3>Dos preguntas distintas</h3>
+<div class="slide-copy"><p>Un servicio es una unidad <code>.service</code>, así que <code>ssh</code> equivale a <code>ssh.service</code>.</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Pregunta</th>
+<th>Consulta</th>
+<th>Se cambia con</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>¿Corre <strong>ahora</strong>?</td>
+<td><code>systemctl is-active X</code></td>
+<td><code>start</code>, <code>stop</code>, <code>restart</code></td>
+</tr>
+<tr>
+<td>¿Arranca <strong>con el sistema</strong>?</td>
+<td><code>systemctl is-enabled X</code></td>
+<td><code>enable</code>, <code>disable</code></td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Las dos respuestas son independientes. Un servicio detenido con <code>stop</code> vuelve a arrancar al reiniciar si está habilitado, y <code>enable</code> no lo inicia en el momento.</p></div>
+<aside class="notes"><p>es lo que más cuesta que quede claro. Las respuestas habituales son active, inactive y failed, y enabled y disabled. Los temporizadores (<code>.timer</code>) se ven en la clase 16. Al proceso de un servicio se lo llama demonio, de ahí la <code>d</code> de <code>sshd</code>.</p>
+</aside>
+</section>
+
+<section id="administrar_un_servicio" data-state="no_footer"><h3>Administrar un servicio</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>systemctl status X            # consultar: sin sudo
+sudo systemctl start X
+sudo systemctl stop X
+sudo systemctl restart X
+sudo systemctl reload X       # si el servicio lo admite
+sudo systemctl enable X
+sudo systemctl disable X
+sudo systemctl enable --now X # habilitar e iniciar</code></pre>
+<div class="slide-copy"><p>Para consultar no hace falta <code>sudo</code>; para cambiar, sí.</p></div>
+<aside class="notes"><p><code>restart</code> corta lo que el servicio estaba haciendo. <code>reload</code> hace que relea su configuración sin detenerse, pero no todos los servicios lo admiten. Se retoma con sshd y Apache.</p>
+</aside>
+</section>
+
+<section id="leer_systemctl_status" data-state="no_footer"><h3>Leer systemctl status</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>● systemd-timesyncd.service - Network Time Synchronization
+     Loaded: loaded (/usr/lib/systemd/system/systemd-timesyncd.service; enabled; preset: enabled)
+     Active: active (running) since Sun 2026-09-27 22:39:23 -03; 9min ago
+   Main PID: 304 (systemd-timesyn)
+     Status: "Contacted time server 170.210.222.2:123 (2.debian.pool.ntp.org)."
+     CGroup: /system.slice/systemd-timesyncd.service
+             └─304 /usr/lib/systemd/systemd-timesyncd</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Línea</th>
+<th>Qué leer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Loaded</td>
+<td>Dónde está la unidad y si está habilitada</td>
+</tr>
+<tr>
+<td>Active</td>
+<td>Si corre ahora y desde cuándo</td>
+</tr>
+<tr>
+<td>Main PID</td>
+<td>Proceso principal</td>
+</tr>
+<tr>
+<td>CGroup</td>
+<td>Procesos del servicio</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Al final aparecen las últimas líneas de su registro. Si se abre el paginador, se sale con <code>q</code>.</p></div>
+<aside class="notes"><p>salida real de la VM, sin las líneas <code>Invocation</code>, <code>Docs</code>, <code>Tasks</code>, <code>Memory</code> y <code>CPU</code>. Sin <code>sudo</code>, <code>status</code> avisa al pie que no pudo abrir algunos archivos del registro.</p>
+</aside>
+</section>
+
+<section id="que_corre_y_con_que_usuario" data-state="no_footer"><h3>Qué corre y con qué usuario</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>systemctl list-units --type=service --state=running
+systemctl --failed
+systemctl cat systemd-timesyncd</code></pre>
+<div class="slide-copy"><p>De <code>systemctl cat</code> nos interesan dos líneas. <code>ExecStart=</code> es el programa que ejecuta y <code>User=</code> es la cuenta con la que corre. Si <code>User=</code> no figura, en general corre como root.</p></div>
+<aside class="notes"><p>en la VM se lee <code>ExecStart=!!/usr/lib/systemd/systemd-timesyncd</code> y <code>User=systemd-timesync</code>. Los <code>!!</code> son un prefijo de systemd y se puede decir que no hace falta prestarles atención. <code>systemctl show -p User X</code> da el mismo dato en una línea. Editar unidades queda fuera del alcance.</p>
+</aside>
+</section>
+
+<section id="consultas_2" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>Un servicio figura <code>inactive</code> y <code>enabled</code>. ¿Qué pasará al reiniciar?</li>
+<li>¿Por qué <code>systemctl status</code> no necesita <code>sudo</code> y <code>systemctl stop</code> sí?</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="cuando_un_servicio_falla" data-state="customevent"><h2>Cuando un servicio falla</h2>
+<div class="slide-copy"><p>El mensaje de error ya indica qué comandos usar.</p></div>
+</section>
+
+<section id="diagnostico_inicial" data-state="no_footer"><h3>Diagnóstico inicial</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Job for demo-falla.service failed because the control process exited with error
+code.
+See "systemctl status demo-falla.service" and "journalctl -xeu demo-falla.service"
+for details.</code></pre>
+<div class="slide-copy"><ol>
+<li><code>systemctl status X</code>: ver si dice <code>failed</code> y leer las últimas líneas.</li>
+<li><code>sudo journalctl -xeu X</code>: el registro del servicio, desde el final.</li>
+<li>Corregir la causa.</li>
+<li><code>sudo systemctl restart X</code> y volver a consultar.</li>
+</ol></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo journalctl -u X -n 20    # últimas 20 líneas
+sudo journalctl -u X -f       # seguir en vivo; salir con Ctrl+C</code></pre>
+<div class="slide-copy"><p>En la clase 14 vamos a profundizar en los registros.</p></div>
+<aside class="notes"><p>mensaje real de la VM. <code>-x</code> agrega explicaciones cuando las hay y <code>-e</code> salta al final. La falla se reproduce sin crear archivos con <code>sudo systemd-run -p Type=oneshot --unit=demo-falla /usr/bin/false</code> y se limpia con <code>sudo systemctl reset-failed demo-falla</code>. Sin <code>sudo</code>, <code>journalctl -u</code> responde <code>-- No entries --</code>, porque <code>cristian</code> no está en <code>adm</code> ni en <code>systemd-journal</code>.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="apagado_y_reinicio" data-state="customevent"><h2>Apagado y reinicio</h2>
+<div class="slide-copy"><p>Cómo apagar el servidor sin dañar lo que está corriendo.</p></div>
+</section>
+
+<section id="apagado_ordenado" data-state="no_footer"><h3>Apagado ordenado</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo systemctl poweroff
+sudo systemctl reboot
+sudo shutdown -r +5 "Reinicio por mantenimiento"
+sudo shutdown -c</code></pre>
+<div class="slide-copy"><ul>
+<li><code>poweroff</code>, <code>reboot</code> y <code>shutdown</code> hacen lo mismo que las órdenes de <code>systemctl</code>.</li>
+<li><code>shutdown</code> con un tiempo <strong>avisa</strong> a los usuarios conectados, y <code>-c</code> lo cancela.</li>
+<li>En un apagado ordenado se detienen los servicios y se desmontan los sistemas de archivos antes de apagar.</li>
+</ul></div>
+</section>
+
+<section id="apagar_la_vm_no_es_lo_mismo" data-state="no_footer"><h3>Apagar la VM no es lo mismo</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>En VirtualBox</th>
+<th>Qué ocurre</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enviar señal de apagado</td>
+<td>El sistema hace un apagado ordenado</td>
+</tr>
+<tr>
+<td>Apagar la máquina</td>
+<td>Equivale a cortar la alimentación</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Por SSH, <code>poweroff</code> deja el servidor sin acceso hasta que alguien lo encienda. Antes de apagar o reiniciar, confirmá el equipo con <code>hostname</code>.</p></div>
+</section>
+
+<section id="revision_minima_de_un_servidor" data-state="no_footer"><h3>Revisión mínima de un servidor</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>systemctl list-units --type=service --state=running
+systemctl --failed
+top
+sudo ss -tlnp</code></pre>
+<div class="slide-copy"><ul>
+<li>¿Reconozco cada servicio que corre?</li>
+<li>¿Hay algo roto?</li>
+<li>¿Algo consume de más en <code>top</code>? ¿Con qué usuario corre cada servicio?</li>
+<li>¿Qué proceso escucha en cada puerto?</li>
+</ul></div>
+<div class="slide-copy"><p>Es mejor que un servicio corra con su propia cuenta y no como root. Si un servicio no se usa, se detiene y deshabilita con <code>sudo systemctl disable --now X</code>.</p></div>
+<aside class="notes"><p>aplica dos de las cinco preguntas de endurecimiento. <code>ss</code> es un anticipo de la clase 17: en la VM muestra <code>users:(("sshd",pid=714,…))</code> en el puerto 22, y sin <code>sudo</code> no aparece el proceso. Un servicio que solo se detiene vuelve a arrancar con el próximo inicio. Esta diapositiva cumple la función del resumen.</p>
+</aside>
+</section>
+
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorio 9</h3>
+<div class="slide-copy"><p><strong>Objetivo:</strong> encontrar y terminar un proceso que consume CPU, y administrar un servicio real.</p></div>
+<div class="slide-copy"><ul>
+<li>Ubicar la propia sesión en el árbol de procesos.</li>
+<li>Controlar trabajos en primer y segundo plano.</li>
+<li>Instalar <code>htop</code> y <code>psmisc</code>, detectar un consumo de CPU y terminarlo con <code>kill</code>.</li>
+<li>Terminar varios procesos por nombre con <code>killall</code>.</li>
+<li>Consultar, detener, iniciar, deshabilitar y habilitar <code>systemd-timesyncd</code>.</li>
+<li>Leer su registro y comprobar con qué usuario corre.</li>
+</ul></div>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab9/lab9.md" target="_blank" rel="noopener noreferrer">Laboratorio 9 — Procesos y servicios</a></p></div>
+<aside class="notes"><p>se usa solo la cuenta administradora y no hace falta el Lab 8. No se reinicia la VM. Al terminar, <code>systemd-timesyncd</code> tiene que quedar <code>active</code> y <code>enabled</code>. Lleva alrededor de una hora. Se probó en la VM (<a href="validacion-laboratorio.md">validación</a>); el enlace de GitHub va a funcionar cuando se publique la guía.</p>
+</aside>
+</section>
+
+<section id="referencias" data-state="no_footer"><h3>Referencias</h3>
+<div class="slide-copy"><ul>
+<li>Ayuda local: <code>man ps</code>, <code>man pstree</code>, <code>man top</code>, <code>help kill</code>, <code>man killall</code>, <code>help jobs</code>.</li>
+<li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemctl.html" target="_blank" rel="noopener noreferrer">systemctl(1)</a> y <a href="https://www.freedesktop.org/software/systemd/man/latest/journalctl.html" target="_blank" rel="noopener noreferrer">journalctl(1)</a>.</li>
+<li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd-timesyncd.service.html" target="_blank" rel="noopener noreferrer">systemd-timesyncd.service(8)</a>.</li>
+<li><a href="https://wiki.debian.org/systemd" target="_blank" rel="noopener noreferrer">Debian Wiki — systemd</a>.</li>
+</ul></div>
+</section>
+</section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                 secret: null,
+                 id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
+                 url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>
