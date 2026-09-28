@@ -10,6 +10,7 @@
 - [Licencias de Software](#licencias-de-software-modelos-y-diferencias-gpl-vs-permisivas)
 - [Arquitectura y Distribuciones](#arquitectura-y-distribuciones-kernel-shell-y-familias-de-distros)
 - [Cuota de Mercado y Linux Desktop](#cuota-de-mercado-y-desktop-servidores-escritorio-y-casos-del-estado)
+- [Actividades prácticas](#labs_1)
 
 ---
 
@@ -300,6 +301,8 @@ La tendencia europea es creciente, pero recuerda que el éxito depende de la tec
 ---
 
 # Sección 5: Actividades Prácticas
+
+<a id="labs_1"></a>
 
 ## Actividades prácticas y laboratorios
 

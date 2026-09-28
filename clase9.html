@@ -233,7 +233,7 @@
 <section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 9: Permisos y propiedad</h4><small><p>Módulo 1 — Operación de Sistemas Operativos GNU/Linux</p></small></section>
 
 <section id="index" data-state="no_footer"><h3>Temas de la clase 9</h3>
-<div class="slide-copy"><ul><li><a href="#/archivos_y_directorios">Permisos en archivos y directorios</a></li><li><a href="#/cambiar_permisos_y_propiedad">Modificación de permisos, owner y grupo</a></li><li><a href="#/diagnosticar_el_acceso">Diagnóstico de una ruta</a></li><li><a href="#/permisos_de_creacion">Permisos de creación: umask</a></li><li><a href="#/directorios_compartidos">SGID en directorios y bit sticky</a></li><li><a href="#/labs_clase">Directorio compartido entre Ana y Bruno</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+<div class="slide-copy"><ul><li><a href="#/archivos_y_directorios">Permisos en archivos y directorios</a></li><li><a href="#/cambiar_permisos_y_propiedad">Modificación de permisos, owner y grupo</a></li><li><a href="#/diagnosticar_el_acceso">Diagnóstico de una ruta</a></li><li><a href="#/permisos_de_creacion">Permisos de creación: umask</a></li><li><a href="#/directorios_compartidos">SGID en directorios y bit sticky</a></li><li><a href="#/labs_clase">Actividad práctica — Laboratorio 8</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
 </section>
 
 <section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
@@ -803,7 +803,9 @@ ls -ld /srv/equipo</code></pre>
 <li>El bit sticky restringe el borrado de archivos ajenos en directorios compartidos.</li>
 </ul></div>
 </section>
+</section>
 
+<section>
 <section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorio 8</h3>
 <div class="slide-copy"><p><strong>Objetivo:</strong> dejar funcionando un directorio compartido entre Ana y Bruno.</p></div>
 <div class="slide-copy"><ul>
@@ -812,8 +814,8 @@ ls -ld /srv/equipo</code></pre>
 <li>Crear archivos con permisos adecuados desde ambas sesiones.</li>
 <li>Comprobar lectura, escritura y rechazo a usuarios ajenos.</li>
 </ul></div>
-<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab8/lab8.md">Laboratorio 8 — Borrador para revisión</a></p></div>
-<aside class="notes"><p>guía independiente del Laboratorio 7, con preparación inicial de cuentas y grupo si faltan. Reservar aproximadamente una hora, más la preparación para quienes la necesiten. Recorrido de permisos probado en VM con cuentas existentes; revisión docente y prueba con cuentas ausentes pendientes. Enlace al archivo local, sin publicación acreditada.</p>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab8/lab8.md" target="_blank" rel="noopener noreferrer">Laboratorio 8 — Permisos y directorios compartidos</a></p></div>
+<aside class="notes"><p>Guía independiente del Laboratorio 7, con preparación inicial de cuentas y grupo si faltan. Reservar aproximadamente una hora, más la preparación para quienes la necesiten.</p>
 </aside></section>
 
 <section id="referencias" data-state="no_footer"><h3>Referencias</h3>
@@ -912,11 +914,11 @@ ls -ld /srv/equipo</code></pre>
                 clipboardjspath: ""
             },
 
-            multiplex: {
-                 secret: null,
-                 id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
-                 url: 'https://multiplex.up.railway.app'
-            },
+            // multiplex: {
+            //      secret: null,
+            //      id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
+            //      url: 'https://multiplex.up.railway.app'
+            // },
 
             plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
         });
@@ -967,7 +969,7 @@ ls -ld /srv/equipo</code></pre>
         })();
     </script>
 
-    <script src="https://multiplex.up.railway.app/client.js"></script>
+    <!-- <script src="https://multiplex.up.railway.app/client.js"></script> -->
 </body>
 
 </html>
