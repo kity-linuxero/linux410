@@ -18,7 +18,7 @@ Módulo 1 — Operación de Sistemas Operativos GNU/Linux
 - [Repositorios](#repositorios)
 - [Otras distribuciones](#otras_distribuciones)
 - [Seguridad al instalar software](#seguridad_al_instalar_software)
-- [Actividad práctica — Laboratorio 10](#labs_clase)
+- [Actividad práctica — Laboratorios 10.1 y 10.2](#labs_clase)
 
 [Exportar a PDF](../clase11.html?print-pdf)
 
@@ -701,18 +701,18 @@ ls /etc/apt/sources.list.d/
 
 <a id="labs_clase"></a>
 
-### Actividad práctica — Laboratorio 10
+### Actividad práctica — Laboratorios 10.1 y 10.2
 
-**Objetivo:** mantener actualizado un servidor Debian e instalar y quitar software sabiendo de dónde viene.
+**Objetivo:** instalar, consultar y quitar software con `apt` en Debian y con `dnf` en Rocky Linux.
 
-- Leer los repositorios de la VM y el origen de un paquete.
-- Actualizar el sistema leyendo el resumen antes de confirmar.
-- Consultar lo instalado con `dpkg`.
-- Instalar `mc` desde un `.deb` y quitarlo con `remove` y `purge`.
+- 10.1, Debian: leer los repositorios, actualizar la lista de paquetes, instalar `mc`, consultarlo con `dpkg` y quitarlo con `remove` y `purge`.
+- 10.2, Rocky: descargar la VM, comprobar su SHA256, importarla en VirtualBox, instalar `tree` con `dnf`, consultarlo con `rpm` y quitarlo.
 
-[Laboratorio 10 — Paquetes y software](https://github.com/kity-linuxero/linux410-labs/blob/main/lab10/lab10.md)
+[Laboratorio 10.1 — Paquetes con APT en Debian](https://github.com/kity-linuxero/linux410-labs/blob/main/lab10/lab10.1.md)
 
-> **Nota docente:** el laboratorio no está escrito todavía. Cuenta administradora solamente; necesita Internet en la VM. El segundo laboratorio, con Rocky Linux 9, está a confirmar.
+[Laboratorio 10.2 — Paquetes con dnf en Rocky Linux](https://github.com/kity-linuxero/linux410-labs/blob/main/lab10/lab10.2.md)
+
+> **Nota docente:** Los dos laboratorios usan solo la cuenta administradora y necesitan Internet en las VM. El 10.1 se hace en la VM Debian; el 10.2 empieza descargando la OVA de Rocky (2,7 GB): conviene que la descarguen e importen antes de la clase. Los dos se probaron en las VM; los enlaces de GitHub van a funcionar cuando se publiquen las guías.
 
 ---
 

@@ -245,7 +245,7 @@
 <section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 11: Paquetes y software</h4><small><p>Módulo 1 — Operación de Sistemas Operativos GNU/Linux</p></small></section>
 
 <section id="index" data-state="no_footer"><h3>Temas de la clase 11</h3>
-<div class="slide-copy"><ul><li><a href="#/paquetes">Paquetes</a></li><li><a href="#/apt">APT</a></li><li><a href="#/dpkg">dpkg</a></li><li><a href="#/repositorios">Repositorios</a></li><li><a href="#/otras_distribuciones">Otras distribuciones</a></li><li><a href="#/seguridad_al_instalar_software">Seguridad al instalar software</a></li><li><a href="#/labs_clase">Actividad práctica — Laboratorio 10</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+<div class="slide-copy"><ul><li><a href="#/paquetes">Paquetes</a></li><li><a href="#/apt">APT</a></li><li><a href="#/dpkg">dpkg</a></li><li><a href="#/repositorios">Repositorios</a></li><li><a href="#/otras_distribuciones">Otras distribuciones</a></li><li><a href="#/seguridad_al_instalar_software">Seguridad al instalar software</a></li><li><a href="#/labs_clase">Actividad práctica — Laboratorios 10.1 y 10.2</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
 </section>
 
 <section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
@@ -930,16 +930,14 @@ ls /etc/apt/sources.list.d/</code></pre>
 </aside>
 </section>
 
-<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorio 10</h3>
-<div class="slide-copy"><p><strong>Objetivo:</strong> mantener actualizado un servidor Debian e instalar y quitar software sabiendo de dónde viene.</p></div>
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorios 10.1 y 10.2</h3>
+<div class="slide-copy"><p><strong>Objetivo:</strong> instalar, consultar y quitar software con <code>apt</code> en Debian y con <code>dnf</code> en Rocky Linux.</p></div>
 <div class="slide-copy"><ul>
-<li>Leer los repositorios de la VM y el origen de un paquete.</li>
-<li>Actualizar el sistema leyendo el resumen antes de confirmar.</li>
-<li>Consultar lo instalado con <code>dpkg</code>.</li>
-<li>Instalar <code>mc</code> desde un <code>.deb</code> y quitarlo con <code>remove</code> y <code>purge</code>.</li>
+<li>10.1, Debian: leer los repositorios, actualizar la lista de paquetes, instalar <code>mc</code>, consultarlo con <code>dpkg</code> y quitarlo con <code>remove</code> y <code>purge</code>.</li>
+<li>10.2, Rocky: descargar la VM, comprobar su SHA256, importarla en VirtualBox, instalar <code>tree</code> con <code>dnf</code>, consultarlo con <code>rpm</code> y quitarlo.</li>
 </ul></div>
-<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab10/lab10.md" target="_blank" rel="noopener noreferrer">Laboratorio 10 — Paquetes y software</a></p></div>
-<aside class="notes"><p>el laboratorio no está escrito todavía. Cuenta administradora solamente; necesita Internet en la VM. El segundo laboratorio, con Rocky Linux 9, está a confirmar.</p>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab10/lab10.1.md" target="_blank" rel="noopener noreferrer">Laboratorio 10.1 — Paquetes con APT en Debian</a><br><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab10/lab10.2.md" target="_blank" rel="noopener noreferrer">Laboratorio 10.2 — Paquetes con dnf en Rocky Linux</a></p></div>
+<aside class="notes"><p>Los dos laboratorios usan solo la cuenta administradora y necesitan Internet en las VM. El 10.1 se hace en la VM Debian; el 10.2 empieza descargando la OVA de Rocky (2,7 GB): conviene que la descarguen e importen antes de la clase. Los dos se probaron en las VM; los enlaces de GitHub van a funcionar cuando se publiquen las guías.</p>
 </aside>
 </section>
 
