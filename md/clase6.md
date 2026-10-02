@@ -290,7 +290,7 @@ zless servicios.txt.gz
 - `zcat` envía el contenido descomprimido a la terminal.
 - `zless` abre ese contenido en el visor paginado.
 
-`gzip` comprime archivos individuales. El empaquetado de directorios con `tar` se verá más adelante.
+`gzip` comprime archivos individuales.
 
 ---
 

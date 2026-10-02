@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 11</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .reveal .slide-copy { font-size: 60%; line-height: 1.3; }
+        .reveal .slide-copy p { margin: 0.6em 0; }
+        .reveal .slide-copy blockquote { width: 92%; }
+        .reveal .slide-copy ul, .reveal .slide-copy ol { margin-bottom: 0.4em; }
+        .reveal .slide-copy code { white-space: nowrap; }
+        .reveal .account-table th, .reveal .account-table td { padding: 0.22em 0.45em; }
+
+        /* Clase 11: tablas y bloques de código. */
+        .reveal .compact-table { width: 94%; font-size: 60%; line-height: 1.18; margin: 0.3em auto; }
+        .reveal .compact-table th, .reveal .compact-table td { padding: 0.18em 0.4em; }
+        .reveal .compact-table code { white-space: nowrap; }
+        /* El botón de copiar se ubica en la esquina de .codeblock: el contenedor
+           tiene que medir lo mismo que el bloque para que el botón quede adentro. */
+        .reveal pre { width: 92%; font-size: 50%; margin: 0.4em auto; }
+        .reveal pre code { max-height: none; }
+        .reveal .codeblock { width: 92%; margin: 0.4em auto; }
+        .reveal .codeblock > pre { width: 100%; margin: 0; }
+        .reveal .codeblock > button { transform: scale(0.75); transform-origin: top right; }
+        .reveal .salida-nota { font-size: 80%; opacity: 0.7; margin: 0.1em 0 !important; }
+        .reveal .slide-copy ul ul { margin-top: 0.1em; }
+        /* Salidas con líneas largas: letra más chica o corte de línea. */
+        #que_hay_para_actualizar pre, #los_repositorios_de_la_vm pre, #apt_apt_get_y_apt_cache pre { font-size: 40%; }
+        #que_hay_para_actualizar pre { font-size: 38%; }
+        #que_hay_para_actualizar pre, #los_repositorios_de_la_vm pre, #apt_apt_get_y_apt_cache pre,
+        #que_hay_para_actualizar .codeblock, #los_repositorios_de_la_vm .codeblock, #apt_apt_get_y_apt_cache .codeblock { width: 98%; }
+        #que_hay_para_actualizar .codeblock > pre, #los_repositorios_de_la_vm .codeblock > pre, #apt_apt_get_y_apt_cache .codeblock > pre { width: 100%; }
+        #consultas_con_dpkg pre code, #un_deb_a_mano pre code, #repositorios_en_rocky pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
+        #otros_gestores_de_paquetes .compact-table { font-size: 46%; width: 98%; }
+        #labs_clase h3 { font-size: 1.05em; }
+        /* Margen para que el botón de copiar no tape el final de las líneas. */
+        .reveal .codeblock > pre > code { padding-right: 2.6em; }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+<section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 11: Paquetes y software</h4><small><p>Módulo 1 — Operación de Sistemas Operativos GNU/Linux</p></small></section>
+
+<section id="index" data-state="no_footer"><h3>Temas de la clase 11</h3>
+<div class="slide-copy"><ul><li><a href="#/paquetes">Paquetes</a></li><li><a href="#/apt">APT</a></li><li><a href="#/dpkg">dpkg</a></li><li><a href="#/repositorios">Repositorios</a></li><li><a href="#/otras_distribuciones">Otras distribuciones</a></li><li><a href="#/seguridad_al_instalar_software">Seguridad al instalar software</a></li><li><a href="#/labs_clase">Actividad práctica — Laboratorio 10</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+</section>
+
+<section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
+<div class="slide-copy"><p>Al finalizar vas a poder:</p></div>
+<div class="slide-copy"><ul>
+<li>Instalar, actualizar y quitar software con APT.</li>
+<li>Averiguar qué instaló un paquete y de qué paquete viene un archivo.</li>
+<li>Leer de dónde descarga Debian el software y por qué confía en él.</li>
+<li>Reconocer cómo se hace lo mismo con <code>dnf</code> en Rocky Linux.</li>
+</ul></div>
+</section>
+
+<section id="retomamos_el_laboratorio_9" data-state="no_footer"><h3>Retomamos el Laboratorio 9</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo apt update
+sudo apt install htop psmisc</code></pre>
+<div class="slide-copy"><ul>
+<li>¿Qué hizo cada comando?</li>
+<li>¿De dónde salieron <code>htop</code> y <code>psmisc</code>?</li>
+<li>¿Por qué el sistema confió en lo que bajó?</li>
+</ul></div>
+<aside class="notes"><p>en el Lab 9 solo dijimos que <code>apt</code> instala programas desde los repositorios de Debian. Hoy se contestan estas tres preguntas. Instalar necesita <code>sudo</code> porque cambia archivos de <code>/usr</code> y <code>/etc</code>, que son de root (clases 8 y 9).</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="paquetes" data-state="customevent"><h2>Paquetes</h2>
+<div class="slide-copy"><p>Qué se instala y quién lo instala.</p></div>
+</section>
+
+<section id="que_trae_un_paquete_deb" data-state="no_footer"><h3>Qué trae un paquete .deb</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Contenido</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Archivos del programa</td>
+<td><code>/usr/bin/htop</code>, páginas de manual</td>
+</tr>
+<tr>
+<td>Configuración</td>
+<td>archivos en <code>/etc</code></td>
+</tr>
+<tr>
+<td>Metadatos</td>
+<td>versión, descripción, dependencias</td>
+</tr>
+<tr>
+<td>Scripts</td>
+<td>se ejecutan al instalar y al quitar</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>El sistema lleva la cuenta de todo lo que instaló cada paquete. Por eso en un servidor no se instala un programa bajado suelto de una página.</p></div>
+<aside class="notes"><p>los scripts son <code>preinst</code>, <code>postinst</code>, <code>prerm</code> y <code>postrm</code>. Los archivos de configuración se marcan como <code>conffiles</code> y reciben un trato especial al actualizar y al quitar; se ve con <code>remove</code> y <code>purge</code>.</p>
+</aside>
+</section>
+
+<section id="dpkg_y_apt" data-state="no_footer"><h3>dpkg y APT</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>repositorio  →  APT  →  dpkg  →  sistema</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dpkg</code></td>
+<td>Instala y consulta un <code>.deb</code> que ya está en el equipo. No descarga ni resuelve dependencias.</td>
+</tr>
+<tr>
+<td>APT</td>
+<td>Busca en los repositorios, descarga, calcula dependencias y le pasa los paquetes a <code>dpkg</code>.</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>En el día a día usamos APT. <code>dpkg</code> queda para consultar lo instalado.</p></div>
+<aside class="notes"><p>la base de datos de lo instalado está en <code>/var/lib/dpkg/</code> y no se edita a mano.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="apt" data-state="customevent"><h2>APT</h2>
+<div class="slide-copy"><p>El uso diario.</p></div>
+</section>
+
+<section id="update_no_actualiza_programas" data-state="no_footer"><h3>update no actualiza programas</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo apt update     # baja la lista de paquetes disponibles
+sudo apt upgrade    # instala las versiones nuevas</code></pre>
+<div class="slide-copy"><ul>
+<li><code>update</code> actualiza los índices: qué paquetes y versiones hay en los repositorios.</li>
+<li><code>upgrade</code> compara lo instalado con esos índices y actualiza.</li>
+<li>Siempre en ese orden. Sin <code>update</code>, APT compara contra una lista vieja.</li>
+</ul></div>
+<aside class="notes"><p>los índices quedan en <code>/var/lib/apt/lists/</code>. En la VM, el último <code>update</code> fue el del Lab 9.</p>
+</aside>
+</section>
+
+<section id="que_hay_para_actualizar" data-state="no_footer"><h3>¿Qué hay para actualizar?</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>apt list --upgradable</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Listando...
+base-files/stable 13.8+deb13u7 amd64 [actualizable desde: 13.8+deb13u6]
+bash/stable 5.2.37-2+b10 amd64 [actualizable desde: 5.2.37-2+b9]
+bind9-host/stable-security 1:9.20.29-1~deb13u1 amd64 [actualizable desde: 1:9.20.26-1~deb13u1]</code></pre>
+<div class="slide-copy"><p>Paquete, repositorio, versión nueva y versión instalada. Lo que viene de <code>stable-security</code> es una corrección de seguridad.</p></div>
+<aside class="notes"><p>salida real de la VM, recortada. No necesita <code>sudo</code> y usa los índices del último <code>update</code>.</p>
+</aside>
+</section>
+
+<section id="upgrade_y_full_upgrade" data-state="no_footer"><h3>upgrade y full-upgrade</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Comando</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo apt upgrade</code></td>
+<td>Actualiza sin quitar ningún paquete</td>
+</tr>
+<tr>
+<td><code>sudo apt full-upgrade</code></td>
+<td>Puede quitar paquetes para resolver dependencias</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p><code>full-upgrade</code> se usa, por ejemplo, al pasar a una versión nueva de Debian. Antes de confirmar, hay que leer qué va a quitar.</p></div>
+<aside class="notes"><p><code>apt upgrade</code> puede instalar paquetes nuevos si una actualización los pide; <code>apt-get upgrade</code> no. El cambio de versión de Debian queda fuera de la clase.</p>
+</aside>
+</section>
+
+<section id="leer_antes_de_confirmar" data-state="no_footer"><h3>Leer antes de confirmar</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo apt install mc</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Installing:
+  mc
+
+Installing dependencies:
+  libssh2-1t64  mailcap  mc-data  unzip
+
+Summary:
+  Upgrading: 0, Installing: 5, Removing: 0, Not Upgrading: 41</code></pre>
+<div class="slide-copy"><ul>
+<li>Qué instala y qué dependencias agrega.</li>
+<li>Qué actualiza y qué <strong>quita</strong>.</li>
+<li>Cuánto descarga y cuánto espacio ocupa.</li>
+</ul></div>
+<div class="slide-copy"><p>Recién después pregunta <code>Continue? [S/n]</code>.</p></div>
+<aside class="notes"><p>salida real de <code>apt install -s mc</code> (simulación sin <code>sudo</code>), sin la lista de sugeridos; la instalación real agrega <code>Download size</code> y <code>Space needed</code>. En APT 3 los títulos del resumen salen en inglés. <code>mailcap</code> y <code>unzip</code> no son dependencias sino recomendados: APT los instala por omisión. Instalar también puede actualizar otros paquetes, cuando una dependencia pide una versión más nueva: en la VM pasó con <code>libglib2.0-0t64</code>. <code>-y</code> saltea la pregunta; reservarlo para scripts probados.</p>
+</aside>
+</section>
+
+<section id="instalar_y_quitar" data-state="no_footer"><h3>Instalar y quitar</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Comando</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sudo apt install mc</code></td>
+<td>Instala el paquete y sus dependencias</td>
+</tr>
+<tr>
+<td><code>sudo apt remove mc</code></td>
+<td>Quita el programa y deja su configuración en <code>/etc</code></td>
+</tr>
+<tr>
+<td><code>sudo apt purge mc</code></td>
+<td>Quita el programa y su configuración</td>
+</tr>
+<tr>
+<td><code>sudo apt autoremove</code></td>
+<td>Quita dependencias que ya nadie usa</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>APT marca qué pidió el administrador y qué entró como dependencia; <code>autoremove</code> usa esa marca y no quita lo que otro paquete recomienda. En la VM: <code>remove</code> dejó <code>rc</code> y los nueve archivos de <code>/etc/mc/</code>; <code>purge</code> mostró <code>mc*</code> y borró <code>/etc/mc/</code>; <code>autoremove</code> quitó <code>libssh2-1t64</code> y <code>mc-data</code>. Cada operación queda en <code>/var/log/apt/history.log</code> con el usuario que la pidió.</p>
+</aside>
+</section>
+
+<section id="consultas" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>¿Por qué después de <code>apt update</code> no cambió ningún programa?</li>
+<li>¿Qué diferencia hay entre <code>remove</code> y <code>purge</code>?</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="dpkg" data-state="customevent"><h2>dpkg</h2>
+<div class="slide-copy"><p>Consultar lo que está instalado.</p></div>
+</section>
+
+<section id="consultas_con_dpkg" data-state="no_footer"><h3>Consultas con dpkg</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>dpkg -l tree            # ¿está instalado?
+dpkg -L tree            # ¿qué archivos instaló?
+dpkg -S /usr/bin/tree   # ¿de qué paquete viene este archivo?
+dpkg -S $(which tree)   # lo mismo, sin saber la ruta</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Estado en <code>dpkg -l</code></th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ii</code></td>
+<td>Instalado</td>
+</tr>
+<tr>
+<td><code>rc</code></td>
+<td>Quitado, pero queda su configuración</td>
+</tr>
+</tbody></table>
+
+<div class="slide-copy"><p>Ninguna de estas consultas necesita <code>sudo</code>.</p></div>
+<aside class="notes"><p>salidas reales; <code>tree</code> ya está instalado en la VM. <code>sshd_config</code> no es de ningún paquete: lo genera el script de instalación de <code>openssh-server</code> a partir de <code>/usr/share/openssh/sshd_config</code>, que sí es suyo. Un archivo sin dueño lo copió alguien o lo creó un script, y vale la pena averiguar cuál.</p>
+</aside>
+</section>
+
+<section id="un_deb_a_mano" data-state="no_footer"><h3>Un .deb a mano</h3>
+    <small>Se puede instalar un paquete <code>.deb</code> directamente</small>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>apt download mc          # baja el .deb, no instala
+dpkg-deb -I mc_*.deb     # metadatos
+dpkg-deb -c mc_*.deb     # contenido</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim> Package: mc
+ Version: 3:4.8.33-1+deb13u1
+ Depends: libc6 (&gt;= 2.38), libext2fs2t64 (&gt;= 1.37), libglib2.0-0t64 (&gt;= 2.78.0), libgpm2 (&gt;= 1.20.7), libslang2 (&gt;= 2.2.4), libssh2-1t64 (&gt;= 1.2.8), mc-data (= 3:4.8.33-1+deb13u1)
+ Recommends: mailcap, perl, sensible-utils, unzip</code></pre>
+<aside class="notes"><p>salida real de la VM, recortada. <code>+deb13u1</code> indica la primera actualización del paquete para Debian 13. <code>3:</code> es la época, que se usa cuando cambia el esquema de numeración; no hace falta explicarla salvo que pregunten. La línea de <code>Depends</code> es larga: al pasarla a HTML, revisar que no se salga del marco.</p>
+</aside>
+</section>
+
+<section id="dpkg_i_no_resuelve_dependencias" data-state="no_footer"><h3>dpkg -i no resuelve dependencias</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo dpkg -i mc_*.deb          # falla por dependencias
+sudo apt install ./mc_*.deb    # APT trae lo que falta</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>dpkg: problemas de dependencias impiden la configuración de mc:
+ mc depende de libssh2-1t64 (&gt;= 1.2.8); sin embargo:
+  El paquete `libssh2-1t64' no está instalado.
+...
+ problemas de dependencias - se deja sin configurar</code></pre>
+<div class="slide-copy"><ul>
+<li><code>dpkg -i</code> deja el paquete a medio instalar: <code>iU</code> en <code>dpkg -l</code>.</li>
+<li><code>sudo apt --fix-broken install</code> completa lo que falta.</li>
+<li>Sin el <code>./</code>, APT busca un paquete con ese nombre en los repositorios.</li>
+</ul></div>
+<aside class="notes"><p>salida real, recortada. <code>--fix-broken</code> instaló <code>libssh2-1t64</code> y <code>mc-data</code>, pero no los recomendados (<code>mailcap</code>, <code>unzip</code>). Es la demostración docente; en el laboratorio se usa directamente <code>apt install ./</code>. <code>apt download</code> guarda el archivo como <code>mc_3%3a4.8.33-1+deb13u1_amd64.deb</code> (el <code>%3a</code> reemplaza los dos puntos), por eso conviene <code>mc_*.deb</code>.</p>
+</aside>
+</section>
+
+<section id="un_deb_suelto_no_se_actualiza" data-state="no_footer"><h3>Un .deb suelto no se actualiza</h3>
+<div class="slide-copy"><ul>
+<li>APT actualiza lo que viene de sus repositorios.</li>
+<li>Un <code>.deb</code> bajado de una página queda en la versión que se instaló.</li>
+<li>Algunos proveedores agregan su repositorio al instalar el <code>.deb</code>. Conviene revisar <code>sources.list.d/</code> después.</li>
+</ul></div>
+<aside class="notes"><p>es la pregunta de seguridad de la clase: quién va a aplicar los parches de lo que se instala por fuera.</p>
+</aside>
+</section>
+
+<section id="consultas_2" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+
+<li>¿Qué hace <code>dpkg</code> que no hace APT, y al revés?</li>
+<li>Si instalás un <code>.deb</code> bajado de una página, ¿quién lo actualiza?</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="repositorios" data-state="customevent"><h2>Repositorios</h2>
+<div class="slide-copy"><p>De dónde viene el software.</p></div>
+</section>
+
+<section id="los_repositorios_de_la_vm" data-state="no_footer"><h3>Los repositorios de la VM</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>cat /etc/apt/sources.list</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>deb http://deb.debian.org/debian/ trixie main non-free-firmware
+deb-src http://deb.debian.org/debian/ trixie main non-free-firmware
+
+deb http://security.debian.org/debian-security trixie-security main non-free-firmware
+deb-src http://security.debian.org/debian-security trixie-security main non-free-firmware
+
+deb http://deb.debian.org/debian/ trixie-updates main non-free-firmware
+deb-src http://deb.debian.org/debian/ trixie-updates main non-free-firmware</code></pre>
+<aside class="notes"><p>salida real, sin los comentarios. El instalador de Debian 13 dejó el formato de una línea y <code>sources.list.d/</code> vacío. También quedó comentada la línea del medio de instalación (<code>#deb cdrom:...</code>).</p>
+</aside>
+</section>
+
+<section id="como_se_lee_una_linea" data-state="no_footer"><h3>Cómo se lee una línea</h3>
+<div class="slide-copy"><p><code>deb http://deb.debian.org/debian/ trixie main non-free-firmware</code></p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Parte</th>
+<th>Qué indica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>deb</code> / <code>deb-src</code></td>
+<td>Paquetes para instalar / código fuente</td>
+</tr>
+<tr>
+<td>URL</td>
+<td>Servidor del repositorio</td>
+</tr>
+<tr>
+<td><code>trixie</code></td>
+<td>Versión: Debian 13</td>
+</tr>
+<tr>
+<td><code>main non-free-firmware</code></td>
+<td>Componentes</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><ul>
+<li><code>trixie-security</code>: correcciones de seguridad. Es el más importante en un servidor.</li>
+<li><code>trixie-updates</code>: cambios que no esperan al siguiente lanzamiento menor.</li>
+</ul></div>
+<aside class="notes"><p>componentes: <code>main</code> es libre; <code>contrib</code> es libre pero depende de algo no libre; <code>non-free</code> no es libre; <code>non-free-firmware</code> es firmware no libre, separado desde Debian 12. Las líneas <code>deb-src</code> hacen que <code>update</code> baje unos 57 MB más de índices de código fuente; en un servidor que no compila se pueden comentar.</p>
+</aside>
+</section>
+
+<section id="el_formato_nuevo_deb822" data-state="no_footer"><h3>El formato nuevo: deb822</h3>
+<div class="slide-copy"><p><code>/etc/apt/sources.list.d/debian.sources</code></p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Types: deb deb-src
+URIs: http://deb.debian.org/debian/
+Suites: trixie
+Components: main non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg</code></pre>
+<div class="slide-copy"><ul>
+<li>Lo mismo que la línea, un dato por renglón.</li>
+<li><code>Signed-By</code> indica con qué clave se verifica ese repositorio.</li>
+<li>Los dos formatos funcionan en Debian 13.</li>
+</ul></div>
+<aside class="notes"><p>es el primer bloque que propone <code>apt modernize-sources</code> para la VM (salida real). Un bloque puede reunir varias suites y se desactiva con <code>Enabled: no</code>.</p>
+</aside>
+</section>
+
+<section id="apt_modernize_sources" data-state="no_footer"><h3>apt modernize-sources</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo apt modernize-sources</code></pre>
+<div class="slide-copy"><ul>
+<li>Convierte <code>sources.list</code> al formato <code>.sources</code>.</li>
+<li>Agrega <code>Signed-By</code> cuando puede deducirlo.</li>
+<li>Guarda el original como <code>sources.list.bak</code>.</li>
+<li>Si respondés <code>n</code>, muestra lo que haría sin cambiar nada.</li>
+</ul></div>
+<aside class="notes"><p>en clase se muestra la simulación, respondiendo <code>n</code>. Probada en la VM sobre una copia; propone un bloque para <code>trixie</code>, otro para <code>trixie-security</code> y otro para <code>trixie-updates</code>.</p>
+</aside>
+</section>
+
+<section id="firmas_por_que_confiamos" data-state="no_footer"><h3>Firmas: por qué confiamos</h3>
+<div class="slide-copy"><ul>
+<li>Cada repositorio publica sus índices firmados.</li>
+<li>APT verifica esa firma con las claves de <code>/usr/share/keyrings/</code>.</li>
+<li>Los índices tienen la suma de verificación de cada paquete.</li>
+<li>Un archivo alterado no pasa la verificación, aunque llegue por HTTP.</li>
+</ul></div>
+<div class="slide-copy"><p>Si <code>apt update</code> da un error de firma, <strong>no se usa ese repositorio</strong> hasta saber por qué.</p></div>
+<aside class="notes"><p>el archivo firmado es <code>InRelease</code>. Las claves de Debian vienen en el paquete <code>debian-archive-keyring</code>. Hay tutoriales que resuelven el error con <code>[trusted=yes]</code>, que desactiva la verificación; en un servidor no se hace. Por eso los repositorios de Debian funcionan por HTTP: la integridad la da la firma.</p>
+</aside>
+</section>
+
+<section id="repositorios_de_terceros" data-state="no_footer"><h3>Repositorios de terceros</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Types: deb
+URIs: https://repo.ejemplo.com/debian
+Suites: trixie
+Components: stable
+Signed-By: /etc/apt/keyrings/ejemplo.asc</code></pre>
+<div class="slide-copy"><ul>
+<li>La clave del proveedor va en <code>/etc/apt/keyrings/</code>.</li>
+<li>Solo sirve para su repositorio.</li>
+<li>Agregar un repositorio le permite a ese proveedor instalar y actualizar software <strong>como root</strong> en el servidor.</li>
+</ul></div>
+<aside class="notes"><p>ejemplo inventado, solo para leer; no se agrega ninguno. Docker, que el docente usa para Nginx Proxy Manager, sigue este esquema: si se quiere mostrar, revisar antes su guía oficial. En la VM, <code>/etc/apt/keyrings/</code> está vacío.</p>
+</aside>
+</section>
+
+<section id="de_donde_viene_esta_version" data-state="no_footer"><h3>¿De dónde viene esta versión?</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>apt policy htop</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>htop:
+  Instalados: 3.4.1-5
+  Candidato:  3.4.1-5
+  Tabla de versión:
+ *** 3.4.1-5 500
+        500 http://deb.debian.org/debian trixie/main amd64 Packages
+        100 /var/lib/dpkg/status</code></pre>
+<div class="slide-copy"><p>Versión instalada, versión que instalaría APT y repositorio de origen.</p></div>
+<aside class="notes"><p>salida real de la VM. Los <code>***</code> marcan lo instalado. Los números 500 y 100 son prioridades; no se explican (pinning queda fuera).</p>
+</aside>
+</section>
+
+<section id="antes_y_ahora" data-state="no_footer"><h3>Antes y ahora</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Antes</th>
+<th>En Debian 13</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>apt-get</code> y <code>apt-cache</code></td>
+<td><code>apt</code> en la terminal; los anteriores, en scripts</td>
+</tr>
+<tr>
+<td>Solo <code>sources.list</code>, una línea por repositorio</td>
+<td>También archivos <code>.sources</code> (deb822)</td>
+</tr>
+<tr>
+<td><code>apt-key add</code>: una clave valía para todos los repositorios</td>
+<td><code>Signed-By</code>: cada clave vale para su repositorio</td>
+</tr>
+<tr>
+<td><code>apt-key</code></td>
+<td>Ya no existe</td>
+</tr>
+<tr>
+<td>APT 2 con <code>gpgv</code></td>
+<td>APT 3 con <code>sqv</code> (Sequoia)</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Si un tutorial empieza con <code>apt-key add</code>, es viejo y no funciona en Debian 13.</p></div>
+<aside class="notes"><p>con <code>apt-key</code>, la clave de un proveedor podía firmar paquetes que reemplazaran a los de Debian. En la VM, <code>command -v apt-key</code> no devuelve nada y la firma la verifica <code>sqv</code>. <code>apt</code> existe desde 2014 (APT 1.0). APT 3 también cambió el formato del resumen de instalación. Las claves de <code>/usr/share/keyrings/</code> ahora son archivos <code>.pgp</code>.</p>
+</aside>
+</section>
+
+<section id="consultas_3" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+
+<li>¿Qué pasa si <code>apt update</code> da un error de firma?</li>
+
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="otras_distribuciones" data-state="customevent"><h2>Otras distribuciones</h2>
+<div class="slide-copy"><p>Ubuntu y Rocky Linux.</p></div>
+</section>
+
+<section id="ubuntu" data-state="no_footer"><h3>Ubuntu</h3>
+<div class="slide-copy"><p>Misma familia: <code>.deb</code>, <code>dpkg</code> y <code>apt</code>. Todo lo de hoy vale.</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Diferencia</th>
+<th>En Ubuntu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Componentes</td>
+<td><code>main</code>, <code>restricted</code>, <code>universe</code>, <code>multiverse</code></td>
+</tr>
+<tr>
+<td>Repositorios</td>
+<td><code>/etc/apt/sources.list.d/ubuntu.sources</code> (deb822 desde 24.04)</td>
+</tr>
+<tr>
+<td>Repositorios personales</td>
+<td>PPA, con <code>add-apt-repository</code></td>
+</tr>
+<tr>
+<td>Otro formato</td>
+<td>Snap, junto a los <code>.deb</code></td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>Ubuntu 26.04 LTS trae APT 3.1 y la instalación nueva no crea <code>sources.list</code>. Un PPA es un repositorio de terceros, con las mismas precauciones.</p>
+</aside>
+</section>
+
+<section id="snap_en_ubuntu" data-state="no_footer"><h3>Snap en Ubuntu</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>snap list              # snaps instalados
+snap info lxd          # versiones y canales disponibles
+sudo snap install lxd
+sudo snap refresh      # actualizar los snaps</code></pre>
+<div class="slide-copy"><ul>
+<li><code>snapd</code> viene instalado en todo Ubuntu, de escritorio y servidor. En escritorio, Firefox ya es un snap; el instalador de servidor ofrece snaps destacados.</li>
+<li>Un snap trae el programa con sus bibliotecas y corre aislado del resto del sistema.</li>
+<li>Viene de la tienda de Canonical, no de los repositorios de APT.</li>
+<li>Se actualiza solo, varias veces por día. <code>apt upgrade</code> no lo toca.</li>
+</ul></div>
+<aside class="notes"><p>la pregunta de la clase vale también acá: quién verificó el snap y quién lo actualiza. Los de editores verificados los publica el propio proyecto; los demás, cualquiera con una cuenta en la tienda. Cada snap se monta como un sistema de archivos aparte, y por eso aparecen dispositivos <code>loop</code> en <code>lsblk</code> y <code>df</code> (sirve para la clase 12). Las actualizaciones automáticas se pueden postergar con <code>snap refresh --hold</code>. En Ubuntu, algunos paquetes de <code>apt</code> solo instalan el snap equivalente (por ejemplo, <code>chromium</code>). Comandos no probados en una VM del curso: no hay VM con Ubuntu.</p>
+</aside>
+</section>
+
+<section id="flatpak" data-state="no_footer"><h3>Flatpak</h3>
+<div class="slide-copy"><p>Formato para aplicaciones de escritorio que funcionan igual en cualquier distribución.</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo apt install flatpak
+flatpak remote-add --if-not-exists flathub \
+    https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub org.gimp.GIMP
+flatpak update</code></pre>
+<div class="slide-copy"><ul>
+<li>Las aplicaciones vienen de fuentes que se agregan; la más usada es Flathub.</li>
+<li>Cada aplicación trae lo que necesita y corre aislada.</li>
+<li>APT no las actualiza: se usa <code>flatpak update</code>.</li>
+<li>En Fedora, Linux Mint o Pop!_OS ya viene instalado. En Debian y Ubuntu hay que instalarlo.</li>
+</ul></div>
+<aside class="notes"><p>en Debian, el programa <code>flatpak</code> está en el repositorio oficial (en la VM, 1.16.6 desde <code>trixie-security</code>), pero las aplicaciones vienen de Flathub, no de Debian. Fedora Workstation trae Flatpak con sus propias aplicaciones, y Flathub se habilita al activar los repositorios de terceros. Linux Mint y Pop!_OS lo traen con Flathub listo; elementary OS lo usa en su tienda. Ubuntu no lo trae y, desde 23.04, tampoco sus variantes oficiales. Varias aplicaciones comparten entornos base (<em>runtimes</em>), así que la primera instalación baja bastante más que la aplicación. Flathub marca como verificadas las que publica el propio desarrollador. En servidores casi no se usa. Comandos no probados en una VM del curso.</p>
+</aside>
+</section>
+
+<section id="rocky_linux_9" data-state="no_footer"><h3>Rocky Linux 9</h3>
+<div class="slide-copy"><ul>
+<li>Familia Red Hat: compatible con Red Hat Enterprise Linux.</li>
+<li>Paquetes <code>.rpm</code>; <code>rpm</code> consulta lo instalado y <code>dnf</code> maneja repositorios y dependencias.</li>
+<li>Elegimos la versión 9 porque pide menos hardware que la 10.</li>
+<li>Soporte de seguridad hasta mayo de 2032.</li>
+</ul></div>
+<aside class="notes"><p>Rocky 9 funciona con CPU x86-64-v2; Rocky 10 exige x86-64-v3 (AVX2), que no todas las computadoras tienen. Soporte general hasta el 31 de mayo de 2027 y de seguridad hasta el 31 de mayo de 2032. <code>yum</code> sigue existiendo como otro nombre de <code>dnf</code>. <code>zypper</code> aparece en la diapositiva de otros gestores.</p>
+</aside>
+</section>
+
+<section id="apt_y_dnf" data-state="no_footer"><h3>apt y dnf</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Debian / Ubuntu</th>
+<th>Rocky Linux</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>apt update</code></td>
+<td><code>dnf check-update</code></td>
+</tr>
+<tr>
+<td><code>apt update &amp;&amp; apt upgrade</code></td>
+<td><code>dnf upgrade</code> (o <code>dnf update</code>)</td>
+</tr>
+<tr>
+<td><code>apt install</code> / <code>remove</code></td>
+<td><code>dnf install</code> / <code>remove</code></td>
+</tr>
+<tr>
+<td><code>apt search</code> / <code>show</code></td>
+<td><code>dnf search</code> / <code>info</code></td>
+</tr>
+<tr>
+<td><code>dpkg -L paquete</code></td>
+<td><code>rpm -ql paquete</code></td>
+</tr>
+<tr>
+<td><code>dpkg -S archivo</code></td>
+<td><code>rpm -qf archivo</code></td>
+</tr>
+<tr>
+<td><code>/etc/apt/sources.list.d/</code></td>
+<td><code>/etc/yum.repos.d/*.repo</code></td>
+</tr>
+</tbody></table>
+<aside class="notes"><p><code>dnf update</code> es otro nombre de <code>dnf upgrade</code>. Como <code>dnf</code> refresca solo los índices vencidos, un <code>dnf upgrade</code> hace lo que en Debian son dos pasos: <code>apt update</code> y <code>apt upgrade</code>. <code>dnf check-update</code> solo lista lo pendiente. <code>dpkg -l</code> equivale a <code>rpm -qa</code>; <code>apt autoremove</code>, a <code>dnf autoremove</code>. En la VM, <code>yum</code> y <code>dnf</code> son enlaces al mismo programa (<code>dnf-3</code>, DNF 4.14).</p>
+</aside>
+</section>
+
+<section id="repositorios_en_rocky" data-state="no_footer"><h3>Repositorios en Rocky</h3>
+<div class="slide-copy"><p><code>/etc/yum.repos.d/rocky.repo</code></p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>[baseos]
+name=Rocky Linux $releasever - BaseOS
+mirrorlist=https://mirrors.rockylinux.org/mirrorlist?arch=$basearch&amp;repo=BaseOS-$releasever$rltype
+gpgcheck=1
+enabled=1
+metadata_expire=6h
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-9</code></pre>
+<div class="slide-copy"><ul>
+<li><code>gpgcheck=1</code> y <code>gpgkey=</code>: cada repositorio declara su clave, como <code>Signed-By</code>.</li>
+<li><code>metadata_expire=6h</code>: <code>dnf</code> actualiza los índices solo. No hay un paso como <code>apt update</code>.</li>
+<li><code>dnf repolist</code> muestra los activos: <code>baseos</code>, <code>appstream</code> y <code>extras</code>.</li>
+</ul></div>
+<aside class="notes"><p>bloque real de la VM Rocky 9.8, sin la línea <code>countme</code>. Los repositorios de depuración y de código fuente vienen con <code>enabled=0</code>. <code>rocky-security.repo</code> trae un repositorio <code>security</code> desactivado, creado en mayo de 2026 para correcciones urgentes que salen antes que las de Red Hat (<code>sudo dnf --enablerepo=security update</code>); solo si preguntan.</p>
+</aside>
+</section>
+
+<section id="quitar_en_rocky" data-state="no_footer"><h3>Quitar en Rocky</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo dnf remove mc</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>advertencia:/etc/mc/mc.menu saved as /etc/mc/mc.menu.rpmsave</code></pre>
+<div class="slide-copy"><ul>
+<li>No hay <code>purge</code>. Lo que modificaste en la configuración queda como <code>.rpmsave</code>; lo demás se borra.</li>
+<li><code>dnf remove</code> quita también las dependencias que ya no hacen falta, sin <code>autoremove</code>.</li>
+<li><code>rpm -V paquete</code> muestra qué archivos del paquete cambiaron.</li>
+</ul></div>
+<aside class="notes"><p>salida real. Antes de quitar <code>mc</code> se agregó una línea a <code>mc.menu</code>, y <code>rpm -V mc</code> la detectó (<code>S.5....T.  c /etc/mc/mc.menu</code>). En Rocky, <code>mc</code> instaló 59 paquetes (casi todos de Perl) y <code>dnf remove</code> los quitó todos, porque <code>/etc/dnf/dnf.conf</code> trae <code>clean_requirements_on_remove=True</code>. En Debian fueron 5 paquetes. <code>rpm -qc paquete</code> lista sus archivos de configuración.</p>
+</aside>
+</section>
+
+<section id="epel" data-state="no_footer"><h3>EPEL</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>dnf info htop                    # no aparece: Rocky no lo trae
+sudo dnf install epel-release    # agrega el repositorio EPEL
+sudo dnf install htop</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Importando llave GPG 0x3228467C:
+ Huella    : FF8A D134 4597 106E CE81 3B91 8A38 72BF 3228 467C
+ Desde     : /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-9</code></pre>
+<div class="slide-copy"><ul>
+<li>EPEL: paquetes extra para Enterprise Linux, mantenidos por Fedora.</li>
+<li>La primera vez, <code>dnf</code> pide aceptar su clave. Ahí se decide si se confía en ese repositorio.</li>
+<li><code>dnf provides /usr/bin/htop</code> busca qué paquete trae un archivo, aunque no esté instalado.</li>
+</ul></div>
+<aside class="notes"><p>salida real. <code>htop</code> sale del repositorio principal en Debian; en Rocky necesita EPEL. <code>epel-release</code> viene en <code>extras</code> y agrega <code>/etc/yum.repos.d/epel.repo</code> y la clave en <code>/etc/pki/rpm-gpg/</code>. Habilitar EPEL es agregar un repositorio de terceros. Sin <code>sudo</code>, <code>dnf</code> arma una caché propia y vuelve a bajar los índices (en la VM, 197 MB y varios minutos con EPEL); en clase conviene usar <code>sudo dnf</code> también para consultar. <code>dpkg -S</code> solo busca en lo instalado; <code>dnf provides</code> busca también en los repositorios.</p>
+</aside>
+</section>
+
+<section id="otros_gestores_de_paquetes" data-state="no_footer"><h3>Otros gestores de paquetes</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Distribución</th>
+<th>Paquetes</th>
+<th>Gestor</th>
+<th>Instalar</th>
+<th>Actualizar todo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Debian, Ubuntu</td>
+<td><code>.deb</code></td>
+<td><code>apt</code></td>
+<td><code>apt install</code></td>
+<td><code>apt update &amp;&amp; apt upgrade</code></td>
+</tr>
+<tr>
+<td>Rocky, RHEL, Fedora</td>
+<td><code>.rpm</code></td>
+<td><code>dnf</code></td>
+<td><code>dnf install</code></td>
+<td><code>dnf upgrade</code></td>
+</tr>
+<tr>
+<td>openSUSE, SLES</td>
+<td><code>.rpm</code></td>
+<td><code>zypper</code></td>
+<td><code>zypper install</code></td>
+<td><code>zypper update</code></td>
+</tr>
+<tr>
+<td>Arch Linux</td>
+<td><code>.pkg.tar.zst</code></td>
+<td><code>pacman</code></td>
+<td><code>pacman -S</code></td>
+<td><code>pacman -Syu</code></td>
+</tr>
+<tr>
+<td>Alpine Linux</td>
+<td><code>.apk</code></td>
+<td><code>apk</code></td>
+<td><code>apk add</code></td>
+<td><code>apk update &amp;&amp; apk upgrade</code></td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>La idea es la misma en todos: repositorios firmados, dependencias y un registro de lo instalado.</p></div>
+<aside class="notes"><p>Alpine es muy chica y aparece sobre todo en contenedores: muchas imágenes de Docker parten de ella, así que <code>apk add</code> se ve seguido en un <code>Dockerfile</code>. Arch es de actualización continua (<em>rolling release</em>), sin versiones como Debian 13; poco común en servidores. SUSE usa <code>.rpm</code> como Red Hat, con otro gestor. Si preguntan: Gentoo compila todo desde el código fuente con <code>emerge</code>, y AppImage es un único archivo ejecutable con la aplicación y sus bibliotecas, sin instalación.</p>
+</aside>
+</section>
+
+<section id="consultas_4" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>¿Qué tienen en común <code>apt</code>, <code>dnf</code> y los demás gestores?</li>
+
+
+</ul></div>
+</section>
+
+<section id="seguridad_al_instalar_software" data-state="no_footer"><h3>Seguridad al instalar software</h3>
+<div class="slide-copy"><ul>
+<li>Lo que viene de Debian lo firma y lo actualiza Debian.</li>
+<li>Un <code>.deb</code> suelto, un repositorio de terceros o un <code>curl | sudo bash</code> obligan a responder:<ul><li>¿Quién verificó de dónde viene?</li><li>¿Quién va a aplicar sus parches?</li></ul></li>
+</ul></div>
+<div class="slide-copy"><p>Revisión mínima:</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>apt list --upgradable
+ls /etc/apt/sources.list.d/</code></pre>
+<aside class="notes"><p>esta diapositiva cumple la función del resumen.</p>
+</aside>
+</section>
+
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorio 10</h3>
+<div class="slide-copy"><p><strong>Objetivo:</strong> mantener actualizado un servidor Debian e instalar y quitar software sabiendo de dónde viene.</p></div>
+<div class="slide-copy"><ul>
+<li>Leer los repositorios de la VM y el origen de un paquete.</li>
+<li>Actualizar el sistema leyendo el resumen antes de confirmar.</li>
+<li>Consultar lo instalado con <code>dpkg</code>.</li>
+<li>Instalar <code>mc</code> desde un <code>.deb</code> y quitarlo con <code>remove</code> y <code>purge</code>.</li>
+</ul></div>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab10/lab10.md" target="_blank" rel="noopener noreferrer">Laboratorio 10 — Paquetes y software</a></p></div>
+<aside class="notes"><p>el laboratorio no está escrito todavía. Cuenta administradora solamente; necesita Internet en la VM. El segundo laboratorio, con Rocky Linux 9, está a confirmar.</p>
+</aside>
+</section>
+
+<section id="referencias" data-state="no_footer"><h3>Referencias</h3>
+<div class="slide-copy"><ul>
+<li>Ayuda local: <code>man apt</code>, <code>man apt-get</code>, <code>man dpkg</code>, <code>man sources.list</code>.</li>
+<li><a href="https://www.debian.org/doc/manuals/debian-reference/ch02.es.html" target="_blank" rel="noopener noreferrer">Debian Reference, capítulo 2: gestión de paquetes</a>.</li>
+<li><a href="https://www.debian.org/releases/trixie/release-notes/" target="_blank" rel="noopener noreferrer">Notas de la versión de Debian 13</a>.</li>
+<li><a href="https://wiki.rockylinux.org/rocky/version/" target="_blank" rel="noopener noreferrer">Rocky Linux — versiones y soporte</a>.</li>
+</ul></div>
+</section>
+</section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                 secret: null,
+                 id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
+                 url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>
