@@ -1,0 +1,1188 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 12</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .reveal .slide-copy { font-size: 60%; line-height: 1.3; }
+        .reveal .slide-copy p { margin: 0.6em 0; }
+        .reveal .slide-copy blockquote { width: 92%; }
+        .reveal .slide-copy ul, .reveal .slide-copy ol { margin-bottom: 0.4em; }
+        .reveal .slide-copy code { white-space: nowrap; }
+        .reveal .account-table th, .reveal .account-table td { padding: 0.22em 0.45em; }
+
+        /* Clase 12: tablas y bloques de código (base de la clase 11). */
+        .reveal .compact-table { width: 94%; font-size: 60%; line-height: 1.18; margin: 0.3em auto; }
+        .reveal .compact-table th, .reveal .compact-table td { padding: 0.18em 0.4em; }
+        .reveal .compact-table code { white-space: nowrap; }
+        /* El botón de copiar se ubica en la esquina de .codeblock: el contenedor
+           tiene que medir lo mismo que el bloque para que el botón quede adentro. */
+        .reveal pre { width: 92%; font-size: 50%; margin: 0.4em auto; }
+        .reveal pre code { max-height: none; }
+        .reveal .codeblock { width: 92%; margin: 0.4em auto; }
+        .reveal .codeblock > pre { width: 100%; margin: 0; }
+        .reveal .codeblock > button { transform: scale(0.75); transform-origin: top right; }
+        .reveal .salida-nota { font-size: 80%; opacity: 0.7; margin: 0.1em 0 !important; }
+        .reveal .slide-copy ul ul { margin-top: 0.1em; }
+        #labs_clase h3 { font-size: 1.05em; }
+        /* Margen para que el botón de copiar no tape el final de las líneas. */
+        .reveal .codeblock > pre > code { padding-right: 2.6em; }
+        /* Salidas con líneas largas: letra más chica. */
+        #enlace_simbolico pre { font-size: 45%; }
+        /* Portada: repartir el título en dos líneas parejas. */
+        #inicio h4 { text-wrap: balance; }
+        #discos_fisicos .compact-table td:first-child { white-space: nowrap; }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+<section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 12: Discos, sistemas de archivos y montaje</h4><small><p>Módulo 1 — Operación de Sistemas Operativos GNU/Linux</p></small></section>
+
+<section id="index" data-state="no_footer"><h3>Temas de la clase 12</h3>
+<div class="slide-copy"><ul><li><a href="#/discos">Discos</a></li><li><a href="#/particiones">Particiones</a></li><li><a href="#/sistemas_de_archivos">Sistemas de archivos</a></li><li><a href="#/particionado">Particionado</a></li><li><a href="#/montaje">Montaje</a></li><li><a href="#/etc_fstab">/etc/fstab</a></li><li><a href="#/inodos_y_enlaces">Inodos y enlaces</a></li><li><a href="#/labs">Actividades prácticas y laboratorios</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+</section>
+
+<section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
+<div class="slide-copy"><p>Al finalizar vas a poder:</p></div>
+<div class="slide-copy"><ul>
+<li>Explicar qué es un disco, una partición y un sistema de archivos.</li>
+<li>Ampliar una partición y su sistema de archivos.</li>
+<li>Particionar, formatear y montar un disco nuevo.</li>
+<li>Dejarlo montado al arrancar y probar <code>/etc/fstab</code> antes de reiniciar.</li>
+<li>Distinguir un enlace duro de uno simbólico.</li>
+</ul></div>
+</section>
+
+<section id="lo_que_vimos_en_la_clase_3" data-state="no_footer"><h3>Lo que vimos en la clase 3</h3>
+<div class="slide-copy"><ul>
+<li>Los discos aparecen en <code>/dev</code>: <code>/dev/sda</code>, <code>/dev/sda1</code>.</li>
+<li>MBR y GPT, la ESP, la swap y ext4.</li>
+<li>Montar es colgar un sistema de archivos en un punto del árbol.</li>
+</ul></div>
+<div class="slide-copy"><p>Hoy hacemos el recorrido completo:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>disco  →  partición  →  sistema de archivos  →  montaje  →  fstab</code></pre>
+<aside class="notes"><p>en la clase 3 prometimos <code>/etc/fstab</code> en detalle, y los enlaces se sacaron de la clase 5 para darlos acá.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="discos" data-state="customevent"><h2>Discos</h2>
+<div class="slide-copy"><p>Dónde se guardan los datos.</p></div>
+</section>
+
+<section id="a_que_llamamos_disco" data-state="no_footer"><h3>¿A qué llamamos disco?</h3>
+<div class="slide-copy"><p>Un dispositivo de almacenamiento que el sistema ve como una serie de <strong>bloques numerados</strong>, donde puede leer y escribir en cualquier posición.</p></div>
+<div class="slide-copy"><ul>
+<li>Linux los llama <strong>dispositivos de bloques</strong>.</li>
+<li>Los trata a todos igual: plato magnético, memoria flash o un archivo.</li>
+</ul></div>
+<aside class="notes"><p>la idea que conviene dejar: para Linux, un pendrive, un NVMe y el disco de la VM se manejan con las mismas herramientas.</p>
+</aside>
+</section>
+
+<section id="discos_fisicos" data-state="no_footer"><h3>Discos físicos</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Cómo es</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HDD</td>
+<td>Platos que giran y un cabezal. Barato por GB, lento para saltar de un lugar a otro.</td>
+</tr>
+<tr>
+<td>SSD SATA</td>
+<td>Memoria flash, sin partes móviles, por la interfaz SATA.</td>
+</tr>
+<tr>
+<td>NVMe</td>
+<td>SSD conectado directo al bus PCIe. Mucho más rápido.</td>
+</tr>
+<tr>
+<td>Flash</td>
+<td>Pendrives, tarjetas SD y eMMC soldada a la placa.</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>M.2 es la forma física de la placa; hay discos M.2 SATA y M.2 NVMe. HDD sigue en servidores de almacenamiento y respaldos por el precio por GB. eMMC aparece en Raspberry Pi y notebooks económicas.</p>
+</aside>
+</section>
+
+<section id="discos_virtuales" data-state="no_footer"><h3>Discos virtuales</h3>
+<div class="slide-copy"><p>Para una VM, el disco es <strong>un archivo del anfitrión</strong>.</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Formato</th>
+<th>De dónde viene</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VDI</td>
+<td>VirtualBox</td>
+</tr>
+<tr>
+<td>VMDK</td>
+<td>VMware (VirtualBox también lo usa)</td>
+</tr>
+<tr>
+<td>VHD / VHDX</td>
+<td>Hyper-V</td>
+</tr>
+<tr>
+<td>qcow2</td>
+<td>KVM, QEMU, Proxmox</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><ul>
+<li>El sistema invitado lo ve como un disco más: <code>VBOX HARDDISK</code>.</li>
+<li>Con tamaño dinámico, el archivo crece a medida que se usa.</li>
+<li>Se le puede agregar capacidad.</li>
+</ul></div>
+<aside class="notes"><p><code>Lab2.vdi</code> tiene 20 GB de capacidad y ocupa 2,9 GB en el anfitrión. En la nube los discos son volúmenes que se conectan a la instancia. La capacidad que se agrega es la base del Laboratorio 11.1.</p>
+</aside>
+</section>
+
+<section id="nombres_en_dev" data-state="no_footer"><h3>Nombres en /dev</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Disco</th>
+<th>Particiones</th>
+<th>Qué es</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sda</code>, <code>sdb</code></td>
+<td><code>sda1</code>, <code>sda2</code></td>
+<td>SATA, SAS, USB, discos de VirtualBox</td>
+</tr>
+<tr>
+<td><code>nvme0n1</code></td>
+<td><code>nvme0n1p1</code></td>
+<td>NVMe</td>
+</tr>
+<tr>
+<td><code>mmcblk0</code></td>
+<td><code>mmcblk0p1</code></td>
+<td>Tarjeta SD, eMMC</td>
+</tr>
+<tr>
+<td><code>vda</code></td>
+<td><code>vda1</code></td>
+<td>Disco <em>virtio</em> en KVM o Proxmox</td>
+</tr>
+<tr>
+<td><code>sr0</code></td>
+<td></td>
+<td>Lectora de CD o DVD</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>El orden de las letras <strong>puede cambiar</strong> entre arranques.</p></div>
+<aside class="notes"><p>si el nombre termina en número, la partición agrega una <code>p</code>. En nuestra VM pasó de verdad: con un segundo disco, en un arranque el disco del sistema salió como <code>sdb</code>. Lo retomamos al hablar de UUID.</p>
+</aside>
+</section>
+
+<section id="lsblk" data-state="no_footer"><h3>lsblk</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>lsblk</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda      8:0    0   20G  0 disk 
+├─sda1   8:1    0  967M  0 part /boot/efi
+├─sda2   8:2    0 18,1G  0 part /
+└─sda3   8:3    0 1005M  0 part [SWAP]
+sdb      8:16   0    2G  0 disk 
+sr0     11:0    1 1024M  1 rom  </code></pre>
+<div class="slide-copy"><ul>
+<li><code>disk</code>: el disco entero. <code>part</code>: una partición. <code>rom</code>: la lectora.</li>
+<li><code>sdb</code> es un disco nuevo: sin particiones y sin montar.</li>
+</ul></div>
+<aside class="notes"><p>salida real de la VM con el disco de 2 GB del Lab 11.2 agregado. <code>lsblk</code> no necesita <code>sudo</code>. En Ubuntu se ven además varios <code>loop</code>: los snaps de la clase 11.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="particiones" data-state="customevent"><h2>Particiones</h2>
+<div class="slide-copy"><p>Dividir el disco.</p></div>
+</section>
+
+<section id="que_es_una_particion" data-state="no_footer"><h3>¿Qué es una partición?</h3>
+<div class="slide-copy"><p>Un <strong>tramo del disco</strong> con un comienzo y un fin, anotados en la tabla de particiones.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>/dev/sda (20 GB)
+┌───────────┬──────────────────────────┬────────────┐
+│ sda1      │ sda2                     │ sda3       │
+│ ESP 967M  │ /  18,1G                 │ swap 1005M │
+└───────────┴──────────────────────────┴────────────┘</code></pre>
+<div class="slide-copy"><p>Una partición sola <strong>no guarda archivos</strong>: es lugar reservado. Necesita un sistema de archivos.</p></div>
+<aside class="notes"><p>la swap es la excepción: no lleva sistema de archivos, se prepara con <code>mkswap</code>. Pedir que miren el orden: la swap está justo después de <code>/</code>. Importa para ampliar.</p>
+</aside>
+</section>
+
+<section id="para_que_se_divide_un_disco" data-state="no_footer"><h3>¿Para qué se divide un disco?</h3>
+<div class="slide-copy"><ul>
+<li>La ESP tiene que ser una partición propia para que UEFI arranque.</li>
+<li>Separar sistema y datos: se reinstala sin tocar los datos, y si los datos llenan su lugar, el sistema sigue.</li>
+<li>Cada partición puede tener otro sistema de archivos u otras opciones.</li>
+<li>La swap puede ir en una partición propia.</li>
+</ul></div>
+<div class="slide-copy"><p>Dónde empieza y termina cada partición queda anotado en la <strong>tabla de particiones</strong>: MBR o GPT, como vimos en la <a href="clase3.html#/mbr_gpt">clase 3</a>.</p></div>
+<aside class="notes"><p>en servidores es común poner los datos en otro disco. LVM (clase 13) da más flexibilidad para repartir el espacio. Si hace falta repasar: las particiones lógicas solo existen en MBR, y nuestra VM es GPT (el Lab 2 llama «partición lógica» a la swap y es un error). GPT guarda una copia de la tabla al final del disco; aparece en el Lab 11.1, cuando <code>fdisk</code> avisa que la tiene que mover.</p>
+</aside>
+</section>
+
+<section id="fdisk_l" data-state="no_footer"><h3>fdisk -l</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo fdisk -l /dev/sda</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Tipo de etiqueta de disco: gpt
+
+Disposit.  Comienzo    Final Sectores Tamaño Tipo
+/dev/sda1      2048  1982463  1980416   967M Sistema EFI
+/dev/sda2   1982464 39882751 37900288  18,1G Sistema de ficheros de Linux
+/dev/sda3  39882752 41940991  2058240  1005M Linux swap</code></pre>
+<div class="slide-copy"><ul>
+<li>«Etiqueta de disco» es el tipo de tabla.</li>
+<li>Cada partición tiene comienzo, fin y tipo.</li>
+<li>Sin <code>sudo</code>: <code>orden no encontrada</code>.</li>
+</ul></div>
+<aside class="notes"><p>salida real, recortada (faltan las líneas del modelo y de los sectores). El tipo es una marca en la tabla; no crea el sistema de archivos. En Debian 13 el <code>PATH</code> de un usuario común no incluye <code>/usr/sbin</code>: <code>fdisk</code>, <code>blkid</code>, <code>mkfs.ext4</code> y <code>resize2fs</code> solo andan con <code>sudo</code>.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="sistemas_de_archivos" data-state="customevent"><h2>Sistemas de archivos</h2>
+<div class="slide-copy"><p>El orden dentro de la partición.</p></div>
+</section>
+
+<section id="que_es_un_sistema_de_archivos" data-state="no_footer"><h3>¿Qué es un sistema de archivos?</h3>
+<div class="slide-copy"><p>La organización que se arma dentro de la partición para guardar archivos con nombre. Lleva la cuenta de:</p></div>
+<div class="slide-copy"><ul>
+<li>qué archivos y carpetas hay;</li>
+<li>dueño, permisos, tamaño y fechas de cada uno;</li>
+<li>en qué bloques están los datos;</li>
+<li>qué bloques están libres.</li>
+</ul></div>
+<div class="slide-copy"><p><strong>Formatear</strong> es crear esa estructura vacía.</p></div>
+<aside class="notes"><p>comparación para clase: la partición es un depósito vacío; el sistema de archivos son las estanterías numeradas y el cuaderno donde se anota qué hay en cada estante. Formatear empieza un cuaderno nuevo: los datos anteriores quedan inaccesibles.</p>
+</aside>
+</section>
+
+<section id="mkfs" data-state="no_footer"><h3>mkfs</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo mkfs.ext4 /dev/sdb1</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Creating filesystem with 523776 4k blocks and 131072 inodes
+Filesystem UUID: 39d5b8e5-b934-46ef-95d8-e6c778027a96
+Creating journal (8192 blocks): done</code></pre>
+<div class="slide-copy"><ul>
+<li>Bloques de 4 KiB y una cantidad fija de inodos.</li>
+<li>Un UUID para identificarlo.</li>
+<li>Un <em>journal</em> para recuperarse después de un corte.</li>
+</ul></div>
+<div class="slide-copy"><p>Hay un <code>mkfs</code> por tipo: <code>mkfs.ext4</code>, <code>mkfs.xfs</code>, <code>mkfs.vfat</code>...</p></div>
+<aside class="notes"><p>salida real recortada, en inglés porque <code>mkfs.ext4</code> no está traducido. Si detecta un sistema de archivos existente, pregunta; con <code>-F</code> no. <code>-L datos</code> pone una etiqueta. En la VM solo está el de ext4.</p>
+</aside>
+</section>
+
+<section id="sistemas_de_archivos_en_linux" data-state="no_footer"><h3>Sistemas de archivos en Linux</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Sistema</th>
+<th>Dónde se usa</th>
+<th>Qué lo distingue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ext4</td>
+<td>Debian, Ubuntu</td>
+<td>Conocido y simple. Se achica desmontado.</td>
+</tr>
+<tr>
+<td>XFS</td>
+<td>Rocky, RHEL</td>
+<td>Archivos grandes. No se puede achicar.</td>
+</tr>
+<tr>
+<td>Btrfs</td>
+<td>openSUSE, Fedora</td>
+<td>Instantáneas, subvolúmenes, compresión.</td>
+</tr>
+<tr>
+<td>ZFS</td>
+<td>TrueNAS, Proxmox</td>
+<td>Volúmenes e integridad de datos. Fuera del kernel.</td>
+</tr>
+<tr>
+<td>tmpfs</td>
+<td><code>/tmp</code>, <code>/run</code></td>
+<td>En RAM: se pierde al reiniciar.</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>XFS es el de Rocky (clase 11). ZFS no viene en el kernel por su licencia (CDDL); en Debian está en <code>contrib</code> como <code>zfs-dkms</code>. Btrfs y ZFS se retoman en la clase 13. En la VM <code>/tmp</code> es tmpfs con la mitad de la RAM como tope.</p>
+</aside>
+</section>
+
+<section id="fat32_exfat_y_ntfs" data-state="no_footer"><h3>FAT32, exFAT y NTFS</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Sistema</th>
+<th>Uso típico</th>
+<th>Límite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FAT32 (<code>vfat</code>)</td>
+<td>ESP, pendrives viejos</td>
+<td>Archivos de hasta 4 GB</td>
+</tr>
+<tr>
+<td>exFAT</td>
+<td>Pendrives y tarjetas grandes</td>
+<td>Sin límite de 4 GB</td>
+</tr>
+<tr>
+<td>NTFS</td>
+<td>Discos de Windows</td>
+<td>Pensado para Windows</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><ul>
+<li>Linux los lee y escribe.</li>
+<li>No guardan dueños ni permisos de Unix: no sirven para <code>/</code>.</li>
+</ul></div>
+<aside class="notes"><p>el kernel de Debian 13 trae <code>fat</code>, <code>exfat</code> y <code>ntfs3</code>. Para formatearlos hacen falta <code>dosfstools</code>, <code>exfatprogs</code> o <code>ntfs-3g</code>, que la VM no tiene. Para un pendrive entre Windows y Linux, exFAT. Windows no lee ext4 sin programas extra.</p>
+</aside>
+</section>
+
+<section id="lsblk_f_y_blkid" data-state="no_footer"><h3>lsblk -f y blkid</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>lsblk -f
+sudo blkid</code></pre>
+<div class="slide-copy"><ul>
+<li>Muestran el tipo de sistema de archivos y el <strong>UUID</strong>.</li>
+<li>El UUID lo escribe <code>mkfs</code> y viaja con el sistema de archivos.</li>
+<li><code>sda</code>, <code>sdb</code> pueden cambiar; el UUID no.</li>
+</ul></div>
+<div class="slide-copy"><p>Por eso <code>/etc/fstab</code> usa UUID.</p></div>
+<aside class="notes"><p>si se vuelve a formatear, el UUID cambia. <code>PARTUUID</code> es de la partición y no cambia al formatear; si preguntan. Justo después de <code>mkfs</code>, <code>lsblk -f</code> puede tardar unos segundos en mostrarlo; <code>sudo blkid</code> lo muestra al instante.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="particionado" data-state="customevent"><h2>Particionado</h2>
+<div class="slide-copy"><p>Herramientas para crear, borrar y cambiar particiones.</p></div>
+</section>
+
+<section id="fdisk" data-state="no_footer"><h3>fdisk</h3>
+<div class="slide-copy"><p>Crea la <strong>tabla de particiones</strong> y <strong>crea, borra y redimensiona</strong> particiones.</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Orden</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>p</code></td>
+<td>Muestra la tabla</td>
+</tr>
+<tr>
+<td><code>g</code> / <code>o</code></td>
+<td>Tabla GPT / MBR nueva</td>
+</tr>
+<tr>
+<td><code>n</code> / <code>d</code></td>
+<td>Crea / borra una partición</td>
+</tr>
+<tr>
+<td><code>t</code></td>
+<td>Cambia el tipo</td>
+</tr>
+<tr>
+<td><code>e</code></td>
+<td>Cambia el tamaño</td>
+</tr>
+<tr>
+<td><code>w</code> / <code>q</code></td>
+<td>Escribe y sale / sale sin escribir</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Nada se escribe en el disco hasta <code>w</code>.</p></div>
+<aside class="notes"><p><code>sudo fdisk /dev/sdb</code>. Antes de abrirlo, mirar <code>lsblk</code> y confirmar el disco. Sobre un disco vacío dice que creó una etiqueta DOS (MBR): es el valor por defecto en memoria y <code>g</code> la reemplaza. La orden <code>e</code> está en el <code>fdisk</code> de Debian 13. La sesión completa está en el apunte.</p>
+</aside>
+</section>
+
+<section id="parted_y_gparted" data-state="no_footer"><h3>parted y GParted</h3>
+<div class="slide-copy"><ul>
+<li><strong><code>parted</code></strong>: lo mismo en una sola línea, útil en scripts. Escribe cada orden en el momento.</li>
+<li><strong>GParted</strong>: la versión gráfica. Se ven las particiones como una barra y se cambian con el mouse.</li>
+<li><strong>GParted Live</strong>: una ISO que arranca con GParted listo, para trabajar sobre el disco del sistema sin que esté en uso.</li>
+</ul></div>
+<div class="slide-copy"><p>Descarga: <a href="https://gparted.org/livecd.php" target="_blank" rel="noopener noreferrer">gparted.org/livecd.php</a></p></div>
+<aside class="notes"><p><code>parted</code> no está instalado en la VM (<code>sudo apt install parted</code>). GParted está en Debian (paquete <code>gparted</code>) pero necesita escritorio, y la VM no tiene. Con GParted Live se puede achicar o mover la raíz, cosa que con el sistema montado no se puede. En VirtualBox se carga la ISO en la lectora virtual.</p>
+</aside>
+</section>
+
+<section id="gparted" data-state="no_footer"><h3>GParted</h3>
+<img src="img/c12/gparted.png" alt="GParted con las particiones de un disco NVMe" class="terminal-screenshot">
+<div class="slide-copy"><p class="salida-nota"><em>Cada partición, con su sistema de archivos y su punto de montaje.</em></p></div>
+<aside class="notes"><p>captura del docente: un disco NVMe con Windows y Linux. Se ven los nombres <code>nvme0n1p1</code> a <code>p7</code>, la ESP en FAT32, las particiones NTFS de Windows y dos ext4 de Linux. La llave indica que la partición está montada: GParted no deja cambiarla hasta desmontarla, y por eso para la raíz se usa GParted Live.</p>
+</aside>
+</section>
+
+<section id="ampliar_una_particion" data-state="no_footer"><h3>Ampliar una partición</h3>
+<div class="slide-copy"><ol>
+<li><strong>Agrandar el disco</strong>: el VDI, o el volumen en la nube.</li>
+<li><strong>Agrandar la partición</strong>: el espacio libre tiene que estar justo detrás.</li>
+<li><strong>Agrandar el sistema de archivos</strong>: <code>resize2fs</code> en ext4.</li>
+</ol></div>
+<div class="slide-copy"><p>ext4 crece <strong>montado</strong>: se puede ampliar en caliente.</p></div>
+<div class="slide-copy"><p>Lo haremos en el Lab.</p></div>
+<aside class="notes"><p>si se hace solo el paso 2, <code>lsblk</code> muestra la partición más grande y <code>df -h</code> sigue con el tamaño viejo. XFS crece con <code>xfs_growfs</code>. Achicar es otra cosa: ext4 solo desmontado, XFS nunca.</p>
+</aside>
+</section>
+
+<!-- <section id="ampliar_la_raiz_de_nuestra_vm" data-state="no_footer"><h3>Ampliar la raíz de nuestra VM</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Antes:   [ ESP ][ sda2 /  18,1G ][ sda3 swap ][ 2G libres ]
+Después: [ ESP ][ sda2 /  20G              ][ sda3 swap ]</code></pre>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo swapoff /dev/sda3
+sudo fdisk /dev/sda          # d 3, e 2, n 3, t 3, w
+sudo mkswap -U &lt;uuid-anterior&gt; /dev/sda3
+sudo swapon -a
+sudo resize2fs /dev/sda2</code></pre>
+<div class="slide-copy"><p>La swap está en el medio: se borra y se vuelve a crear al final.</p></div>
+<aside class="notes"><p>probado en un clon de la VM, con <code>/</code> montada y sin reiniciar. <code>fdisk</code> avisa que la GPT de respaldo no está al final y la mueve al escribir. <code>mkswap -U</code> conserva el UUID que figura en <code>fstab</code> y en el <em>resume</em> del initramfs; con un UUID nuevo, el arranque tardó 2 minutos y quedó sin swap. También se puede hacer con GParted Live. Es el Laboratorio 11.1.</p>
+</aside>
+</section> -->
+</section>
+
+<section>
+<section id="montaje" data-state="customevent"><h2>Montaje</h2>
+<div class="slide-copy"><p>Colgar el sistema de archivos en el árbol.</p></div>
+</section>
+
+<section id="mount_y_umount" data-state="no_footer"><h3>mount y umount</h3>
+<div class="slide-copy"><p>Montar es asociar un sistema de archivos a un directorio, el <strong>punto de montaje</strong>. Lo explicamos en la <a href="clase3.html#/punto_montaje">clase 3</a>.</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo mkdir -p /srv/datos
+sudo mount /dev/sdb1 /srv/datos
+findmnt /srv/datos
+sudo umount /srv/datos</code></pre>
+<div class="slide-copy"><ul>
+<li>El directorio tiene que existir.</li>
+<li>Lo que había adentro queda tapado mientras dura el montaje.</li>
+<li><code>umount</code> lleva una sola <code>n</code>.</li>
+</ul></div>
+<aside class="notes"><p>error frecuente: copiar datos al directorio sin que esté montado y que después «desaparezcan». <code>findmnt /srv/datos</code> muestra <code>/dev/sdb1  ext4  rw,relatime</code>. <code>/srv/datos</code> es provisorio: convive con <code>/srv/equipo</code> del Lab 8.</p>
+</aside>
+</section>
+
+<section id="permisos_del_disco_nuevo" data-state="no_footer"><h3>Permisos del disco nuevo</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ls -ld /srv/datos</code></pre>
+<div class="slide-copy"><ul>
+<li>La raíz de un ext4 nuevo es de root, modo 755, con <code>lost+found</code>.</li>
+<li>Los permisos se cambian <strong>con el disco montado</strong>.</li>
+<li>Si se cambian antes, al montar se ven los de la raíz del disco.</li>
+</ul></div>
+<aside class="notes"><p>conecta con las clases 8 y 9. <code>lost+found</code> es donde <code>fsck</code> deja lo que recupera. Antes de montar, <code>ls -ld</code> da <code>drwxr-xr-x 2 root root</code>; después, <code>3</code>, por <code>lost+found</code>.</p>
+</aside>
+</section>
+
+<section id="target_is_busy" data-state="no_footer"><h3>target is busy</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>umount: /srv/datos: el destino está ocupado.</code></pre>
+<div class="slide-copy"><ul>
+<li>Algún proceso usa algo ahí. Alcanza con una terminal parada adentro.</li>
+<li>Salir con <code>cd</code> y volver a probar.</li>
+<li><code>fuser -vm /srv/datos</code> muestra quién lo usa.</li>
+</ul></div>
+<aside class="notes"><p>mensaje real. <code>fuser</code> es de <code>psmisc</code> (Lab 9) y anda sin <code>sudo</code>; muestra <code>cristian  846 ..c.. bash</code>, donde <code>c</code> es directorio actual.</p>
+</aside>
+</section>
+
+<section id="df_y_du" data-state="no_footer"><h3>df y du</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>df -h
+du -sh /var/log
+sudo du -h --max-depth=1 /var | sort -h</code></pre>
+<div class="slide-copy"><ul>
+<li><code>df</code>: ¿se está llenando el disco?</li>
+<li><code>du</code>: ¿qué lo está llenando?</li>
+</ul></div>
+<aside class="notes"><p>ext4 reserva un 5 % para root, por eso <code>Tamaño</code> no es <code>Usados + Disp</code>. <code>df -i</code> muestra los inodos; un disco se puede quedar sin inodos con espacio libre (<code>No queda espacio en el dispositivo</code>). Si <code>df</code> y <code>du</code> no coinciden, suele ser un archivo borrado que un proceso sigue teniendo abierto. Cuotas de disco: una mención.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="etc_fstab" data-state="customevent"><h2>/etc/fstab</h2>
+<div class="slide-copy"><p>Montar al arrancar.</p></div>
+</section>
+
+<section id="que_es_etc_fstab" data-state="no_footer"><h3>¿Qué es /etc/fstab?</h3>
+<div class="slide-copy"><p>Un archivo de texto con la <strong>lista de sistemas de archivos que se montan al arrancar</strong>. El nombre viene de <em>file systems table</em>.</p></div>
+<div class="slide-copy"><ul>
+<li>Una línea por montaje: qué, dónde, de qué tipo y con qué opciones.</li>
+<li>Al arrancar, systemd lo lee y monta cada línea.</li>
+<li><code>mount</code> también lo consulta: <code>sudo mount /srv/datos</code> busca el resto de los datos ahí.</li>
+</ul></div>
+<div class="slide-copy"><p>Si una línea está mal, el sistema puede no arrancar.</p></div>
+<aside class="notes"><p>lo que se monta a mano con <code>mount</code> se pierde al reiniciar; lo que está en <code>fstab</code> queda. systemd convierte cada línea en una unidad <code>.mount</code> (clase 10). Se edita con <code>sudo nano /etc/fstab</code> (clase 7). <code>mount /srv/datos</code> con la línea ya cargada se probó en la VM.</p>
+</aside>
+</section>
+
+<section id="lo_que_dejo_el_instalador" data-state="no_footer"><h3>Lo que dejó el instalador</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>cat /etc/fstab</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>UUID=771f6e7f-...  /          ext4  errors=remount-ro  0  1
+UUID=223E-B092     /boot/efi  vfat  umask=0077         0  1
+UUID=bc71ad71-...  none       swap  sw                 0  0
+/dev/sr0  /media/cdrom0  udf,iso9660  user,noauto  0  0</code></pre>
+<div class="slide-copy"><p>Cada línea es un montaje.</p></div>
+<aside class="notes"><p>salida real, sin comentarios, con UUID abreviados y columnas alineadas. La última es la lectora de CD (<code>noauto</code>: no se monta sola). <code>errors=remount-ro</code> pasa <code>/</code> a solo lectura si ext4 detecta un error. <code>umask=0077</code>: vfat no tiene permisos de Unix y la opción deja la ESP solo para root.</p>
+</aside>
+</section>
+
+<section id="los_seis_campos" data-state="no_footer"><h3>Los seis campos</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>UUID=39d5...7a96  /srv/datos  ext4  defaults,nofail  0  2</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Campo</th>
+<th>Qué indica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UUID=...</code></td>
+<td>Qué montar</td>
+</tr>
+<tr>
+<td><code>/srv/datos</code></td>
+<td>Dónde</td>
+</tr>
+<tr>
+<td><code>ext4</code></td>
+<td>Tipo</td>
+</tr>
+<tr>
+<td><code>defaults,nofail</code></td>
+<td>Opciones, con coma y sin espacios</td>
+</tr>
+<tr>
+<td><code>0</code></td>
+<td>Respaldo con <code>dump</code>: siempre 0</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Orden de <code>fsck</code>: 1 para <code>/</code>, 2 para el resto</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>las columnas se separan con espacios o tabulaciones, en cualquier cantidad. Un espacio dentro de las opciones rompe la línea. <code>defaults</code> es <code>rw,suid,dev,exec,auto,nouser,async</code>.</p>
+</aside>
+</section>
+
+<section id="nofail" data-state="no_footer"><h3>nofail</h3>
+<div class="slide-copy"><ul>
+<li>Si el disco no está, el sistema arranca igual sin él.</li>
+<li>Sin <code>nofail</code>, un disco de datos que falta frena el arranque.</li>
+<li>Va en los discos de datos. Nunca en <code>/</code>.</li>
+</ul></div>
+<aside class="notes"><p>medido en la VM: con <code>nofail</code> y el disco ausente, el inicio de sesión está disponible enseguida, pero systemd espera 90 segundos. La otra cara: con un UUID mal copiado, el disco no se monta y nadie avisa; lo que se escriba en <code>/srv/datos</code> va al disco raíz.</p>
+</aside>
+</section>
+
+
+
+<section id="probar_antes_de_reiniciar" data-state="no_footer"><h3>Probar antes de reiniciar</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo umount /srv/datos
+sudo systemctl daemon-reload
+sudo findmnt --verify
+sudo mount -a
+findmnt /srv/datos</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Comprobación</th>
+<th>Detecta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>findmnt --verify</code></td>
+<td>UUID inexistente, punto de montaje o tipo equivocado</td>
+</tr>
+<tr>
+<td><code>mount -a</code></td>
+<td>Además, opciones mal escritas</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>probado en la VM: <code>findmnt --verify</code> no detecta <code>noexce</code>; <code>mount -a</code> falla con <code>ext4: Unknown parameter 'noexce'</code>. Con la línea correcta da <code>0 errores, 1 aviso</code>: el aviso es la lectora de CD y aparece siempre. Hay que desmontar antes, o <code>mount -a</code> no prueba la línea nueva. <code>daemon-reload</code> porque systemd convierte cada línea en una unidad <code>srv-datos.mount</code> (clase 10).</p>
+</aside>
+</section>
+
+
+
+<section id="si_fstab_tiene_un_error" data-state="no_footer"><h3>Si fstab tiene un error</h3>
+<div class="slide-copy"><ul>
+<li>Sin <code>nofail</code>, el arranque espera el disco 90 segundos y entra en <strong>modo de emergencia</strong>.</li>
+<li>En nuestra VM root no tiene contraseña:</li>
+</ul></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>You are in emergency mode. ...
+No se puede dar acceso a la consola; la cuenta root está bloqueada.</code></pre>
+<div class="slide-copy"><ul>
+<li>La salida es arrancar desde GRUB. Queda como tarea opcional del laboratorio.</li>
+</ul></div>
+<aside class="notes"><p>probado en la VM; captura en <code>validacion/modo-emergencia-root-bloqueado.png</code>. Enter reintenta el arranque y vuelve a lo mismo. Con root con contraseña, el modo de emergencia da una consola. El procedimiento con <code>init=/bin/bash</code> está en el anexo del apunte.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="inodos_y_enlaces" data-state="customevent"><h2>Inodos y enlaces</h2>
+<div class="slide-copy"><p>Varios nombres para un archivo.</p></div>
+</section>
+
+<section id="que_es_un_inodo" data-state="no_footer"><h3>¿Qué es un inodo?</h3>
+<div class="slide-copy"><p>El sistema de archivos guarda cada archivo en dos partes:</p></div>
+<div class="slide-copy"><ul>
+<li><strong>el contenido</strong>, en bloques del disco;</li>
+<li><strong>los datos sobre el archivo</strong>, en un registro numerado: el <strong>inodo</strong>.</li>
+</ul></div>
+<div class="slide-copy"><p>El inodo guarda el tipo, el dueño, los permisos, el tamaño, las fechas, cuántos nombres tiene y en qué bloques está el contenido.</p></div>
+<div class="slide-copy"><p><strong>El nombre no está en el inodo.</strong></p></div>
+<aside class="notes"><p>inodo viene de <em>index node</em>. Con la comparación del sistema de archivos como cuaderno del depósito: cada archivo tiene su hoja numerada, y esa hoja es el inodo. Al formatear el disco de 2 GB se crearon 131072 inodos: si se acaban, no entra ningún archivo más aunque haya espacio (<code>df -i</code>).</p>
+</aside>
+</section>
+
+<section id="donde_esta_el_nombre" data-state="no_footer"><h3>¿Dónde está el nombre?</h3>
+<div class="slide-copy"><p>En el <strong>directorio</strong>: una lista de nombres, cada uno con su número de inodo.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>directorio /srv/datos      inodo 13                 bloques
+┌───────────────────┐      ┌───────────────────┐    ┌──────┐
+│ lost+found  → 11  │      │ dueño: cristian   │    │ hola │
+│ a.txt       → 13  │ ───► │ permisos: rw-rw-r │ ─► └──────┘
+└───────────────────┘      │ tamaño: 5 bytes   │
+                           │ nombres: 1        │
+                           └───────────────────┘</code></pre>
+<div class="slide-copy"><ul>
+<li>Para abrir <code>a.txt</code>, el sistema busca el nombre en el directorio, toma el número y va al inodo.</li>
+<li>Mover un archivo dentro del mismo disco solo cambia el renglón: por eso es instantáneo.</li>
+</ul></div>
+<aside class="notes"><p>los números son reales (<code>ls -ia</code> en <code>/srv/datos</code>). Si preguntan: <code>.</code> tiene el inodo 2, el de la raíz de ese sistema de archivos, y <code>..</code> tiene un número muy distinto porque está en otro disco.</p>
+</aside>
+</section>
+
+<section id="ver_el_inodo" data-state="no_footer"><h3>Ver el inodo</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ls -i a.txt
+stat a.txt</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>  Fichero: a.txt
+  Tamaño: 5         	Bloques: 8          Bloque E/S: 4096   regular file
+Device: 8,17	Inode: 13          Links: 1
+Acceso: (0664/-rw-rw-r--)  Uid: ( 1000/cristian)   Gid: ( 1000/cristian)
+Modificación: 2026-10-04 19:39:39.737755254 -0300</code></pre>
+<div class="slide-copy"><ul>
+<li><code>Inode: 13</code>: el número. <code>ls -i</code> muestra solo eso.</li>
+<li><code>Links: 1</code>: cuántos nombres apuntan a este inodo.</li>
+</ul></div>
+<aside class="notes"><p>salida real, recortada (faltan las fechas de acceso, cambio y creación). <code>stat</code> muestra el nombre porque se lo pasamos, no porque esté en el inodo. <code>Links</code> es el mismo número que aparece en el segundo campo de <code>ls -l</code>, y es la puerta a la diapositiva siguiente.</p>
+</aside>
+</section>
+
+<section id="dos_formas_de_dar_otro_nombre" data-state="no_footer"><h3>Dos formas de dar otro nombre</h3>
+<div class="slide-copy"><ul>
+<li><strong>Enlace duro</strong> (hard link): otro nombre en un directorio que apunta al <strong>mismo inodo</strong>. El archivo tiene dos nombres, y los dos valen lo mismo.</li>
+<li><strong>Enlace simbólico</strong> (symbolic link): un archivo aparte que guarda <strong>una ruta</strong>. Como un acceso directo.</li>
+</ul></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>duro:       a.txt ─┐
+                   ├─► inodo 13 ─► datos
+            b.txt ─┘
+
+simbólico:  acceso.txt ─► "/srv/datos/a.txt" ─► a.txt ─► inodo 13</code></pre>
+<aside class="notes"><p>detenerse acá antes de los comandos. Pregunta para la clase: si borro <code>a.txt</code>, ¿qué pasa con <code>b.txt</code>? ¿y con <code>acceso.txt</code>?</p>
+</aside>
+</section>
+
+<section id="enlace_duro" data-state="no_footer"><h3>Hard link</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ln a.txt b.txt
+ls -li a.txt b.txt</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>13 -rw-rw-r-- 2 cristian cristian 5 oct  4 16:11 a.txt
+13 -rw-rw-r-- 2 cristian cristian 5 oct  4 16:11 b.txt</code></pre>
+<div class="slide-copy"><ul>
+<li>Mismo inodo (13). El contador de nombres está en 2.</li>
+<li>Si se borra <code>a.txt</code>, <code>b.txt</code> sigue.</li>
+<li><code>rm</code> borra un nombre. Los datos se liberan cuando no queda ninguno.</li>
+</ul></div>
+<aside class="notes"><p>salida real, en <code>/srv/datos</code>. Esto explica la diferencia entre <code>df</code> y <code>du</code> con un archivo borrado que sigue abierto.</p>
+</aside>
+</section>
+
+<section id="limites_del_enlace_duro" data-state="no_footer"><h3>Límites del hard link</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ cd /srv/datos
+$ ln a.txt ~/c.txt
+ln: fallo al crear el enlace duro '/home/cristian/c.txt' =&gt; 'a.txt':
+Enlace cruzado entre dispositivos no permitido
+$ ln dd dd2
+ln: dd: no se permiten enlaces fuertes para directorios</code></pre>
+<div class="slide-copy"><ul>
+<li>No cruza sistemas de archivos: el número de inodo vale dentro de cada uno.</li>
+<li>No se hace sobre directorios.</li>
+</ul></div>
+<aside class="notes"><p>mensajes reales; el primero sale en una sola línea. Por esto los enlaces van después del montaje: <code>/srv/datos</code> y <code>/home</code> son sistemas de archivos distintos.</p>
+</aside>
+</section>
+
+<section id="enlace_simbolico" data-state="no_footer"><h3>Symbolic link</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ln -s /srv/datos/a.txt ~/acceso.txt
+ls -l ~/acceso.txt</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>lrwxrwxrwx 1 cristian cristian 16 oct  4 16:11 acceso.txt -&gt; /srv/datos/a.txt</code></pre>
+<div class="slide-copy"><ul>
+<li>Tiene su propio inodo y guarda una ruta.</li>
+<li>Cruza sistemas de archivos y puede apuntar a directorios.</li>
+<li>Si se borra el destino, queda roto.</li>
+</ul></div>
+<aside class="notes"><p>salida real. El tamaño (16) es el largo de la ruta. Con ruta relativa, se interpreta desde la carpeta del enlace: parado en <code>~</code> con <code>x.txt</code>, <code>ln -s x.txt /srv/datos/rel.txt</code> queda roto. Los permisos <code>rwxrwxrwx</code> del enlace no cuentan.</p>
+</aside>
+</section>
+
+<section id="un_caso_real_usr_merge" data-state="no_footer"><h3>Un caso real: usr-merge</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ls -l /</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>lrwxrwxrwx   1 root root     7 ago 27 12:05 bin -&gt; usr/bin
+lrwxrwxrwx   1 root root     7 ago 27 12:05 lib -&gt; usr/lib
+lrwxrwxrwx   1 root root     8 ago 27 12:05 sbin -&gt; usr/sbin</code></pre>
+<div class="slide-copy"><p>Todo está en <code>/usr</code>. <code>/bin</code> y <code>/sbin</code> quedan como enlaces para que <code>/bin/bash</code> siga funcionando.</p></div>
+<aside class="notes"><p>salida real, con otras filas omitidas (<code>lib64</code>, <code>initrd.img</code> y <code>vmlinuz</code> también son enlaces). Otros ejemplos: <code>/etc/alternatives</code> y <code>/etc/systemd/system/*.wants/</code>, que crea <code>systemctl enable</code> (clase 10).</p>
+</aside>
+</section>
+
+<section id="duro_o_simbolico" data-state="no_footer"><h3>Hard link o symbolic link</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th></th>
+<th>Hard</th>
+<th>Symbolic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué es</td>
+<td>Otro nombre del mismo inodo</td>
+<td>Un archivo con una ruta</td>
+</tr>
+<tr>
+<td>Entre sistemas de archivos</td>
+<td>No</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>A directorios</td>
+<td>No</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Si se borra el original</td>
+<td>El contenido sigue</td>
+<td>Queda roto</td>
+</tr>
+</tbody></table>
+</section>
+
+<section id="consultas" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>¿Qué le falta a una partición recién creada para guardar archivos?</li>
+<li>¿Por qué <code>fstab</code> usa UUID y no <code>/dev/sdb1</code>?</li>
+<li>Después de agrandar una partición, ¿por qué <code>df</code> puede seguir mostrando el tamaño viejo?</li>
+<li>¿Dónde está guardado el nombre de un archivo?</li>
+<li>¿Por qué un hard link no puede ir de <code>/srv/datos</code> a <code>/home</code>?</li>
+</ul></div>
+</section>
+
+<section id="resumen" data-state="no_footer"><h3>Resumen</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>disco  →  partición  →  sistema de archivos  →  montaje  →  fstab</code></pre>
+<div class="slide-copy"><ul>
+<li>Una partición necesita un sistema de archivos para guardar datos.</li>
+<li>Ampliar: disco, partición y sistema de archivos, en ese orden.</li>
+<li>En <code>fstab</code>: UUID y <code>nofail</code> para los discos de datos.</li>
+<li>Antes de reiniciar: <code>findmnt --verify</code> y <code>mount -a</code>.</li>
+<li>El inodo guarda todo del archivo menos el nombre.</li>
+<li>Enlace duro: otro nombre del mismo inodo. Simbólico: una ruta.</li>
+</ul></div>
+</section>
+</section>
+
+<!-- SECCIÓN LABS/PRÁCTICA -->
+<section>
+<section id="labs" data-state="hide_footer" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h2>Actividades prácticas y laboratorios</h2></section>
+
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorios 11.1 y 11.2</h3>
+<div class="slide-copy"><p><strong>Objetivo:</strong> ampliar la partición raíz de la VM y agregarle un disco de datos que se monte al arrancar.</p></div>
+<div class="slide-copy"><ul>
+<li>11.1: sacar la swap y ampliar <code>/</code> y su sistema de archivos en caliente.</li>
+<li>11.2: agregar un disco de 2 GB, particionarlo, formatearlo y montarlo, probar enlaces y dejarlo montado desde <code>fstab</code>. Opcional: recuperar un <code>fstab</code> roto desde GRUB.</li>
+</ul></div>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab11/lab11.1.md" target="_blank" rel="noopener noreferrer">Laboratorio 11.1 — Ampliar la partición raíz</a><br><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab11/lab11.2.md" target="_blank" rel="noopener noreferrer">Laboratorio 11.2 — Agregar un disco</a></p></div>
+<aside class="notes"><p>las dos guías se probaron en la VM del curso el 2026-10-05. Las dos empiezan recomendando una instantánea. Para agregar el disco en el 11.2 la VM tiene que estar apagada (el controlador SATA no admite discos en caliente). El 11.1 no agranda el disco: borra la swap y <code>sda2</code> crece sobre ese espacio.</p>
+</aside>
+</section>
+
+<section id="referencias" data-state="no_footer"><h3>Referencias</h3>
+<div class="slide-copy"><ul>
+<li>Ayuda local: <code>man lsblk</code>, <code>man fdisk</code>, <code>man mkfs.ext4</code>, <code>man resize2fs</code>, <code>man mount</code>, <code>man fstab</code>, <code>man findmnt</code>, <code>man ln</code>.</li>
+<li><a href="https://gparted.org/livecd.php" target="_blank" rel="noopener noreferrer">GParted Live</a>.</li>
+<li><a href="https://www.debian.org/doc/manuals/debian-reference/ch09.es.html" target="_blank" rel="noopener noreferrer">Debian Reference, capítulo 9: consejos del sistema</a>.</li>
+<li><a href="https://www.debian.org/releases/trixie/release-notes/" target="_blank" rel="noopener noreferrer">Notas de la versión de Debian 13</a>.</li>
+</ul></div>
+</section>
+</section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                 secret: null,
+                 id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
+                 url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>
