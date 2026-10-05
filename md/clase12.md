@@ -391,30 +391,9 @@ Descarga: [gparted.org/livecd.php](https://gparted.org/livecd.php)
 
 ext4 crece **montado**: se puede ampliar en caliente.
 
+Lo haremos en el Lab.
+
 > **Nota docente:** si se hace solo el paso 2, `lsblk` muestra la partición más grande y `df -h` sigue con el tamaño viejo. XFS crece con `xfs_growfs`. Achicar es otra cosa: ext4 solo desmontado, XFS nunca.
-
----
-
-<a id="ampliar_la_raiz_de_nuestra_vm"></a>
-
-### Ampliar la raíz de nuestra VM
-
-```text
-Antes:   [ ESP ][ sda2 /  18,1G ][ sda3 swap ][ 2G libres ]
-Después: [ ESP ][ sda2 /  20G              ][ sda3 swap ]
-```
-
-```bash
-sudo swapoff /dev/sda3
-sudo fdisk /dev/sda          # d 3, e 2, n 3, t 3, w
-sudo mkswap -U <uuid-anterior> /dev/sda3
-sudo swapon -a
-sudo resize2fs /dev/sda2
-```
-
-La swap está en el medio: se borra y se vuelve a crear al final.
-
-> **Nota docente:** probado en un clon de la VM, con `/` montada y sin reiniciar. `fdisk` avisa que la GPT de respaldo no está al final y la mueve al escribir. `mkswap -U` conserva el UUID que figura en `fstab` y en el *resume* del initramfs; con un UUID nuevo, el arranque tardó 2 minutos y quedó sin swap. También se puede hacer con GParted Live. Es el Laboratorio 11.1.
 
 ---
 
@@ -832,6 +811,8 @@ disco  →  partición  →  sistema de archivos  →  montaje  →  fstab
 <a id="labs"></a>
 
 ## Actividades prácticas y laboratorios
+
+
 
 ---
 
