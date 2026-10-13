@@ -1,0 +1,60 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 456' width='800' height='456' font-family='Segoe UI, Helvetica, Arial, sans-serif'>
+<title>RAID 10</title>
+<defs><marker id='f' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='7' markerHeight='7' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#495057'/></marker></defs>
+<rect x='1' y='1' width='798' height='454' rx='18' fill='#ffffff' stroke='#dee2e6' stroke-width='2'/>
+<text x='168.0' y='56' text-anchor='end' font-size='20' fill='#495057'>Datos</text>
+<rect x='182.0' y='28' width='66' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='215.0' y='56.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A1</text>
+<rect x='256.0' y='28' width='66' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='289.0' y='56.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A2</text>
+<rect x='330.0' y='28' width='66' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='363.0' y='56.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A3</text>
+<rect x='404.0' y='28' width='66' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='437.0' y='56.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A4</text>
+<rect x='478.0' y='28' width='66' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='511.0' y='56.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A5</text>
+<rect x='552.0' y='28' width='66' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='585.0' y='56.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A6</text>
+<rect x='46' y='108' width='348' height='262' rx='16' fill='none' stroke='#0ca678' stroke-width='2.5' stroke-dasharray='7 5'/>
+<rect x='60' y='118' width='150' height='172' rx='14' fill='#f8f9fa' stroke='#1e1e1e' stroke-width='2.5'/>
+<rect x='76' y='134' width='118' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='135.0' y='162.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A1</text>
+<rect x='76' y='184' width='118' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='135.0' y='212.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A3</text>
+<rect x='76' y='234' width='118' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='135.0' y='262.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A5</text>
+<text x='135.0' y='320' text-anchor='middle' font-size='20' font-weight='600' fill='#1e1e1e'>Disco 1</text>
+<rect x='230' y='118' width='150' height='172' rx='14' fill='#f8f9fa' stroke='#1e1e1e' stroke-width='2.5'/>
+<rect x='246' y='134' width='118' height='40' rx='8' fill='#b2f2bb' stroke='#2f9e44' stroke-width='2'/>
+<text x='305.0' y='162.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A1</text>
+<rect x='246' y='184' width='118' height='40' rx='8' fill='#b2f2bb' stroke='#2f9e44' stroke-width='2'/>
+<text x='305.0' y='212.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A3</text>
+<rect x='246' y='234' width='118' height='40' rx='8' fill='#b2f2bb' stroke='#2f9e44' stroke-width='2'/>
+<text x='305.0' y='262.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A5</text>
+<text x='305.0' y='320' text-anchor='middle' font-size='20' font-weight='600' fill='#1e1e1e'>Disco 2</text>
+<text x='220.0' y='360' text-anchor='middle' font-size='18' font-weight='700' fill='#0ca678'>Espejo 1 (RAID 1)</text>
+<rect x='406' y='108' width='348' height='262' rx='16' fill='none' stroke='#0ca678' stroke-width='2.5' stroke-dasharray='7 5'/>
+<rect x='420' y='118' width='150' height='172' rx='14' fill='#f8f9fa' stroke='#1e1e1e' stroke-width='2.5'/>
+<rect x='436' y='134' width='118' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='495.0' y='162.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A2</text>
+<rect x='436' y='184' width='118' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='495.0' y='212.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A4</text>
+<rect x='436' y='234' width='118' height='40' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='495.0' y='262.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A6</text>
+<text x='495.0' y='320' text-anchor='middle' font-size='20' font-weight='600' fill='#1e1e1e'>Disco 3</text>
+<rect x='590' y='118' width='150' height='172' rx='14' fill='#f8f9fa' stroke='#1e1e1e' stroke-width='2.5'/>
+<rect x='606' y='134' width='118' height='40' rx='8' fill='#b2f2bb' stroke='#2f9e44' stroke-width='2'/>
+<text x='665.0' y='162.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A2</text>
+<rect x='606' y='184' width='118' height='40' rx='8' fill='#b2f2bb' stroke='#2f9e44' stroke-width='2'/>
+<text x='665.0' y='212.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A4</text>
+<rect x='606' y='234' width='118' height='40' rx='8' fill='#b2f2bb' stroke='#2f9e44' stroke-width='2'/>
+<text x='665.0' y='262.0' text-anchor='middle' font-size='22' font-weight='600' fill='#1e1e1e'>A6</text>
+<text x='665.0' y='320' text-anchor='middle' font-size='20' font-weight='600' fill='#1e1e1e'>Disco 4</text>
+<text x='580.0' y='360' text-anchor='middle' font-size='18' font-weight='700' fill='#0ca678'>Espejo 2 (RAID 1)</text>
+<line x1='340' y1='76' x2='220.0' y2='108' stroke='#495057' stroke-width='2.5' marker-end='url(#f)'/>
+<line x1='460' y1='76' x2='580.0' y2='108' stroke='#495057' stroke-width='2.5' marker-end='url(#f)'/>
+<rect x='250.0' y='414' width='22' height='22' rx='4' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<text x='280.0' y='432' font-size='18' fill='#495057'>Datos</text>
+<rect x='400.0' y='414' width='22' height='22' rx='4' fill='#b2f2bb' stroke='#2f9e44' stroke-width='2'/>
+<text x='430.0' y='432' font-size='18' fill='#495057'>Copia</text>
+</svg>

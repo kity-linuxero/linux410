@@ -1,0 +1,80 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 352' width='800' height='352' font-family='Segoe UI, Helvetica, Arial, sans-serif'>
+<defs><marker id='f' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='7' markerHeight='7' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#adb5bd'/></marker></defs>
+<rect x='1' y='1' width='798' height='350' rx='18' fill='#1e2133' stroke='#3b3f58' stroke-width='2'/>
+<text x='126' y='40' text-anchor='start' font-size='16' font-weight='600' fill='#e9ecef'>1. Rocky recién importada</text>
+<rect x='126' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='154' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='182' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='210' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='238' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='266' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='294' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='322' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='350' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='378' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='406' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='434' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='462' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='490' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='518' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='546' y='52' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='574' y='52' width='24' height='24' rx='4' fill='#3f2f7a' stroke='#b197fc' stroke-width='2'/>
+<rect x='602' y='52' width='24' height='24' rx='4' fill='#3f2f7a' stroke='#b197fc' stroke-width='2'/>
+<text x='376.0' y='96' text-anchor='middle' font-size='13' font-weight='400' fill='#adb5bd'>sda3</text>
+<text x='126' y='140' text-anchor='start' font-size='16' font-weight='600' fill='#e9ecef'>2. vgextend rl /dev/sdb</text>
+<rect x='126' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='154' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='182' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='210' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='238' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='266' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='294' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='322' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='350' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='378' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='406' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='434' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='462' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='490' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='518' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='546' y='152' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='574' y='152' width='24' height='24' rx='4' fill='#3f2f7a' stroke='#b197fc' stroke-width='2'/>
+<rect x='602' y='152' width='24' height='24' rx='4' fill='#3f2f7a' stroke='#b197fc' stroke-width='2'/>
+<text x='376.0' y='196' text-anchor='middle' font-size='13' font-weight='400' fill='#adb5bd'>sda3</text>
+<rect x='666' y='152' width='24' height='24' rx='4' fill='#1e2133' stroke='#9aa1ab' stroke-width='2'/>
+<rect x='694' y='152' width='24' height='24' rx='4' fill='#1e2133' stroke='#9aa1ab' stroke-width='2'/>
+<rect x='722' y='152' width='24' height='24' rx='4' fill='#1e2133' stroke='#9aa1ab' stroke-width='2'/>
+<rect x='750' y='152' width='24' height='24' rx='4' fill='#1e2133' stroke='#9aa1ab' stroke-width='2'/>
+<text x='720.0' y='196' text-anchor='middle' font-size='13' font-weight='400' fill='#adb5bd'>sdb</text>
+<text x='126' y='240' text-anchor='start' font-size='16' font-weight='600' fill='#e9ecef'>3. lvextend -r -L +1G rl/root</text>
+<rect x='126' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='154' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='182' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='210' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='238' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='266' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='294' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='322' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='350' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='378' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='406' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='434' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='462' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='490' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='518' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='546' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='574' y='252' width='24' height='24' rx='4' fill='#3f2f7a' stroke='#b197fc' stroke-width='2'/>
+<rect x='602' y='252' width='24' height='24' rx='4' fill='#3f2f7a' stroke='#b197fc' stroke-width='2'/>
+<text x='376.0' y='296' text-anchor='middle' font-size='13' font-weight='400' fill='#adb5bd'>sda3</text>
+<rect x='666' y='252' width='24' height='24' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<rect x='694' y='252' width='24' height='24' rx='4' fill='#1e2133' stroke='#9aa1ab' stroke-width='2'/>
+<rect x='722' y='252' width='24' height='24' rx='4' fill='#1e2133' stroke='#9aa1ab' stroke-width='2'/>
+<rect x='750' y='252' width='24' height='24' rx='4' fill='#1e2133' stroke='#9aa1ab' stroke-width='2'/>
+<text x='720.0' y='296' text-anchor='middle' font-size='13' font-weight='400' fill='#adb5bd'>sdb</text>
+<rect x='250.0' y='318' width='22' height='22' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<text x='280.0' y='335' text-anchor='start' font-size='16' font-weight='400' fill='#adb5bd'>root</text>
+<rect x='360.0' y='318' width='22' height='22' rx='4' fill='#3f2f7a' stroke='#b197fc' stroke-width='2'/>
+<text x='390.0' y='335' text-anchor='start' font-size='16' font-weight='400' fill='#adb5bd'>swap</text>
+<rect x='470.0' y='318' width='22' height='22' rx='4' fill='#1e2133' stroke='#9aa1ab' stroke-width='2'/>
+<text x='500.0' y='335' text-anchor='start' font-size='16' font-weight='400' fill='#adb5bd'>libre</text>
+</svg>

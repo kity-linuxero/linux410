@@ -1,0 +1,24 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 366' width='800' height='366' font-family='Segoe UI, Helvetica, Arial, sans-serif'>
+<defs><marker id='f' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='7' markerHeight='7' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#495057'/></marker></defs>
+<rect x='1' y='1' width='798' height='364' rx='18' fill='#ffffff' stroke='#dee2e6' stroke-width='2'/>
+<rect x='40' y='24' width='227.0' height='50' rx='8' fill='#fff3bf' stroke='#f08c00' stroke-width='2'/>
+<text x='153.5' y='55.0' text-anchor='middle' font-size='18' font-weight='700' fill='#1e1e1e'>Disco 1</text>
+<rect x='283.0' y='24' width='227.0' height='50' rx='8' fill='#fff3bf' stroke='#f08c00' stroke-width='2'/>
+<text x='396.5' y='55.0' text-anchor='middle' font-size='18' font-weight='700' fill='#1e1e1e'>Disco 2</text>
+<text x='538' y='46' text-anchor='start' font-size='15' font-weight='400' fill='#495057'>discos o particiones</text>
+<line x1='275.0' y1='80' x2='275.0' y2='106' stroke='#495057' stroke-width='2' marker-end='url(#f)'/>
+<rect x='40' y='112' width='470' height='50' rx='8' fill='#c3fae8' stroke='#0ca678' stroke-width='2' stroke-dasharray='7 5'/>
+<text x='275.0' y='143.0' text-anchor='middle' font-size='18' font-weight='700' fill='#1e1e1e'>RAID</text>
+<text x='538' y='132' text-anchor='start' font-size='15' font-weight='400' fill='#495057'>opcional · tolerancia a fallas:</text>
+<text x='538' y='152' text-anchor='start' font-size='15' font-weight='400' fill='#495057'>sigue andando si muere un disco</text>
+<line x1='275.0' y1='168' x2='275.0' y2='194' stroke='#495057' stroke-width='2' marker-end='url(#f)'/>
+<rect x='40' y='200' width='470' height='50' rx='8' fill='#a5d8ff' stroke='#1971c2' stroke-width='2' stroke-dasharray='7 5'/>
+<text x='275.0' y='231.0' text-anchor='middle' font-size='18' font-weight='700' fill='#1e1e1e'>LVM</text>
+<text x='538' y='220' text-anchor='start' font-size='15' font-weight='400' fill='#495057'>opcional · flexibilidad: crecer,</text>
+<text x='538' y='240' text-anchor='start' font-size='15' font-weight='400' fill='#495057'>sumar discos, instantáneas</text>
+<line x1='275.0' y1='256' x2='275.0' y2='282' stroke='#495057' stroke-width='2' marker-end='url(#f)'/>
+<rect x='40' y='288' width='470' height='50' rx='8' fill='#f8f9fa' stroke='#1e1e1e' stroke-width='2'/>
+<text x='275.0' y='310.0' text-anchor='middle' font-size='18' font-weight='700' fill='#1e1e1e'>Sistema de archivos</text>
+<text x='275.0' y='331.0' text-anchor='middle' font-size='14' font-weight='400' fill='#495057'>ext4, XFS</text>
+<text x='538' y='318' text-anchor='start' font-size='15' font-weight='400' fill='#495057'>se monta en el árbol</text>
+</svg>

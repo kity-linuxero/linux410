@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 13</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .reveal .slide-copy { font-size: 60%; line-height: 1.3; }
+        .reveal .slide-copy p { margin: 0.6em 0; }
+        .reveal .slide-copy blockquote { width: 92%; }
+        .reveal .slide-copy ul, .reveal .slide-copy ol { margin-bottom: 0.4em; }
+        .reveal .slide-copy code { white-space: nowrap; }
+        .reveal .account-table th, .reveal .account-table td { padding: 0.22em 0.45em; }
+
+        /* Clase 12: tablas y bloques de código (base de la clase 11). */
+        .reveal .compact-table { width: 94%; font-size: 60%; line-height: 1.18; margin: 0.3em auto; }
+        .reveal .compact-table th, .reveal .compact-table td { padding: 0.18em 0.4em; }
+        .reveal .compact-table code { white-space: nowrap; }
+        /* El botón de copiar se ubica en la esquina de .codeblock: el contenedor
+           tiene que medir lo mismo que el bloque para que el botón quede adentro. */
+        .reveal pre { width: 92%; font-size: 50%; margin: 0.4em auto; }
+        .reveal pre code { max-height: none; }
+        .reveal .codeblock { width: 92%; margin: 0.4em auto; }
+        .reveal .codeblock > pre { width: 100%; margin: 0; }
+        .reveal .codeblock > button { transform: scale(0.75); transform-origin: top right; }
+        .reveal .salida-nota { font-size: 80%; opacity: 0.7; margin: 0.1em 0 !important; }
+        .reveal .slide-copy ul ul { margin-top: 0.1em; }
+        #labs_clase h3 { font-size: 1.05em; }
+        /* Margen para que el botón de copiar no tape el final de las líneas. */
+        .reveal .codeblock > pre > code { padding-right: 2.6em; }
+        /* Salidas con líneas largas: letra más chica. */
+        #enlace_simbolico pre { font-size: 45%; }
+        /* Portada: repartir el título en dos líneas parejas. */
+        #inicio h4 { text-wrap: balance; }
+        #discos_fisicos .compact-table td:first-child { white-space: nowrap; }
+        /* Clase 13: diagramas SVG con versión clara y oscura. */
+        .reveal img.diagrama { display: block; margin: 0.3em auto; max-height: 58vh; width: auto; max-width: 96%; }
+        .reveal img.diagrama.tema-oscuro { display: none; }
+        html.dark-theme .reveal img.diagrama.tema-claro { display: none; }
+        html.dark-theme .reveal img.diagrama.tema-oscuro { display: block; }
+        /* Diapositivas de RAID: diagrama, una línea de datos y la tabla de ventajas y desventajas. */
+        /* Dos columnas (diagrama y texto), usadas en LUKS. */
+        .reveal .raid-cols { display: flex; align-items: center; gap: 0.8em; width: 100%; }
+        .reveal .raid-img { flex: 1.15; }
+        .reveal .raid-txt { flex: 1; }
+        .reveal .raid-cols img.diagrama { max-height: 56vh; max-width: 100%; }
+        /* RAID: diagrama grande y la tabla de ventajas y desventajas debajo. */
+        .reveal section.con-tabla img.diagrama { max-height: 55vh; margin: 0.1em auto 0.2em; }
+        .reveal small.raid-tabla { display: block; }
+        .reveal small.raid-tabla .compact-table { width: 96%; font-size: 82%; margin: 0 auto; }
+        .reveal small.raid-tabla .compact-table td, .reveal small.raid-tabla .compact-table th { padding: 0.12em 0.4em; }
+        .reveal .datos-raid { font-size: 58%; margin: 0.1em 0 0.4em; opacity: 0.85; }
+        #inicio h4 { text-wrap: balance; }
+        /* Ajustes por diapositiva para que entre el texto que acompaña al diagrama. */
+        #disco_de_reserva_spare img.diagrama { max-height: 44vh; }
+        .reveal small.texto-chico { display: block; }
+        .reveal small.texto-chico .slide-copy { font-size: 90%; }
+        #cifrado_del_disco_luks img.diagrama { max-height: 56vh; margin: 0.1em auto 0.2em; }
+        #como_se_llaman_los_volumenes .compact-table td:first-child { white-space: nowrap; }
+        #btrfs_o_zfs .compact-table td:first-child { white-space: nowrap; }
+        #labs_clase h3 { font-size: 1.05em; }
+        #raid_1_espejo img.diagrama { max-height: 52vh; }
+        #raid_5_paridad_distribuida img.diagrama { max-height: 48vh; }
+        #comparacion .compact-table td { white-space: nowrap; }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+<section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 13: LVM y RAID</h4><small><p>Módulo 1 — Operación de Sistemas Operativos GNU/Linux</p></small></section>
+
+<section id="index" data-state="no_footer"><h3>Temas de la clase 13</h3>
+<div class="slide-copy"><ul><li><a href="#/el_problema">El problema</a></li><li><a href="#/lvm">LVM</a></li><li><a href="#/crear_y_ampliar">Crear y ampliar</a></li><li><a href="#/instantaneas_y_lvm_thin">Instantáneas y LVM thin</a></li><li><a href="#/raid">RAID</a></li><li><a href="#/donde_se_arma_el_raid">Dónde se arma el RAID</a></li><li><a href="#/seguridad">Seguridad</a></li><li><a href="#/labs">Actividades prácticas y laboratorios</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+</section>
+
+<section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
+<div class="slide-copy"><p>Al finalizar vas a poder:</p></div>
+<div class="slide-copy"><ul>
+<li>Explicar qué son un PV, un VG y un LV.</li>
+<li>Ampliar un volumen lógico y su sistema de archivos con el sistema en marcha.</li>
+<li>Explicar la diferencia entre un volumen clásico y uno thin.</li>
+<li>Comparar los niveles de RAID por capacidad y fallas que toleran.</li>
+<li>Crear un RAID 1, simular la falla de un disco y reemplazarlo.</li>
+</ul></div>
+</section>
+
+<section id="lo_que_ya_vimos" data-state="no_footer"><h3>Lo que ya vimos</h3>
+<div class="slide-copy"><ul>
+<li><a href="clase2.html#/thin_thick">Clase 2</a>: discos virtuales thin y thick, el <a href="clase2.html#/overcommit">sobreaprovisionamiento</a> y que una <a href="clase2.html#/snapshot_no_backup">instantánea no es un respaldo</a>.</li>
+<li><a href="clase3.html#/filesystems">Clase 3</a>: Btrfs y ZFS en la tabla de sistemas de archivos. El instalador ofrecía LVM y lo dejamos para hoy.</li>
+<li><a href="clase11.html#/rocky_linux_9">Clase 11</a>: la VM Rocky. Su instalador usó LVM.</li>
+<li><a href="clase12.html#/ampliar_una_particion">Clase 12</a>: ampliar una partición y su sistema de archivos.</li>
+</ul></div>
+<aside class="notes"><p>la práctica de hoy es en la VM Rocky, no en la Debian. Conviene avisar al principio para que la tengan importada.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="el_problema" data-state="customevent"><h2>El problema</h2>
+<div class="slide-copy"><p>Lo que no se puede hacer con particiones.</p></div>
+</section>
+
+<section id="particiones_fijas" data-state="no_footer"><h3>Particiones fijas</h3>
+<div class="slide-copy"><ul>
+<li><strong>Se llena <code>/</code>.</strong> Solo se amplía si hay lugar libre justo detrás.</li>
+<li><strong>Se llena <code>/srv/datos</code> y compramos otro disco.</strong> El disco nuevo es otro sistema de archivos, con otro punto de montaje.</li>
+<li><strong>Se rompe un disco.</strong> Se pierde lo que tenía y el servicio se cae.</li>
+</ul></div>
+<aside class="notes"><p>en el Lab 11.1 la raíz creció porque la swap estaba detrás y la pudimos borrar. Si hubiera habido otra partición con datos, no se podía.</p>
+</aside>
+</section>
+
+<section id="dos_capas_nuevas" data-state="no_footer"><h3>Dos capas nuevas</h3>
+<img src="img/c13/capas.svg" alt="Capas: discos, RAID y LVM opcionales, y al final el sistema de archivos" class="diagrama tema-claro"><img src="img/c13/capas-oscuro.svg" alt="Capas: discos, RAID y LVM opcionales, y al final el sistema de archivos" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li><strong>LVM</strong> resuelve las dos primeras: crecer y sumar discos.</li>
+<li><strong>RAID</strong> resuelve la tercera: seguir andando si muere un disco.</li>
+</ul></div>
+<aside class="notes"><p>son independientes. Se puede usar una, las dos o ninguna.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="lvm" data-state="customevent"><h2>LVM</h2>
+<div class="slide-copy"><p class="salida-nota"><em>Logical Volume Manager</em></p></div>
+</section>
+
+<section id="que_es_lvm" data-state="no_footer"><h3>¿Qué es LVM?</h3>
+<div class="slide-copy"><p>Una capa entre los discos y el sistema de archivos que <strong>junta el espacio</strong> de uno o varios discos y lo <strong>reparte en volúmenes</strong>.</p></div>
+<div class="slide-copy"><ul>
+<li>Los volúmenes se agrandan, se achican o se mueven sin tocar la tabla de particiones.</li>
+<li>Para el sistema de archivos, un volumen es como una partición.</li>
+</ul></div>
+<aside class="notes"><p>la comparación de los bidones: los PV son bidones, el VG es el tanque donde se vuelca todo y los LV son las botellas que se llenan desde el tanque.</p>
+</aside>
+</section>
+
+<section id="las_tres_capas" data-state="no_footer"><h3>Las tres capas</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Capa</th>
+<th>Qué es</th>
+<th>Se crea con</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PV</strong>, volumen físico</td>
+<td>Un disco o una partición preparada para LVM</td>
+<td><code>pvcreate</code></td>
+</tr>
+<tr>
+<td><strong>VG</strong>, grupo de volúmenes</td>
+<td>El espacio de uno o varios PV junto</td>
+<td><code>vgcreate</code></td>
+</tr>
+<tr>
+<td><strong>LV</strong>, volumen lógico</td>
+<td>Un tramo del VG que se formatea y se monta</td>
+<td><code>lvcreate</code></td>
+</tr>
+</tbody></table>
+</section>
+
+<section id="paso_1_discos_y_particiones" data-state="no_footer"><h3>Paso 1: discos y particiones</h3>
+<img src="img/c13/lvm-paso1.svg" alt="Paso 1: el disco sda con sda1, sda2 y sda3, y el disco sdb" class="diagrama tema-claro"><img src="img/c13/lvm-paso1-oscuro.svg" alt="Paso 1: el disco sda con sda1, sda2 y sda3, y el disco sdb" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li><code>sda1</code> y <code>sda2</code> quedan fuera de LVM.</li>
+<li><code>sda3</code> y <code>sdb</code> entero van a LVM.</li>
+</ul></div>
+<aside class="notes"><p>es la VM Rocky como queda al terminar el Lab 12.1. <code>sdb</code> es el disco de 4 GiB que se agrega en el laboratorio.</p>
+</aside>
+</section>
+
+<section id="paso_2_volumenes_fisicos" data-state="no_footer"><h3>Paso 2: volúmenes físicos</h3>
+<img src="img/c13/lvm-paso2.svg" alt="Paso 2: sda3 y sdb pasan a ser PV, divididos en cuadrados iguales" class="diagrama tema-claro"><img src="img/c13/lvm-paso2-oscuro.svg" alt="Paso 2: sda3 y sdb pasan a ser PV, divididos en cuadrados iguales" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li><code>pvcreate</code> prepara cada uno para LVM.</li>
+<li>El PV se divide en <strong>extensiones</strong> del mismo tamaño (4 MiB por defecto).</li>
+</ul></div>
+<aside class="notes"><p>cada cuadrado del dibujo es 1 GiB, redondeado. En cada uno entran unas 256 extensiones reales.</p>
+</aside>
+</section>
+
+<section id="paso_3_grupo_de_volumenes" data-state="no_footer"><h3>Paso 3: grupo de volúmenes</h3>
+<img src="img/c13/lvm-paso3.svg" alt="Paso 3: un recuadro naranja junta los dos PV en el VG rl" class="diagrama tema-claro"><img src="img/c13/lvm-paso3-oscuro.svg" alt="Paso 3: un recuadro naranja junta los dos PV en el VG rl" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li><code>vgcreate</code> junta los PV en un VG. Para sumar un PV a un VG que ya existe: <code>vgextend</code>.</li>
+<li>Desde acá LVM no piensa en discos: tiene 22 cuadrados para repartir.</li>
+</ul></div>
+</section>
+
+<section id="paso_4_volumenes_logicos" data-state="no_footer"><h3>Paso 4: volúmenes lógicos</h3>
+<img src="img/c13/lvm-paso4.svg" alt="Paso 4: los cuadrados se pintan según el LV al que pertenecen: root, swap, datos y libre" class="diagrama tema-claro"><img src="img/c13/lvm-paso4-oscuro.svg" alt="Paso 4: los cuadrados se pintan según el LV al que pertenecen: root, swap, datos y libre" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li><code>lvcreate</code> reparte extensiones del VG entre los LV.</li>
+<li><code>root</code> tiene extensiones en los dos discos y para el sistema es <strong>un solo volumen</strong>.</li>
+<li>Lo libre queda para crecer.</li>
+</ul></div>
+</section>
+
+<section id="paso_5_sistemas_de_archivos" data-state="no_footer"><h3>Paso 5: sistemas de archivos</h3>
+<img src="img/c13/lvm-paso5.svg" alt="Paso 5: debajo de cada LV, su sistema de archivos y su punto de montaje" class="diagrama tema-claro"><img src="img/c13/lvm-paso5-oscuro.svg" alt="Paso 5: debajo de cada LV, su sistema de archivos y su punto de montaje" class="diagrama tema-oscuro">
+<div class="slide-copy"><p>Cada LV se formatea y se monta como una partición. Desde acá, todo es lo de la <a href="clase12.html#/etc_fstab">clase 12</a>.</p></div>
+</section>
+
+<section id="como_se_llaman_los_volumenes" data-state="no_footer"><h3>Cómo se llaman los volúmenes</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Ruta</th>
+<th>Qué es</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/dev/dm-0</code>, <code>/dev/dm-1</code></td>
+<td>El dispositivo que crea el kernel. El número puede cambiar.</td>
+</tr>
+<tr>
+<td><code>/dev/mapper/rl-root</code></td>
+<td>Nombre estable: VG y LV unidos por un guion.</td>
+</tr>
+<tr>
+<td><code>/dev/rl/root</code></td>
+<td>Otro nombre estable, un directorio por VG.</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Como el nombre no cambia, <code>fstab</code> puede usarlo sin UUID:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>/dev/mapper/rl-root     /      xfs     defaults        0 0
+/dev/mapper/rl-swap     none   swap    defaults        0 0</code></pre>
+<aside class="notes"><p>LVM usa el <em>device mapper</em> del kernel, la misma pieza que usa el cifrado de discos (LUKS, al final de la clase). Si el nombre tiene guion, en <code>/dev/mapper</code> se duplica: <code>mis-datos</code> aparece como <code>mis--datos</code>.</p>
+</aside>
+</section>
+
+<section id="lvm_en_la_vm_rocky" data-state="no_footer"><h3>LVM en la VM Rocky</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINTS
+NAME         SIZE TYPE FSTYPE      MOUNTPOINTS
+sda           20G disk             
+├─sda1       600M part vfat        /boot/efi
+├─sda2         1G part xfs         /boot
+└─sda3      18,4G part LVM2_member 
+  ├─rl-root 16,4G lvm  xfs         /
+  └─rl-swap    2G lvm  swap        [SWAP]
+sr0         1024M rom              </code></pre>
+<div class="slide-copy"><ul>
+<li><code>sda3</code> es el PV (<code>LVM2_member</code>).</li>
+<li>El VG se llama <code>rl</code> y tiene dos LV: <code>root</code> y <code>swap</code>.</li>
+<li><code>root</code> y <code>swap</code> ocupan todo el PV: no queda espacio libre.</li>
+</ul></div>
+<aside class="notes"><p><code>/boot</code> queda fuera de LVM para que el arranque no dependa de él. Salida real, revisada el 2026-10-07.</p>
+</aside>
+</section>
+
+<section id="pvs_vgs_y_lvs" data-state="no_footer"><h3>pvs, vgs y lvs</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo pvs
+  PV         VG Fmt  Attr PSize   PFree
+  /dev/sda3  rl lvm2 a--  &lt;18,41g    0 
+$ sudo vgs
+  VG #PV #LV #SN Attr   VSize   VFree
+  rl   1   2   0 wz--n- &lt;18,41g    0 
+$ sudo lvs
+  LV   VG Attr       LSize   Pool Origin Data%  Meta%
+  root rl -wi-ao---- &lt;16,41g
+  swap rl -wi-ao----   2,00g</code></pre>
+<div class="slide-copy"><ul>
+<li><code>PFree</code> y <code>VFree</code> en 0: no hay lugar para crecer.</li>
+<li>Para ver el detalle: <code>pvdisplay</code>, <code>vgdisplay</code>, <code>lvdisplay</code>.</li>
+</ul></div>
+<aside class="notes"><p>salida <strong>a verificar</strong> en la VM Rocky. En <code>Attr</code> de <code>lvs</code>, la <code>a</code> es activo y la <code>o</code> abierto (montado o en uso como swap).</p>
+</aside>
+</section>
+
+<section id="consultas" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>¿Qué diferencia hay entre un PV y un VG?</li>
+<li>¿Por qué <code>fstab</code> de Rocky puede usar <code>/dev/mapper/rl-root</code> sin UUID?</li>
+<li>En la VM Rocky, ¿cuánto espacio libre tiene el VG?</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="crear_y_ampliar" data-state="customevent"><h2>Crear y ampliar</h2>
+<div class="slide-copy"><p>Lo que más se usa de LVM.</p></div>
+</section>
+
+<section id="crear_un_volumen" data-state="no_footer"><h3>Crear un volumen</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo pvcreate /dev/sdb
+sudo vgcreate datos /dev/sdb
+sudo lvcreate -n web -L 1G datos
+sudo mkfs.xfs /dev/datos/web
+sudo mount /dev/datos/web /srv/web</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Opción</th>
+<th>Tamaño</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-L 1G</code></td>
+<td>1 GiB exacto</td>
+</tr>
+<tr>
+<td><code>-l 100%FREE</code></td>
+<td>Todo lo libre del VG</td>
+</tr>
+<tr>
+<td><code>-l 50%FREE</code></td>
+<td>La mitad de lo libre</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>un LV recién creado está vacío, igual que una partición nueva. Conviene no asignar todo el VG de entrada: lo libre es lo que permite crecer después.</p>
+</aside>
+</section>
+
+<section id="ampliar_en_caliente" data-state="no_footer"><h3>Ampliar en caliente</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo lvextend -r -L +1G rl/root</code></pre>
+<div class="slide-copy"><ul>
+<li><code>-L +1G</code> suma 1 GiB. <code>-l +100%FREE</code> le da todo lo libre.</li>
+<li><code>-r</code> agranda también el sistema de archivos.</li>
+</ul></div>
+<div class="slide-copy"><p>Sin <code>-r</code>, el LV crece pero <code>df</code> muestra lo mismo. Hay que hacerlo a mano:</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Sistema de archivos</th>
+<th>Comando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ext4</td>
+<td><code>resize2fs /dev/rl/datos</code></td>
+</tr>
+<tr>
+<td>XFS</td>
+<td><code>xfs_growfs /</code></td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>es el mismo problema que en la <a href="clase12.html#/ampliar_una_particion">clase 12</a>: crecer el contenedor no agranda el sistema de archivos. Olvidar <code>-r</code> es el error más común.</p>
+</aside>
+</section>
+
+<section id="si_el_vg_esta_lleno" data-state="no_footer"><h3>Si el VG está lleno</h3>
+<div class="slide-copy"><p>Primero hay que darle espacio al VG:</p></div>
+<div class="slide-copy"><ul>
+<li><strong>Un disco nuevo:</strong> <code>pvcreate /dev/sdb</code> y <code>vgextend rl /dev/sdb</code>.</li>
+<li><strong>Agrandar el disco existente:</strong> agrandar <code>sda3</code> como en el Lab 11.1 y después <code>pvresize /dev/sda3</code>.</li>
+</ul></div>
+<div class="slide-copy"><p>Después, <code>lvextend -r</code>.</p></div>
+</section>
+
+<section id="ampliar_la_raiz_de_rocky" data-state="no_footer"><h3>Ampliar la raíz de Rocky</h3>
+<img src="img/c13/lvm-ampliar.svg" alt="El VG rl en tres momentos: lleno, con sdb sumado y libre, y con root extendido sobre sdb" class="diagrama tema-claro"><img src="img/c13/lvm-ampliar-oscuro.svg" alt="El VG rl en tres momentos: lleno, con sdb sumado y libre, y con root extendido sobre sdb" class="diagrama tema-oscuro">
+<aside class="notes"><p>es el Lab 12.1. Con particiones no se puede hacer que <code>/</code> ocupe dos discos; con LVM es un comando.</p>
+</aside>
+</section>
+
+<section id="un_lv_en_dos_discos" data-state="no_footer"><h3>Un LV en dos discos</h3>
+<div class="slide-copy"><ul>
+<li>Desde el <code>vgextend</code>, <code>root</code> tiene extensiones en <code>sda3</code> y en <code>sdb</code>.</li>
+<li>Si muere cualquiera de los dos, se pierde <code>root</code> entero.</li>
+<li>Sin RAID, LVM no protege los datos.</li>
+</ul></div>
+<aside class="notes"><p>frente a una falla, un VG en varios discos sin RAID es tan frágil como un RAID 0. Por eso el laboratorio empieza con una instantánea de VirtualBox.</p>
+</aside>
+</section>
+
+<section id="achicar" data-state="no_footer"><h3>Achicar</h3>
+<div class="slide-copy"><ul>
+<li><strong>ext4:</strong> se puede, con el volumen desmontado. <code>lvreduce -r</code> achica primero el sistema de archivos y después el LV.</li>
+<li><strong>XFS:</strong> no se puede achicar. Por eso conviene dejar espacio libre en el VG en lugar de asignarlo todo de entrada.</li>
+</ul></div>
+<aside class="notes"><p>la raíz de Rocky es XFS. <code>pvmove</code> mueve las extensiones de un disco a otro con el sistema en uso, y <code>vgreduce</code> saca el disco del VG: sirve para cambiar un disco sin apagar. Solo se menciona.</p>
+</aside>
+</section>
+
+<section id="consultas_2" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>Después de <code>lvextend</code> sin <code>-r</code>, ¿qué muestra <code>df</code>?</li>
+<li>¿Qué dos caminos hay para darle espacio a un VG lleno?</li>
+<li>¿Qué pasa con <code>root</code> si se rompe el disco que sumamos?</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="instantaneas_y_lvm_thin" data-state="customevent"><h2>Instantáneas y LVM thin</h2>
+
+</section>
+
+<section id="instantanea_de_lvm" data-state="no_footer"><h3>Instantánea de LVM</h3>
+<div class="slide-copy"><p>Congela el estado de un LV en un momento. El original sigue en uso.</p></div>
+<div class="slide-copy"><ul>
+<li>Sirve para probar un cambio y volver atrás.</li>
+<li>Sirve para respaldar un sistema en uso: se copia desde la instantánea, que no cambia.</li>
+<li>Como la de VirtualBox, <a href="clase2.html#/snapshot_no_backup">no es un respaldo</a>: está en los mismos discos.</li>
+</ul></div>
+<aside class="notes"><p>la de VirtualBox congela la VM entera desde afuera; la de LVM congela un volumen desde adentro del sistema. El uso para respaldos se retoma en la clase 24.</p>
+</aside>
+</section>
+
+<section id="instantanea_clasica" data-state="no_footer"><h3>Instantánea clásica</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo lvcreate -s -n datos-antes -L 200M rl/datos</code></pre>
+<div class="slide-copy"><ul>
+<li>Al crearla no se copia nada.</li>
+<li>Antes de modificar un bloque del original, LVM guarda el bloque viejo en la instantánea.</li>
+<li><code>-L 200M</code> es el lugar para esos bloques viejos. <strong>Si se llena, se invalida.</strong></li>
+</ul></div>
+<div class="slide-copy"><p>Para volver atrás:</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo umount /srv/datos
+sudo lvconvert --merge rl/datos-antes
+sudo mount /srv/datos</code></pre>
+<aside class="notes"><p>mientras exista, cada escritura cuesta dos. Se borra apenas cumplió su función. Si el LV no se puede desmontar, la fusión queda para el próximo arranque.</p>
+</aside>
+</section>
+
+<section id="lvm_thin" data-state="no_footer"><h3>LVM thin</h3>
+<div class="slide-copy"><p>Lo mismo que vimos con los <a href="clase2.html#/thin_thick">discos virtuales thin</a>, pero dentro de LVM.</p></div>
+<div class="slide-copy"><ul>
+<li><strong>Volumen clásico:</strong> reserva todo su espacio al crearse.</li>
+<li><strong>Volumen thin:</strong> ocupa lugar a medida que se escribe.</li>
+</ul></div>
+<div class="slide-copy"><p>Los volúmenes thin salen de un <strong>pool</strong>: un LV especial que guarda los bloques.</p></div>
+</section>
+
+<section id="pool_y_volumenes_thin" data-state="no_footer"><h3>Pool y volúmenes thin</h3>
+<img src="img/c13/thin.svg" alt="Pool thin de 1 GiB con cuatro cuadrados ocupados, tres de vol1 y uno de vol2; abajo, los dos volúmenes de 1 GiB prometido" class="diagrama tema-claro"><img src="img/c13/thin-oscuro.svg" alt="Pool thin de 1 GiB con cuatro cuadrados ocupados, tres de vol1 y uno de vol2; abajo, los dos volúmenes de 1 GiB prometido" class="diagrama tema-oscuro">
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo lvcreate --type thin-pool -n pool -L 1G rl
+sudo lvcreate --thin -n vol1 -V 1G rl/pool
+sudo lvcreate --thin -n vol2 -V 1G rl/pool</code></pre>
+<aside class="notes"><p><code>-L</code> es el tamaño real del pool y <code>-V</code> el tamaño que ve el sistema de archivos. Los metadatos son otro LV oculto que anota qué bloque del pool es de cada volumen.</p>
+</aside>
+</section>
+
+<section id="sobreasignacion" data-state="no_footer"><h3>Sobreasignación</h3>
+<div class="slide-copy"><p>En el ejemplo se prometieron 2 GiB sobre un pool de 1 GiB.</p></div>
+<div class="slide-copy"><ul>
+<li>Funciona mientras no se escriba todo junto.</li>
+<li>Si el pool se llena, los volúmenes no pueden escribir. Puede haber corrupción.</li>
+<li>Hay que vigilar <code>Data%</code> y <code>Meta%</code> en <code>lvs</code>.</li>
+</ul></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>  LV   VG Attr       LSize  Pool Origin Data%  Meta%
+  pool rl twi-aotz--  1,00g             29,30  11,52
+  vol1 rl Vwi-aotz--  1,00g pool        29,30
+  vol2 rl Vwi-a-tz--  1,00g pool         0,00</code></pre>
+<aside class="notes"><p>salida <strong>a verificar</strong>. Es el mismo riesgo del <a href="clase2.html#/overcommit">sobreaprovisionamiento</a> de la clase 2. <code>thin_pool_autoextend_threshold</code> en <code>/etc/lvm/lvm.conf</code> hace crecer el pool solo (por defecto está desactivado). Borrar archivos no devuelve espacio al pool sin <code>fstrim</code>.</p>
+</aside>
+</section>
+
+<section id="instantanea_clasica_o_thin" data-state="no_footer"><h3>Instantánea clásica o thin</h3>
+<img src="img/c13/instantaneas.svg" alt="Instantánea clásica contra thin: en la clásica el C viejo se copia a 200M reservados; en la thin original e instantánea comparten los bloques del pool" class="diagrama tema-claro"><img src="img/c13/instantaneas-oscuro.svg" alt="Instantánea clásica contra thin: en la clásica el C viejo se copia a 200M reservados; en la thin original e instantánea comparten los bloques del pool" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li>La thin no lleva <code>-L</code>: comparte bloques con el original y ocupa solo lo que cambia.</li>
+<li>Se crea al instante y se pueden tener muchas.</li>
+</ul></div>
+<aside class="notes"><p>las instantáneas thin se crean inactivas. Para usarlas: <code>lvchange -ay -K</code>.</p>
+</aside>
+</section>
+
+<section id="lvm_thin_en_proxmox" data-state="no_footer"><h3>LVM thin en Proxmox</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>LV en el VG <code>pve</code></th>
+<th>En Proxmox</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>root</code></td>
+<td>Almacenamiento <code>local</code>, para ISO y respaldos</td>
+</tr>
+<tr>
+<td><code>swap</code></td>
+<td>Swap</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>Pool thin: almacenamiento <code>local-lvm</code></td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><ul>
+<li>Cada disco de VM es un volumen thin dentro de <code>data</code>.</li>
+<li>Por eso las instantáneas de VM son rápidas.</li>
+<li>Y por eso hay que vigilar <code>Data%</code>.</li>
+</ul></div>
+</section>
+
+<section id="consultas_3" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>¿Qué pasa si se llena el espacio de una instantánea clásica?</li>
+<li>¿Qué indica el <code>-V</code> de un volumen thin?</li>
+<li>¿Por qué una instantánea thin casi no ocupa lugar al crearla?</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="raid" data-state="customevent"><h2>RAID</h2>
+<div class="slide-copy"><p class="salida-nota"><em>Redundant Array of Independent Disks</em></p></div>
+</section>
+
+<section id="que_es_raid" data-state="no_footer"><h3>¿Qué es RAID?</h3>
+<div class="slide-copy"><p>Varios discos combinados en uno solo para ganar:</p></div>
+<div class="slide-copy"><ul>
+<li>velocidad,</li>
+<li>tolerancia a fallas,</li>
+<li>o las dos cosas.</li>
+</ul></div>
+<div class="slide-copy"><p>Cada forma de combinarlos es un <strong>nivel</strong>.</p></div>
+</section>
+
+<section id="raid_0_distribucion" data-state="no_footer" class="con-tabla"><h3>RAID 0: distribución</h3>
+<p class="datos-raid">Mínimo 2 discos · Capacidad: la suma de todos · No tolera fallas</p><img src="img/c13/raid0.svg" alt="RAID 0: los bloques A1 a A6 se reparten alternados entre dos discos" class="diagrama tema-claro"><img src="img/c13/raid0-oscuro.svg" alt="RAID 0: los bloques A1 a A6 se reparten alternados entre dos discos" class="diagrama tema-oscuro"><small class="raid-tabla"><table class="compact-table">
+<thead>
+<tr>
+<th>Ventajas</th>
+<th>Desventajas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lee y escribe más rápido: usa los discos a la vez</td>
+<td>Si muere un disco, se pierde todo</td>
+</tr>
+<tr>
+<td>Aprovecha toda la capacidad</td>
+<td>Cuantos más discos, más probable la falla</td>
+</tr>
+</tbody></table></small>
+<aside class="notes"><p>aunque se llame RAID, no tiene redundancia. Sirve para datos temporales que se pueden regenerar.</p>
+</aside>
+</section>
+
+<section id="raid_1_espejo" data-state="no_footer" class="con-tabla"><h3>RAID 1: espejo</h3>
+<p class="datos-raid">Mínimo 2 discos · Capacidad: la de un disco · Tolera la falla de todos menos uno</p><img src="img/c13/raid1.svg" alt="RAID 1: los bloques A1 a A3 se escriben iguales en los dos discos" class="diagrama tema-claro"><img src="img/c13/raid1-oscuro.svg" alt="RAID 1: los bloques A1 a A3 se escriben iguales en los dos discos" class="diagrama tema-oscuro"><small class="raid-tabla"><table class="compact-table">
+<thead>
+<tr>
+<th>Ventajas</th>
+<th>Desventajas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lee más rápido: puede leer de cualquier disco</td>
+<td>Se pierde la mitad de la capacidad</td>
+</tr>
+<tr>
+<td>Sigue andando con un solo disco</td>
+<td>Escribe igual que un disco solo</td>
+</tr>
+<tr>
+<td>Reconstruir es copiar el disco sano</td>
+<td></td>
+</tr>
+</tbody></table></small>
+<aside class="notes"><p>es el de los discos de sistema en servidores.</p>
+</aside>
+</section>
+
+<section id="raid_5_paridad_distribuida" data-state="no_footer" class="con-tabla"><h3>RAID 5: paridad distribuida</h3>
+<p class="datos-raid">Mínimo 3 discos · Capacidad: todos menos uno · Tolera la falla de un disco</p><img src="img/c13/raid5.svg" alt="RAID 5 con tres discos: en cada franja hay dos bloques de datos y uno de paridad, que cambia de disco en cada franja" class="diagrama tema-claro"><img src="img/c13/raid5-oscuro.svg" alt="RAID 5 con tres discos: en cada franja hay dos bloques de datos y uno de paridad, que cambia de disco en cada franja" class="diagrama tema-oscuro"><small class="raid-tabla"><table class="compact-table">
+<thead>
+<tr>
+<th>Ventajas</th>
+<th>Desventajas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tolera una falla y pierde solo un disco de capacidad</td>
+<td>Escribe más lento: recalcula la paridad</td>
+</tr>
+<tr>
+<td>Lee rápido</td>
+<td>Degradado, cada lectura del disco caído se calcula</td>
+</tr>
+<tr>
+<td></td>
+<td>Con discos grandes, la reconstrucción es larga y riesgosa</td>
+</tr>
+</tbody></table></small>
+<aside class="notes"><p>la <strong>paridad</strong> permite recalcular el bloque que falte. Si se pierde el disco 2, A2 se recalcula con A1 y Ap, y C1 con Cp y C2. Con un disco caído sigue andando, <strong>degradado</strong>.</p>
+</aside>
+</section>
+
+<section id="raid_6_doble_paridad" data-state="no_footer" class="con-tabla"><h3>RAID 6: doble paridad</h3>
+<p class="datos-raid">Mínimo 4 discos · Capacidad: todos menos dos · Tolera la falla de dos discos</p><img src="img/c13/raid6.svg" alt="RAID 6 con cuatro discos: en cada franja hay dos bloques de datos, una paridad P y una paridad Q, que cambian de disco en cada franja" class="diagrama tema-claro"><img src="img/c13/raid6-oscuro.svg" alt="RAID 6 con cuatro discos: en cada franja hay dos bloques de datos, una paridad P y una paridad Q, que cambian de disco en cada franja" class="diagrama tema-oscuro"><small class="raid-tabla"><table class="compact-table">
+<thead>
+<tr>
+<th>Ventajas</th>
+<th>Desventajas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tolera dos fallas cualesquiera</td>
+<td>Escribe más lento que RAID 5: calcula dos paridades</td>
+</tr>
+<tr>
+<td>Aguanta otra falla durante la reconstrucción</td>
+<td>Pierde dos discos de capacidad</td>
+</tr>
+</tbody></table></small>
+<aside class="notes"><p>es el RAID 5 pensado para discos grandes. P es XOR, como en RAID 5; Q usa otro cálculo, así que no es una copia de P.</p>
+</aside>
+</section>
+
+<section id="raid_10_espejos_repartidos" data-state="no_footer" class="con-tabla"><h3>RAID 10: espejos repartidos</h3>
+<p class="datos-raid">Mínimo 4 discos · Capacidad: la mitad · Tolera una falla seguro, una por espejo si hay suerte</p><img src="img/c13/raid10.svg" alt="RAID 10 con cuatro discos: dos espejos de dos discos; A1, A3 y A5 van al espejo 1 y A2, A4 y A6 al espejo 2" class="diagrama tema-claro"><img src="img/c13/raid10-oscuro.svg" alt="RAID 10 con cuatro discos: dos espejos de dos discos; A1, A3 y A5 van al espejo 1 y A2, A4 y A6 al espejo 2" class="diagrama tema-oscuro"><small class="raid-tabla"><table class="compact-table">
+<thead>
+<tr>
+<th>Ventajas</th>
+<th>Desventajas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lee y escribe rápido: no hay paridad</td>
+<td>Se pierde la mitad de la capacidad</td>
+</tr>
+<tr>
+<td>Reconstruir es copiar el compañero de espejo</td>
+<td>Si caen los dos discos de un espejo, se pierde todo</td>
+</tr>
+</tbody></table></small>
+<aside class="notes"><p>pares en espejo (RAID 1) y los datos repartidos entre los pares (RAID 0). Se usa para bases de datos y discos de VM.</p>
+</aside>
+</section>
+
+<section id="comparacion" data-state="no_footer"><h3>Comparación</h3>
+<div class="slide-copy"><p>Ejemplos con 4 discos de 1 TB · ×1 = velocidad de un disco</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Nivel</th>
+<th>Mínimo</th>
+<th>Capacidad</th>
+<th>Fallas que tolera</th>
+<th>Lectura</th>
+<th>Escritura</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAID 0 (<em>stripe</em>)</td>
+<td>2</td>
+<td>4 TB</td>
+<td>Ninguna</td>
+<td>×4</td>
+<td>×4</td>
+</tr>
+<tr>
+<td>RAID 1 (<em>mirror</em>)</td>
+<td>2</td>
+<td>1 TB</td>
+<td>3</td>
+<td>×4</td>
+<td>×1</td>
+</tr>
+<tr>
+<td>RAID 5 (<em>parity</em>)</td>
+<td>3</td>
+<td>3 TB</td>
+<td>1</td>
+<td>×3</td>
+<td>×1</td>
+</tr>
+<tr>
+<td>RAID 6 (<em>double parity</em>)</td>
+<td>4</td>
+<td>2 TB</td>
+<td>2</td>
+<td>×2</td>
+<td>×1</td>
+</tr>
+<tr>
+<td>RAID 10 (<em>mirror + stripe</em>)</td>
+<td>4</td>
+<td>2 TB</td>
+<td>1 seguro</td>
+<td>×4</td>
+<td>×2</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>son ganancias teóricas, con el mismo criterio que <a href="https://www.raid-calculator.com" target="_blank" rel="noopener noreferrer">raid-calculator.com</a>. En RAID 5 y RAID 6 la escritura no gana: cambiar un bloque obliga a leer y reescribir la paridad (4 operaciones en RAID 5, 6 en RAID 6). Con escrituras grandes y seguidas pueden andar algo mejor, pero con escrituras chicas al azar quedan incluso por debajo de un disco solo; por eso las bases de datos prefieren RAID 10. RAID 1 escribe como un disco porque cada dato va a todos. RAID 1 con cuatro discos son cuatro copias; la calculadora avisa que espera exactamente dos discos en RAID 1, pero MD permite más. Valores comprobados en la calculadora el 2026-10-13 con 4 discos de 1 TB. RAID 10 tolera 2 fallas si caen en espejos distintos.</p>
+</aside>
+</section>
+
+<section id="la_reconstruccion" data-state="no_footer"><h3>La reconstrucción</h3>
+<div class="slide-copy"><p>Al cambiar el disco roto, el arreglo copia o recalcula todo en el nuevo.</p></div>
+<div class="slide-copy"><ul>
+<li>Los discos que quedan trabajan a fondo durante horas.</li>
+<li>Suelen ser del mismo lote y la misma edad que el que murió.</li>
+<li>En RAID 5, un error de lectura durante la reconstrucción no se puede recuperar.</li>
+</ul></div>
+<div class="slide-copy"><p>Con discos grandes se prefiere RAID 6 o RAID 10.</p></div>
+</section>
+
+<section id="disco_de_reserva_spare" data-state="no_footer"><h3>Disco de reserva (<em>spare</em>)</h3>
+<img src="img/c13/raid-spare.svg" alt="RAID 1 con tres discos: el disco 2 falló y el disco 3, de reserva, se reconstruye solo a partir del disco 1" class="diagrama tema-claro"><img src="img/c13/raid-spare-oscuro.svg" alt="RAID 1 con tres discos: el disco 2 falló y el disco 3, de reserva, se reconstruye solo a partir del disco 1" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li>Un disco conectado al arreglo que no guarda nada mientras todo anda bien.</li>
+<li>Cuando falla un disco, la reconstrucción empieza sola sobre la reserva, sin esperar a que alguien lo cambie.</li>
+<li>Se usa en servidores lejos o sin nadie que cambie un disco enseguida, y en arreglos grandes, para acortar el tiempo degradado.</li>
+</ul></div>
+<aside class="notes"><p>el disco roto hay que cambiarlo igual; el nuevo pasa a ser la próxima reserva. En <code>mdadm</code>, un disco que se agrega a un arreglo completo queda como reserva y se ve con <code>(S)</code> en <code>/proc/mdstat</code>. Con cuatro discos, muchos prefieren RAID 6 antes que RAID 5 más una reserva: el disco extra ya protege desde el primer momento, sin esperar una reconstrucción.</p>
+</aside>
+</section>
+
+<section id="raid_no_es_un_respaldo" data-state="no_footer"><h3>RAID no es un respaldo</h3>
+<div class="slide-copy"><p>RAID protege contra una cosa: que un disco se rompa.</p></div>
+<div class="slide-copy"><ul>
+<li>Un <code>rm</code> equivocado se borra en todos los discos.</li>
+<li>Un ransomware cifra todos los discos.</li>
+<li>Un archivo dañado por un programa queda dañado en todos.</li>
+</ul></div>
+<div class="slide-copy"><p>RAID mantiene el servicio andando. Los datos los recupera el respaldo.</p></div>
+</section>
+
+<section id="consultas_4" data-state="no_footer"><h3>Consultas</h3>
+<div class="slide-copy"><ul>
+<li>Con tres discos de 1 TB en RAID 5, ¿cuánto espacio útil queda?</li>
+<li>¿Cuántos discos pueden fallar en un RAID 1 de dos discos?</li>
+<li>¿Qué gana RAID 6 frente a RAID 5, y qué pierde?</li>
+<li>¿Por qué la reconstrucción es el momento de más riesgo?</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="donde_se_arma_el_raid" data-state="customevent"><h2>Dónde se arma el RAID</h2>
+<div class="slide-copy"><p>Software, hardware o el sistema de archivos.</p></div>
+</section>
+
+<section id="raid_por_software_en_linux" data-state="no_footer"><h3>RAID por software en Linux</h3>
+<div class="slide-copy"><ul>
+<li>Linux arma RAID sin hardware especial: lo hace el propio kernel.</li>
+<li>Hoy es muy eficiente: con los discos y procesadores actuales casi no se nota.</li>
+<li>El arreglo no depende de una placa: los discos se pueden llevar a otro equipo.</li>
+<li>Los instaladores de Debian y Rocky lo ofrecen. Lo probamos en el Lab 12.2.</li>
+</ul></div>
+<aside class="notes"><p>la pieza del kernel se llama MD y el programa para administrarlo, <code>mdadm</code>. Los comandos quedan para el laboratorio; están en la sección 8 del apunte.</p>
+</aside>
+</section>
+
+<section id="controladoras_por_hardware" data-state="no_footer"><h3>Controladoras por hardware</h3>
+<div class="slide-copy"><p>Una placa con su procesador arma el arreglo. El sistema ve <strong>un solo disco</strong>.</p></div>
+<div class="slide-copy"><ul>
+<li>Se configuran desde su firmware, como vimos en la <a href="clase3.html#/servidor_fisico">clase 3</a>, o con programas del fabricante.</li>
+<li>Si se rompe la controladora, para leer los discos hace falta otra compatible.</li>
+</ul></div>
+<aside class="notes"><p>el RAID «de la placa madre» (<em>fake RAID</em>, como Intel RST) lo configura el firmware, pero el trabajo lo hace el sistema operativo; en Linux lo maneja <code>mdadm</code>.</p>
+</aside>
+</section>
+
+<section id="btrfs_y_zfs" data-state="no_footer"><h3>Btrfs y ZFS</h3>
+<div class="slide-copy"><p>Estos sistemas de archivos manejan los discos y la redundancia ellos mismos, sin RAID ni LVM abajo.</p></div>
+<div class="slide-copy"><ul>
+<li>Guardan una <strong>suma de verificación</strong> de cada bloque: detectan un bloque dañado y lo reparan con la otra copia.</li>
+<li>Al reconstruir, copian solo lo ocupado.</li>
+<li>Tienen instantáneas y volúmenes propios.</li>
+</ul></div>
+<aside class="notes"><p>el RAID por software de Linux no detecta la corrupción silenciosa: si un disco devuelve un bloque alterado sin dar error, lo entrega así. RAID-Z1 tolera las mismas fallas que RAID 5 pero no tiene <em>write hole</em>. El <code>raid1</code> de Btrfs guarda dos copias, haya dos discos o cinco. Los nombramos en la <a href="clase3.html#/filesystems">clase 3</a>.</p>
+</aside>
+</section>
+
+<section id="btrfs_o_zfs" data-state="no_footer"><h3>Btrfs o ZFS</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th></th>
+<th>Btrfs</th>
+<th>ZFS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Madurez</td>
+<td>Espejo estable; RAID 5/6 todavía no</td>
+<td>Muy maduro</td>
+</tr>
+<tr>
+<td>Licencia</td>
+<td>En el kernel</td>
+<td>Fuera del kernel (CDDL)</td>
+</tr>
+<tr>
+<td>Rocky</td>
+<td>No está</td>
+<td>Repositorio externo</td>
+</tr>
+<tr>
+<td>Debian</td>
+<td>Incluido</td>
+<td><code>zfs-dkms</code>, desde <code>contrib</code></td>
+</tr>
+<tr>
+<td>Dónde se ve</td>
+<td>Fedora, openSUSE, Synology</td>
+<td>Proxmox, TrueNAS</td>
+</tr>
+</tbody></table>
+</section>
+
+<section id="raid_y_lvm_juntos" data-state="no_footer"><h3>RAID y LVM juntos</h3>
+<img src="img/c13/raid-lvm.svg" alt="Dos discos con sda2 y sdb2 en RAID 1 (/dev/md0); debajo, el VG con LV root y LV datos" class="diagrama tema-claro"><img src="img/c13/raid-lvm-oscuro.svg" alt="Dos discos con sda2 y sdb2 en RAID 1 (/dev/md0); debajo, el VG con LV root y LV datos" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li>RAID, pegado a los discos: tolerancia a fallas.</li>
+<li>LVM, sobre el RAID: flexibilidad para repartir y ampliar.</li>
+</ul></div>
+<aside class="notes"><p>es el esquema clásico de un servidor con dos discos y lo que arman los instaladores al elegir RAID y LVM. La ESP queda fuera del RAID porque el firmware UEFI no lo entiende.</p>
+</aside>
+</section>
+
+<section id="cual_conviene" data-state="no_footer"><h3>¿Cuál conviene?</h3>
+<div class="slide-copy"><ul>
+<li><strong>Servidor con Debian o Rocky:</strong> RAID por software, con LVM si hace falta, y ext4 o XFS encima.</li>
+<li><strong>Proxmox o un NAS:</strong> ZFS.</li>
+<li><strong>Escritorio con Fedora u openSUSE:</strong> Btrfs.</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<section id="seguridad" data-state="customevent"><h2>Seguridad</h2>
+
+</section>
+
+<section id="disponibilidad" data-state="no_footer"><h3>Disponibilidad</h3>
+<div class="slide-copy"><p>Tres propiedades: <strong>confidencialidad</strong>, <strong>integridad</strong> y <strong>disponibilidad</strong>.</p></div>
+<div class="slide-copy"><ul>
+<li>RAID: la falla de un disco no tira el servicio.</li>
+<li>LVM: se amplía sin cortar.</li>
+<li>Btrfs y ZFS: suman integridad con las sumas de verificación.</li>
+<li>El respaldo: protege los datos si todo lo demás falla.</li>
+</ul></div>
+<aside class="notes"><p>con usuarios y permisos trabajamos sobre todo la confidencialidad. Esta clase es de disponibilidad.</p>
+</aside>
+</section>
+
+<section id="cifrado_del_disco_luks" data-state="no_footer"><h3>Cifrado del disco: LUKS</h3>
+<img src="img/c13/luks.svg" alt="sda3 cifrada con LUKS, abierta con la passphrase; adentro, LVM con LV root y LV swap" class="diagrama tema-claro"><img src="img/c13/luks-oscuro.svg" alt="sda3 cifrada con LUKS, abierta con la passphrase; adentro, LVM con LV root y LV swap" class="diagrama tema-oscuro"><small class="texto-chico">
+<div class="slide-copy"><ul>
+<li>LUKS cifra todo lo que se escribe en el disco. Para abrirlo hace falta la <em>passphrase</em> (la clave).</li>
+<li>Un disco robado o tirado sin borrar no se puede leer.</li>
+<li>Es la opción «LVM cifrado» del instalador que vimos en la <a href="clase3.html#/etapas_instalador">clase 3</a>.</li>
+<li>Lo común es usarlo en notebooks y escritorios. En un servidor la <em>passphrase</em> es un problema: tiene que poder arrancar solo. Cuando se cifra un servidor, se usa un desbloqueo automático.</li>
+</ul></div>
+</small>
+<aside class="notes"><p>protege solo con el equipo apagado; encendido, lo que cuida los datos son los permisos. En servidores se cifra cuando lo exige una norma (datos de pago o de salud) o cuando el equipo está en un lugar que no controlamos. El desbloqueo automático se hace con el chip TPM del equipo, con un servidor de claves en la red (Clevis y Tang en Rocky) o escribiendo la frase por SSH al arrancar. Fuera del curso. Si se pierde la frase, se pierden los datos. BitLocker y FileVault hacen lo mismo en Windows y macOS. Sin práctica.</p>
+</aside>
+</section>
+
+<section id="resumen" data-state="no_footer"><h3>Resumen</h3>
+<div class="slide-copy"><ul>
+<li><strong>LVM:</strong> PV, VG y LV. Junta discos y reparte volúmenes que crecen en caliente con <code>lvextend -r</code>.</li>
+<li><strong>Thin:</strong> se ocupa al escribir. Hay que vigilar el pool.</li>
+<li><strong>Instantáneas:</strong> para probar cambios y respaldar. No son respaldos.</li>
+<li><strong>RAID 0, 1, 5, 6 y 10:</strong> distribución, espejo, paridad simple, doble paridad y espejos repartidos.</li>
+<li><strong>RAID en Linux:</strong> por software y eficiente; ZFS y Btrfs lo integran al sistema de archivos.</li>
+<li>RAID no es un respaldo.</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<!-- SECCIÓN LABS/PRÁCTICA -->
+
+<section id="labs" data-state="hide_footer" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h2>Actividades prácticas y laboratorios</h2></section>
+
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorios 12.1 y 12.2</h3>
+<div class="slide-copy"><p><strong>Objetivo:</strong> ampliar la raíz de la VM Rocky con LVM y armar un RAID 1 que sobreviva a la falla de un disco.</p></div>
+<div class="slide-copy"><ul>
+<li>12.1: sumar un disco al VG <code>rl</code>, ampliar <code>/</code> en caliente y crear un volumen para <code>/srv/datos</code>. Opcional: instantánea y LVM thin.</li>
+<li>12.2: crear un RAID 1 con dos discos, simular una falla y reemplazar el disco. Opcional: desconectar un disco en VirtualBox.</li>
+</ul></div>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab12/lab12.1.md" target="_blank" rel="noopener noreferrer">Laboratorio 12.1 — LVM en Rocky</a><br><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab12/lab12.2.md" target="_blank" rel="noopener noreferrer">Laboratorio 12.2 — RAID 1 con mdadm</a></p></div>
+<aside class="notes"><p>enlaces previstos; los laboratorios no están escritos. Las dos guías empiezan con una instantánea de VirtualBox. Los discos se agregan con la VM apagada (el controlador SATA no admite discos en caliente): uno de 4 GB para LVM y tres de 1 GB para RAID, a confirmar.</p>
+</aside>
+</section>
+
+<section id="referencias" data-state="no_footer"><h3>Referencias</h3>
+<div class="slide-copy"><ul>
+<li>Ayuda local: <code>man lvm</code>, <code>man lvmthin</code>, <code>man lvextend</code>, <code>man lvconvert</code>, <code>man mdadm</code>, <code>man md</code>.</li>
+<li><a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/configuring_and_managing_logical_volumes/index" target="_blank" rel="noopener noreferrer">Red Hat: configurar y administrar volúmenes lógicos (RHEL 9)</a>.</li>
+<li><a href="https://docs.kernel.org/admin-guide/md.html" target="_blank" rel="noopener noreferrer">MD del kernel Linux</a>.</li>
+<li><a href="https://www.raid-calculator.com" target="_blank" rel="noopener noreferrer">RAID Calculator</a>: capacidad, ganancia de velocidad y fallas que tolera cada nivel.</li>
+<li><a href="https://btrfs.readthedocs.io/en/latest/Status.html" target="_blank" rel="noopener noreferrer">Estado de los perfiles de Btrfs</a>.</li>
+<li><a href="https://openzfs.github.io/openzfs-docs/man/master/7/zpoolconcepts.7.html" target="_blank" rel="noopener noreferrer">Conceptos de OpenZFS</a>.</li>
+<li><a href="https://pve.proxmox.com/wiki/Storage:_LVM_Thin" target="_blank" rel="noopener noreferrer">LVM thin en Proxmox</a>.</li>
+</ul></div>
+</section>
+</section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                 secret: null,
+                 id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
+                 url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>

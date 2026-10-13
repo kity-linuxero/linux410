@@ -1,0 +1,49 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 338' width='800' height='338' font-family='Segoe UI, Helvetica, Arial, sans-serif'>
+<defs><marker id='f' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='6' markerHeight='6' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#495057'/></marker></defs>
+<rect x='1' y='1' width='798' height='336' rx='18' fill='#ffffff' stroke='#dee2e6' stroke-width='2'/>
+<rect x='24' y='24' width='752' height='150' rx='12' fill='none' stroke='#e8590c' stroke-width='2.5' stroke-dasharray='5 4'/>
+<text x='40' y='48' text-anchor='start' font-size='16' font-weight='700' fill='#e8590c'>VG rl</text>
+<rect x='108' y='60' width='458' height='90' rx='10' fill='#fffbeb' stroke='#f08c00' stroke-width='2'/>
+<rect x='120' y='70' width='38' height='38' rx='4' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<rect x='164' y='70' width='38' height='38' rx='4' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<rect x='208' y='70' width='38' height='38' rx='4' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<rect x='252' y='70' width='38' height='38' rx='4' fill='#b2f2bb' stroke='#2f9e44' stroke-width='2'/>
+<rect x='296' y='70' width='38' height='38' rx='4' fill='#fff3bf' stroke='#f08c00' stroke-width='2'/>
+<rect x='340' y='70' width='38' height='38' rx='4' fill='#fff3bf' stroke='#f08c00' stroke-width='2'/>
+<rect x='384' y='70' width='38' height='38' rx='4' fill='#fff3bf' stroke='#f08c00' stroke-width='2'/>
+<rect x='428' y='70' width='38' height='38' rx='4' fill='#fff3bf' stroke='#f08c00' stroke-width='2'/>
+<rect x='472' y='70' width='38' height='38' rx='4' fill='#fff3bf' stroke='#f08c00' stroke-width='2'/>
+<rect x='516' y='70' width='38' height='38' rx='4' fill='#fff3bf' stroke='#f08c00' stroke-width='2'/>
+<text x='337.0' y='138' text-anchor='middle' font-size='16' font-weight='700' fill='#1e1e1e'>pool thin · 1 GiB real · Data% 40</text>
+<rect x='588' y='70' width='120' height='38' rx='6' fill='#e9ecef' stroke='#868e96' stroke-width='2'/>
+<text x='648' y='95' text-anchor='middle' font-size='15' font-weight='600' fill='#1e1e1e'>metadatos</text>
+<text x='648' y='138' text-anchor='middle' font-size='13' font-weight='400' fill='#495057'>qué bloque es de quién</text>
+<rect x='40' y='236' width='32' height='32' rx='4' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<rect x='75' y='236' width='32' height='32' rx='4' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<rect x='110' y='236' width='32' height='32' rx='4' fill='#a5d8ff' stroke='#1971c2' stroke-width='2'/>
+<rect x='145' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='180' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='215' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='250' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='285' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='320' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='355' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<text x='40' y='294' text-anchor='start' font-size='16' font-weight='700' fill='#1e1e1e'>vol1 · 1 GiB prometido</text>
+<text x='40' y='316' text-anchor='start' font-size='14' font-weight='400' fill='#495057'>escrito: 300 MiB · lo demás no ocupa lugar</text>
+<rect x='413' y='236' width='32' height='32' rx='4' fill='#b2f2bb' stroke='#2f9e44' stroke-width='2'/>
+<rect x='448' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='483' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='518' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='553' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='588' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='623' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='658' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='693' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<rect x='728' y='236' width='32' height='32' rx='4' fill='#ffffff' stroke='#adb5bd' stroke-width='2' stroke-dasharray='5 4'/>
+<text x='413' y='294' text-anchor='start' font-size='16' font-weight='700' fill='#1e1e1e'>vol2 · 1 GiB prometido</text>
+<text x='413' y='316' text-anchor='start' font-size='14' font-weight='400' fill='#495057'>escrito: 100 MiB · lo demás no ocupa lugar</text>
+<line x1='139.0' y1='180' x2='56.0' y2='230' stroke='#1971c2' stroke-width='2' marker-end='url(#f)'/>
+<line x1='183.0' y1='180' x2='91.0' y2='230' stroke='#1971c2' stroke-width='2' marker-end='url(#f)'/>
+<line x1='227.0' y1='180' x2='126.0' y2='230' stroke='#1971c2' stroke-width='2' marker-end='url(#f)'/>
+<line x1='271.0' y1='180' x2='429.0' y2='230' stroke='#2f9e44' stroke-width='2' marker-end='url(#f)'/>
+</svg>
