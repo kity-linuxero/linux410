@@ -241,6 +241,7 @@
         #raid_1_espejo img.diagrama { max-height: 52vh; }
         #raid_5_paridad_distribuida img.diagrama { max-height: 48vh; }
         #comparacion .compact-table td { white-space: nowrap; }
+        #pvs_vgs_y_lvs pre { font-size: 43%; }
     </style>
 </head>
 
@@ -281,7 +282,7 @@
 <li>Ampliar un volumen lógico y su sistema de archivos con el sistema en marcha.</li>
 <li>Explicar la diferencia entre un volumen clásico y uno thin.</li>
 <li>Comparar los niveles de RAID por capacidad y fallas que toleran.</li>
-<li>Crear un RAID 1, simular la falla de un disco y reemplazarlo.</li>
+<li>Tomar una instantánea de un volumen lógico y volver atrás con ella.</li>
 </ul></div>
 </section>
 
@@ -372,6 +373,7 @@
 <li><code>sda1</code> y <code>sda2</code> quedan fuera de LVM.</li>
 <li><code>sda3</code> y <code>sdb</code> entero van a LVM.</li>
 </ul></div>
+<p><small>*Para explicar mejor el concepto de LVM se agrega en la imágen un disco de 4GiB que es como se hará el Lab 12.1.</small></p>
 <aside class="notes"><p>es la VM Rocky como queda al terminar el Lab 12.1. <code>sdb</code> es el disco de 4 GiB que se agrega en el laboratorio.</p>
 </aside>
 </section>
@@ -458,20 +460,20 @@ sr0         1024M rom              </code></pre>
 
 <section id="pvs_vgs_y_lvs" data-state="no_footer"><h3>pvs, vgs y lvs</h3>
 <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo pvs
-  PV         VG Fmt  Attr PSize   PFree
-  /dev/sda3  rl lvm2 a--  &lt;18,41g    0 
+  PV         VG Fmt  Attr PSize  PFree
+  /dev/sda3  rl lvm2 a--  18,41g    0 
 $ sudo vgs
-  VG #PV #LV #SN Attr   VSize   VFree
-  rl   1   2   0 wz--n- &lt;18,41g    0 
+  VG #PV #LV #SN Attr   VSize  VFree
+  rl   1   2   0 wz--n- 18,41g    0 
 $ sudo lvs
-  LV   VG Attr       LSize   Pool Origin Data%  Meta%
-  root rl -wi-ao---- &lt;16,41g
-  swap rl -wi-ao----   2,00g</code></pre>
+  LV   VG Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  root rl -wi-ao---- 16,41g
+  swap rl -wi-ao----  2,00g</code></pre>
 <div class="slide-copy"><ul>
 <li><code>PFree</code> y <code>VFree</code> en 0: no hay lugar para crecer.</li>
 <li>Para ver el detalle: <code>pvdisplay</code>, <code>vgdisplay</code>, <code>lvdisplay</code>.</li>
 </ul></div>
-<aside class="notes"><p>salida <strong>a verificar</strong> en la VM Rocky. En <code>Attr</code> de <code>lvs</code>, la <code>a</code> es activo y la <code>o</code> abierto (montado o en uso como swap).</p>
+<aside class="notes"><p>salida real de la VM Rocky (2026-10-13). En <code>Attr</code> de <code>lvs</code>, la <code>a</code> es activo y la <code>o</code> abierto (montado o en uso como swap). <code>pvdisplay</code> confirma extensiones de 4 MiB, 4713 en total y ninguna libre. Con <code>lvs -o +devices</code> se ve que la swap ocupa el principio del PV y <code>root</code> empieza en la extensión 512.</p>
 </aside>
 </section>
 
@@ -647,11 +649,11 @@ sudo lvcreate --thin -n vol2 -V 1G rl/pool</code></pre>
 <li>Si el pool se llena, los volúmenes no pueden escribir. Puede haber corrupción.</li>
 <li>Hay que vigilar <code>Data%</code> y <code>Meta%</code> en <code>lvs</code>.</li>
 </ul></div>
-<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>  LV   VG Attr       LSize  Pool Origin Data%  Meta%
-  pool rl twi-aotz--  1,00g             29,30  11,52
-  vol1 rl Vwi-aotz--  1,00g pool        29,30
-  vol2 rl Vwi-a-tz--  1,00g pool         0,00</code></pre>
-<aside class="notes"><p>salida <strong>a verificar</strong>. Es el mismo riesgo del <a href="clase2.html#/overcommit">sobreaprovisionamiento</a> de la clase 2. <code>thin_pool_autoextend_threshold</code> en <code>/etc/lvm/lvm.conf</code> hace crecer el pool solo (por defecto está desactivado). Borrar archivos no devuelve espacio al pool sin <code>fstrim</code>.</p>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>  LV   VG      Attr       LSize Pool Origin Data%  Meta%
+  pool pruebas twi-aotz-- 1,00g             35,62  14,36
+  vol1 pruebas Vwi-aotz-- 1,00g pool        35,62
+  vol2 pruebas Vwi-a-tz-- 1,00g pool        0,00</code></pre>
+<aside class="notes"><p>salida real en la VM Rocky (2026-10-13), en un VG de prueba <code>pruebas</code> armado sobre un archivo, con 300 MiB escritos en <code>vol1</code> (las columnas vacías del final se recortaron). Al crear <code>vol2</code>, LVM avisa: <code>WARNING: Sum of all thin volume sizes (2,00 GiB) exceeds the size of thin pool</code> y sugiere bajar <code>thin_pool_autoextend_threshold</code>. Después de borrar el archivo, <code>Data%</code> siguió en 35,62; con <code>fstrim</code> bajó a 6,30. Es el mismo riesgo del <a href="clase2.html#/overcommit">sobreaprovisionamiento</a> de la clase 2. <code>thin_pool_autoextend_threshold</code> en <code>/etc/lvm/lvm.conf</code> hace crecer el pool solo (por defecto está desactivado). Borrar archivos no devuelve espacio al pool sin <code>fstrim</code>.</p>
 </aside>
 </section>
 
@@ -946,9 +948,9 @@ sudo lvcreate --thin -n vol2 -V 1G rl/pool</code></pre>
 <li>Linux arma RAID sin hardware especial: lo hace el propio kernel.</li>
 <li>Hoy es muy eficiente: con los discos y procesadores actuales casi no se nota.</li>
 <li>El arreglo no depende de una placa: los discos se pueden llevar a otro equipo.</li>
-<li>Los instaladores de Debian y Rocky lo ofrecen. Lo probamos en el Lab 12.2.</li>
+<li>Los instaladores de Debian y Rocky lo ofrecen.</li>
 </ul></div>
-<aside class="notes"><p>la pieza del kernel se llama MD y el programa para administrarlo, <code>mdadm</code>. Los comandos quedan para el laboratorio; están en la sección 8 del apunte.</p>
+<aside class="notes"><p>la pieza del kernel se llama MD y el programa para administrarlo, <code>mdadm</code>. No se practica; los comandos están en la sección 8 del apunte.</p>
 </aside>
 </section>
 
@@ -1078,13 +1080,13 @@ sudo lvcreate --thin -n vol2 -V 1G rl/pool</code></pre>
 <section id="labs" data-state="hide_footer" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h2>Actividades prácticas y laboratorios</h2></section>
 
 <section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorios 12.1 y 12.2</h3>
-<div class="slide-copy"><p><strong>Objetivo:</strong> ampliar la raíz de la VM Rocky con LVM y armar un RAID 1 que sobreviva a la falla de un disco.</p></div>
+<div class="slide-copy"><p><strong>Objetivo:</strong> ampliar la raíz de la VM Rocky con LVM y volver atrás un cambio con una instantánea.</p></div>
 <div class="slide-copy"><ul>
-<li>12.1: sumar un disco al VG <code>rl</code>, ampliar <code>/</code> en caliente y crear un volumen para <code>/srv/datos</code>. Opcional: instantánea y LVM thin.</li>
-<li>12.2: crear un RAID 1 con dos discos, simular una falla y reemplazar el disco. Opcional: desconectar un disco en VirtualBox.</li>
+<li>12.1: agregar un disco de 4 GB, sumarlo al VG <code>rl</code> y ampliar <code>/</code> en caliente.</li>
+<li>12.2: tomar una instantánea de un volumen, romper sus datos y restaurarlos.</li>
 </ul></div>
-<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab12/lab12.1.md" target="_blank" rel="noopener noreferrer">Laboratorio 12.1 — LVM en Rocky</a><br><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab12/lab12.2.md" target="_blank" rel="noopener noreferrer">Laboratorio 12.2 — RAID 1 con mdadm</a></p></div>
-<aside class="notes"><p>enlaces previstos; los laboratorios no están escritos. Las dos guías empiezan con una instantánea de VirtualBox. Los discos se agregan con la VM apagada (el controlador SATA no admite discos en caliente): uno de 4 GB para LVM y tres de 1 GB para RAID, a confirmar.</p>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab12/lab12.1.md" target="_blank" rel="noopener noreferrer">Laboratorio 12.1 — Ampliar la raíz con LVM</a><br><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab12/lab12.2.md" target="_blank" rel="noopener noreferrer">Laboratorio 12.2 — Instantánea de LVM</a></p></div>
+<aside class="notes"><p>los dos están escritos y probados en la VM (12.1 el 2026-10-13, 12.2 el 2026-10-14). Para montar la instantánea con XFS hace falta <code>-o ro,nouuid</code>. RAID no se practica (decisión del 2026-10-13). La VM Rocky se descarga de linux-files.idep.atepba.org.ar para quien no hizo el Lab 10.2. El disco se agrega con la VM apagada. La instantánea de VirtualBox se toma con la VM apagada al empezar el 12.1 y se restaura al terminar el 12.2.</p>
 </aside>
 </section>
 
