@@ -4,7 +4,7 @@
 
 ## Clase 13: LVM y RAID
 
-Módulo 1 — Operación de Sistemas Operativos GNU/Linux
+Módulo 2 — Administración de Servidores
 
 ---
 
