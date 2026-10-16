@@ -242,6 +242,9 @@
         #raid_5_paridad_distribuida img.diagrama { max-height: 48vh; }
         #comparacion .compact-table td { white-space: nowrap; }
         #pvs_vgs_y_lvs pre { font-size: 43%; }
+
+/* Logo IDEP de la última diapositiva: es negro, se invierte en modo oscuro. */
+html.dark-theme #fin img { filter: invert(1); }
     </style>
 </head>
 
@@ -719,8 +722,7 @@ sudo lvcreate --thin -n vol2 -V 1G rl/pool</code></pre>
 <div class="slide-copy"><ul>
 <li>velocidad,</li>
 <li>tolerancia a fallas,</li>
-<li>espacio de almacenamiento,</li>
-<li>o alguna combinación de estas cosas.</li>
+<li>o las dos cosas.</li>
 </ul></div>
 <div class="slide-copy"><p>Cada forma de combinarlos es un <strong>nivel</strong>.</p></div>
 </section>
