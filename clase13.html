@@ -630,7 +630,11 @@ sudo mount /srv/datos</code></pre>
 <li><strong>Volumen clásico:</strong> reserva todo su espacio al crearse.</li>
 <li><strong>Volumen thin:</strong> ocupa lugar a medida que se escribe.</li>
 </ul></div>
-<div class="slide-copy"><p>Los volúmenes thin salen de un <strong>pool</strong>: un LV especial que guarda los bloques.</p></div>
+<div class="slide-copy"><p>El <strong>pool</strong> es un LV que reserva espacio del VG. Los volúmenes thin se sirven de ahí, a medida que escriben.</p></div>
+<div class="slide-copy"><ul>
+<li>El pool no se formatea ni se monta.</li>
+<li>Los volúmenes thin sí, y se usan como cualquier LV.</li>
+</ul></div>
 </section>
 
 <section id="pool_y_volumenes_thin" data-state="no_footer"><h3>Pool y volúmenes thin</h3>
@@ -715,7 +719,8 @@ sudo lvcreate --thin -n vol2 -V 1G rl/pool</code></pre>
 <div class="slide-copy"><ul>
 <li>velocidad,</li>
 <li>tolerancia a fallas,</li>
-<li>o las dos cosas.</li>
+<li>espacio de almacenamiento,</li>
+<li>o alguna combinación de estas cosas.</li>
 </ul></div>
 <div class="slide-copy"><p>Cada forma de combinarlos es un <strong>nivel</strong>.</p></div>
 </section>
@@ -1058,7 +1063,7 @@ sudo lvcreate --thin -n vol2 -V 1G rl/pool</code></pre>
 <li>Lo común es usarlo en notebooks y escritorios. En un servidor la <em>passphrase</em> es un problema: tiene que poder arrancar solo. Cuando se cifra un servidor, se usa un desbloqueo automático.</li>
 </ul></div>
 </small>
-<aside class="notes"><p>protege solo con el equipo apagado; encendido, lo que cuida los datos son los permisos. En servidores se cifra cuando lo exige una norma (datos de pago o de salud) o cuando el equipo está en un lugar que no controlamos. El desbloqueo automático se hace con el chip TPM del equipo, con un servidor de claves en la red (Clevis y Tang en Rocky) o escribiendo la frase por SSH al arrancar. Fuera del curso. Si se pierde la frase, se pierden los datos. BitLocker y FileVault hacen lo mismo en Windows y macOS. Sin práctica.</p>
+<aside class="notes"><p>protege solo con el equipo apagado; encendido, lo que cuida los datos son los permisos. En servidores se cifra cuando lo exige una norma (datos de pago o de salud) o cuando el equipo está en un lugar que no controlamos. El desbloqueo automático se hace con el chip TPM del equipo, con un servidor de claves en la red (Clevis y Tang en Rocky) o escribiendo la <em>passphrase</em> por SSH al arrancar. Fuera del curso. Si se pierde la <em>passphrase</em>, se pierden los datos. BitLocker y FileVault hacen lo mismo en Windows y macOS. Sin práctica.</p>
 </aside>
 </section>
 
