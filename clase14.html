@@ -225,7 +225,7 @@ html.dark-theme #fin img { filter: invert(1); }
         #que_es_un_log .compact-table { font-size: 50%; }
         #por_tiempo_y_por_arranque pre { font-size: 45%; }
         #donde_mirar .compact-table td:first-child { white-space: nowrap; }
-        #donde_mirar .compact-table { font-size: 55%; }
+        #donde_mirar .compact-table { font-size: 51%; }
     </style>
 </head>
 
@@ -256,7 +256,7 @@ html.dark-theme #fin img { filter: invert(1); }
 <section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 14: Logs del sistema</h4><small><p>Módulo 2 — Administración de Servidores</p></small></section>
 
 <section id="index" data-state="no_footer"><h3>Temas de la clase 14</h3>
-<div class="slide-copy"><ul><li><a href="#/logs">Logs</a></li><li><a href="#/journalctl">journalctl</a></li><li><a href="#/logs_de_texto">Logs de texto</a></li><li><a href="#/leer_los_logs">Leer los logs</a></li><li><a href="#/labs">Actividades prácticas y laboratorios</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+<div class="slide-copy"><ul><li><a href="#/logs">Logs</a></li><li><a href="#/journalctl">journalctl</a></li><li><a href="#/logs_de_texto">Logs de texto</a></li><li><a href="#/labs">Actividades prácticas y laboratorios</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
 </section>
 
 <section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
@@ -387,7 +387,7 @@ html.dark-theme #fin img { filter: invert(1); }
 <td>Sí</td>
 </tr>
 </tbody></table>
-<div class="slide-copy"><p>journald recibe todo. Si hay rsyslog, copia los mensajes a texto.</p></div>
+<div class="slide-copy"><p>journald recibe todos los mensajes. Si está instalado, rsyslog los copia a archivos de texto.</p></div>
 <aside class="notes"><p>journald guarda en disco si existe <code>/var/log/journal</code> (Debian lo crea al instalar, Rocky no). En Rocky el journal se pierde al reiniciar y el historial queda en los archivos de rsyslog. Debian dejó de instalar rsyslog en la versión 12. Cada entrada del journal tiene muchos campos además del mensaje: se ven con <code>journalctl -o verbose</code>.</p>
 </aside>
 </section>
@@ -424,7 +424,7 @@ sudo journalctl -xeu ssh        # lo que sugiere systemd</code></pre>
 </tr>
 </tbody></table>
 <div class="slide-copy"><p>Sin <code>sudo</code>, solo se ven los mensajes propios. Los grupos <code>adm</code> y <code>systemd-journal</code> leen todo sin <code>sudo</code>.</p></div>
-<aside class="notes"><p>repaso de la <a href="clase10.html#/diagnostico_inicial">clase 10</a>. Sin <code>-e</code>, <code>journalctl</code> abre el log desde el mensaje más viejo y hay que bajar hasta el final. Las líneas que agrega <code>-x</code> empiezan con <code>░░</code> y no son del log: por ejemplo, debajo de <code>Failed to start demo-falla.service</code> aparecen <code>░░ Subject: A start job for unit demo-falla.service has failed</code> y una explicación que repite lo mismo con más palabras. Para los mensajes de los programas no agrega nada. Por eso alcanza con <code>-u</code> y <code>-e</code>; <code>-xeu</code> aparece porque es lo que recomienda <code>systemctl</code> cuando un servicio falla. Sumar un operador a <code>adm</code> (<a href="clase8.html#/grupo_principal_y_suplementarios">clase 8</a>) le da lectura de los logs sin darle <code>sudo</code>.</p>
+<aside class="notes"><p>repaso de la <a href="clase10.html#/diagnostico_inicial">clase 10</a>. Sin <code>-e</code>, <code>journalctl</code> abre el log desde el mensaje más viejo y hay que bajar hasta el final. Las líneas que agrega <code>-x</code> empiezan con <code>░░</code> y no son del log: por ejemplo, debajo de <code>Failed to start demo-falla.service</code> aparecen <code>░░ Subject: A start job for unit demo-falla.service has failed</code> y una explicación que repite lo mismo con más palabras. Para los mensajes de los programas no agrega nada, así que para buscar alcanza con <code>-u</code> y <code>-e</code>. <code>-xeu</code> aparece porque es lo que recomienda <code>systemctl</code> cuando un servicio falla. Sumar un operador a <code>adm</code> (<a href="clase8.html#/grupo_principal_y_suplementarios">clase 8</a>) le da lectura de los logs sin darle <code>sudo</code>.</p>
 </aside>
 </section>
 
@@ -443,9 +443,9 @@ oct 18 15:17:35 lab2-vm systemd-ssh-generator[224]: Failed to query local AF_VSO
 oct 18 15:17:36 lab2-vm kernel: vmwgfx ...: [drm] *ERROR* ... unsupported hypervisor.</code></pre>
 <div class="slide-copy"><ul>
 <li><code>-p err</code>: <code>err</code> y todo lo más grave. También rangos: <code>-p warning..err</code>.</li>
-<li>No todo error es un problema.</li>
+<li>Algunos errores salen en cada arranque y no indican ninguna falla.</li>
 </ul></div>
-<aside class="notes"><p>salida real, con los mensajes recortados. Son avisos de VirtualBox que aparecen en cada arranque. Parte del oficio es reconocer el ruido de fondo de cada equipo.</p>
+<aside class="notes"><p>salida real con los mensajes recortados. Son avisos de VirtualBox. Conviene conocer los errores que cada equipo muestra siempre, para no perder tiempo con ellos cuando se busca una falla real.</p>
 </aside>
 </section>
 
@@ -454,7 +454,7 @@ oct 18 15:17:36 lab2-vm kernel: vmwgfx ...: [drm] *ERROR* ... unsupported hyperv
 sudo journalctl -t sshd-session       # por etiqueta
 sudo journalctl -k                    # solo el núcleo
 sudo journalctl -u ssh --grep "Failed password"</code></pre>
-<div class="slide-copy"><p>¡Ojo con el nombre de la unidad!</p></div>
+<div class="slide-copy"><p>El nombre de la unidad tiene que ser el exacto:</p></div>
 <pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -u sshd --since 15:26
 -- No entries --</code></pre>
 <aside class="notes"><p>en Debian la unidad es <code>ssh</code> y <code>sshd</code> es un alias. <code>systemctl</code> acepta el alias; <code>journalctl</code> no. En Rocky la unidad es <code>sshd</code>. <code>--no-pager</code> permite encadenar con <code>grep</code> (<a href="clase6.html#/tuberias">clase 6</a>).</p>
@@ -544,9 +544,9 @@ kern.*				-/var/log/kern.log
 
 <section id="logs_en_otro_equipo" data-state="no_footer"><h3>Logs en otro equipo</h3>
 <div class="slide-copy"><ul>
-<li>rsyslog puede <strong>enviar</strong> los logs por la red y también <strong>recibirlos</strong>.</li>
+<li>rsyslog puede enviar los logs por la red y también recibirlos.</li>
 <li>Si alguien entra con root, puede borrar los logs locales, pero no los que ya salieron.</li>
-<li>Un solo lugar para revisar los logs de varios servidores.</li>
+<li>Los logs de varios servidores se revisan en un solo lugar.</li>
 </ul></div>
 <aside class="notes"><p>solo se nombra. En el Lab 13.2 la VM Rocky recibe los logs de la Debian. Herramientas como Graylog o Loki centralizan y buscan logs de muchos equipos: fuera del curso.</p>
 </aside>
@@ -596,73 +596,13 @@ oct 18 15:27:52 lab2-vm respaldo[1339]: No se pudo copiar /srv/datos</code></pre
 <section id="consultas_2" data-state="no_footer"><h3>Consultas</h3>
 
 </section>
-</section>
-
-<section>
-<section id="leer_los_logs" data-state="customevent"><h2>Leer los logs</h2>
-<div class="slide-copy"><p>Tres casos.</p></div>
-</section>
-
-<section id="caso_1_intentos_de_acceso_por_ssh" data-state="no_footer"><h3>Caso 1: intentos de acceso por SSH</h3>
-<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -u ssh --since today --grep "Failed password"
-15:26:33 sshd-session[993]: Failed password for invalid user invitado from 10.0.2.2
-15:26:35 sshd-session[995]: Failed password for invalid user invitado from 10.0.2.2
-15:26:37 sshd-session[997]: Failed password for invalid user invitado from 10.0.2.2
-15:26:40 sshd-session[999]: Failed password for ana from 10.0.2.2</code></pre>
-<div class="slide-copy"><ul>
-<li><strong>¿Quién?</strong> <code>invitado</code> no existe; <code>ana</code> sí.</li>
-<li><strong>¿Desde dónde?</strong> <code>10.0.2.2</code>.</li>
-<li><strong>¿Cuándo y cuántos?</strong> Cuatro en siete segundos.</li>
-<li><strong>¿Entró alguien?</strong> Se busca <code>Accepted</code>.</li>
-</ul></div>
-<aside class="notes"><p>salida recortada para que entre: cada línea empieza con <code>oct 18</code> y el equipo <code>lab2-vm</code>, y termina con el puerto de origen y <code>ssh2</code> (por ejemplo, <code>port 38804 ssh2</code>). <code>invalid user</code> es el patrón de un robot que prueba nombres. Un fallo sobre una cuenta que existe preocupa más. <code>10.0.2.2</code> es la NAT de VirtualBox, o sea, el anfitrión. Los intentos fallidos son <code>info</code> y <code>notice</code>: con <code>-p warning</code> no aparecen. Con <code>auth.log</code>, cuidado: sudo registra el comando, y <code>sudo grep "Failed password" /var/log/auth.log</code> puede encontrarse a sí mismo.</p>
-</aside>
-</section>
-
-<section id="caso_2_un_servicio_que_no_arranca" data-state="no_footer"><h3>Caso 2: un servicio que no arranca</h3>
-<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -u respaldo-etc -n 4
-(tarr)[1628]: ...: Failed at step EXEC spawning /usr/bin/tarr: No such file or directory
-systemd[1]: respaldo-etc.service: Main process exited, code=exited, status=203/EXEC
-systemd[1]: respaldo-etc.service: Failed with result 'exit-code'.
-systemd[1]: Failed to start respaldo-etc.service - Copia de /etc a /srv/datos.</code></pre>
-<div class="slide-copy"><p>La última línea dice <strong>que</strong> falló. La primera dice <strong>por qué</strong>.</p></div>
-<aside class="notes"><p>un error de tipeo en <code>ExecStart</code>. Mismo orden que en la clase 10: <code>status</code>, <code>journalctl -u</code>, corregir, <code>restart</code>, verificar. Salida recortada para que entre: sin fecha ni equipo, y con <code>...</code> en lugar de <code>respaldo-etc.service</code> en la primera línea. <code>systemctl --failed</code> lista las unidades en falla.</p>
-</aside>
-</section>
-
-<section id="caso_3_disco_lleno" data-state="no_footer"><h3>Caso 3: disco lleno</h3>
-<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -u respaldo-etc
-tar[1551]: gzip: stdout: No space left on device
-tar[1549]: /usr/bin/tar: /srv/datos/etc.tar.gz: No se puede efectuar write: Tubería rota
-...
-systemd[1]: Failed to start respaldo-etc.service - Copia de /etc a /srv/datos.</code></pre>
-<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ df -h /srv/datos
-S.ficheros     Tamaño Usados  Disp Uso% Montado en
-/dev/sdb1        2,0G   2,0G     0 100% /srv/datos</code></pre>
-<div class="slide-copy"><p>Después, <code>du</code> para encontrar qué ocupa el espacio (<a href="clase12.html#/df_y_du">clase 12</a>).</p></div>
-<aside class="notes"><p>salida recortada (sin fecha ni equipo, y sin dos líneas de systemd). Con <code>-p err</code> solo aparece <code>Failed to start</code>: para diagnosticar se lee toda la unidad. ext4 reserva un 5 % para root: con <code>df</code> en 100 % un usuario ya no escribe, pero un servicio que corre como root sí, hasta que se acaba la reserva.</p>
-</aside>
-</section>
-
-<section id="el_log_es_la_evidencia" data-state="no_footer"><h3>El log es la evidencia</h3>
-<div class="slide-copy"><ol>
-<li><strong>Detectar:</strong> los <code>Failed password</code> en el log.</li>
-<li><strong>Contener:</strong> bloquear la cuenta o el origen.</li>
-<li><strong>Recuperar:</strong> si alguien entró, cambiar credenciales y revisar qué hizo.</li>
-<li><strong>Documentar:</strong> guardar las líneas, con hora y origen, antes de que se roten.</li>
-</ol></div>
-<div class="slide-copy"><p>Los logs tienen datos personales (usuarios, IP, comandos): no son de lectura pública.</p></div>
-<aside class="notes"><p>con lo que ya tenemos, contener es bloquear la contraseña de la cuenta (<a href="clase8.html#/estados_de_una_contrasena">clase 8</a>). fail2ban lee estos mismos logs y bloquea las IP que fallan muchas veces: lo vemos en la clase 23. A veces queda una contraseña tipeada en el campo del usuario, como <code>Invalid user</code>.</p>
-</aside>
-</section>
 
 <section id="resumen" data-state="no_footer"><h3>Resumen</h3>
 <div class="slide-copy"><ul>
-<li><strong>journald</strong> guarda todo. Se lee con <code>journalctl</code>: <code>-u</code>, <code>-t</code>, <code>-b</code>, <code>--since</code>, <code>-p</code>, <code>--grep</code>.</li>
-<li><strong>rsyslog</strong> copia a texto: <code>syslog</code> y <code>auth.log</code> en Debian, <code>messages</code> y <code>secure</code> en Rocky. También envía logs a otro equipo.</li>
-<li><strong>logrotate</strong> rota, comprime y borra los logs de texto.</li>
-<li><strong>logger</strong> escribe en el log desde un script.</li>
-<li>Ante una falla, leer las líneas de antes del error.</li>
+<li>journald guarda todo y se lee con <code>journalctl</code>: <code>-u</code>, <code>-t</code>, <code>-b</code>, <code>--since</code>, <code>-p</code>, <code>--grep</code>.</li>
+<li>rsyslog copia a texto: <code>syslog</code> y <code>auth.log</code> en Debian, <code>messages</code> y <code>secure</code> en Rocky. También puede mandar los logs a otro equipo.</li>
+<li>logrotate rota, comprime y borra los logs de texto.</li>
+<li><code>logger</code> escribe en el log desde un script.</li>
 </ul></div>
 </section>
 </section>
@@ -679,7 +619,7 @@ S.ficheros     Tamaño Usados  Disp Uso% Montado en
 <li>13.2: la VM Rocky recibe los logs de la Debian.</li>
 </ul></div>
 <div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab13/lab13.1.md" target="_blank" rel="noopener noreferrer">Laboratorio 13.1 — Logs del sistema</a><br><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab13/lab13.2.md" target="_blank" rel="noopener noreferrer">Laboratorio 13.2 — Logs en otro equipo</a></p></div>
-<aside class="notes"><p>los dos laboratorios están escritos y probados en las VM (2026-10-18), sin publicar todavía. El 13.1 necesita <code>/srv/datos</code> del Lab 11.2. El 13.2 necesita rsyslog en la Debian (lo instala el 13.1) y una regla de reenvío de puertos en la VM Rocky, porque las dos VM están en NAT y no se ven entre sí: la Debian envía a <code>10.0.2.2:2514</code> (el anfitrión) y VirtualBox lo pasa al puerto 514 de Rocky. Probado el 2026-10-18.</p>
+<aside class="notes"><p>los dos laboratorios están escritos y probados en las VM (2026-10-18), sin publicar todavía. Ninguno depende de laboratorios anteriores, salvo el acceso por SSH del Lab 3: el 13.1 usa un tmpfs de 20 MB para el disco lleno y <code>root</code> como cuenta existente, y el 13.2 instala rsyslog en la Debian. El 13.2 necesita la VM Rocky (se descarga la OVA si falta) y una regla de reenvío de puertos en la VM Rocky, porque las dos VM están en NAT y no se ven entre sí: la Debian envía a <code>10.0.2.2:2514</code> (el anfitrión) y VirtualBox lo pasa al puerto 514 de Rocky.</p>
 </aside>
 </section>
 
