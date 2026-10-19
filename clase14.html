@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 14</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .reveal .slide-copy { font-size: 60%; line-height: 1.3; }
+        .reveal .slide-copy p { margin: 0.6em 0; }
+        .reveal .slide-copy blockquote { width: 92%; }
+        .reveal .slide-copy ul, .reveal .slide-copy ol { margin-bottom: 0.4em; }
+        .reveal .slide-copy code { white-space: nowrap; }
+        .reveal .account-table th, .reveal .account-table td { padding: 0.22em 0.45em; }
+
+        /* Clase 12: tablas y bloques de código (base de la clase 11). */
+        .reveal .compact-table { width: 94%; font-size: 60%; line-height: 1.18; margin: 0.3em auto; }
+        .reveal .compact-table th, .reveal .compact-table td { padding: 0.18em 0.4em; }
+        .reveal .compact-table code { white-space: nowrap; }
+        /* El botón de copiar se ubica en la esquina de .codeblock: el contenedor
+           tiene que medir lo mismo que el bloque para que el botón quede adentro. */
+        .reveal pre { width: 92%; font-size: 50%; margin: 0.4em auto; }
+        .reveal pre code { max-height: none; }
+        .reveal .codeblock { width: 92%; margin: 0.4em auto; }
+        .reveal .codeblock > pre { width: 100%; margin: 0; }
+        .reveal .codeblock > button { transform: scale(0.75); transform-origin: top right; }
+        .reveal .salida-nota { font-size: 80%; opacity: 0.7; margin: 0.1em 0 !important; }
+        .reveal .slide-copy ul ul { margin-top: 0.1em; }
+        #labs_clase h3 { font-size: 1.05em; }
+        /* Margen para que el botón de copiar no tape el final de las líneas. */
+        .reveal .codeblock > pre > code { padding-right: 2.6em; }
+        /* Salidas con líneas largas: letra más chica. */
+        #enlace_simbolico pre { font-size: 45%; }
+        /* Portada: repartir el título en dos líneas parejas. */
+        #inicio h4 { text-wrap: balance; }
+        #discos_fisicos .compact-table td:first-child { white-space: nowrap; }
+        #inicio h4 { text-wrap: balance; }
+        #labs_clase h3 { font-size: 1.05em; }
+
+/* Logo IDEP de la última diapositiva: es negro, se invierte en modo oscuro. */
+html.dark-theme #fin img { filter: invert(1); }
+        /* Clase 14: las salidas de log largas pasan a la línea siguiente en vez de mostrar barra. */
+        .reveal pre code.text { white-space: pre-wrap; }
+        #que_es_un_log pre, #por_prioridad pre, #una_linea_de_texto pre,
+        #caso_1_intentos_de_acceso_por_ssh pre, #caso_2_un_servicio_que_no_arranca pre,
+        #caso_3_disco_lleno pre { font-size: 42%; }
+        #que_es_un_log .compact-table { font-size: 50%; }
+        #por_tiempo_y_por_arranque pre { font-size: 45%; }
+        #donde_mirar .compact-table td:first-child { white-space: nowrap; }
+        #donde_mirar .compact-table { font-size: 55%; }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+<section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 14: Logs del sistema</h4><small><p>Módulo 2 — Administración de Servidores</p></small></section>
+
+<section id="index" data-state="no_footer"><h3>Temas de la clase 14</h3>
+<div class="slide-copy"><ul><li><a href="#/logs">Logs</a></li><li><a href="#/journalctl">journalctl</a></li><li><a href="#/logs_de_texto">Logs de texto</a></li><li><a href="#/leer_los_logs">Leer los logs</a></li><li><a href="#/labs">Actividades prácticas y laboratorios</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+</section>
+
+<section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
+<div class="slide-copy"><p>Al finalizar vas a poder:</p></div>
+<div class="slide-copy"><ul>
+<li>Filtrar el journal por servicio, por tiempo, por arranque y por prioridad.</li>
+<li>Ubicar los logs de texto en Debian y en Rocky.</li>
+<li>Explicar qué hace logrotate.</li>
+<li>Dejar un mensaje en el log con <code>logger</code>.</li>
+<li>Encontrar en los logs la causa de una falla o el rastro de un intento de acceso.</li>
+</ul></div>
+</section>
+
+<section id="lo_que_ya_vimos" data-state="no_footer"><h3>Lo que ya vimos</h3>
+<div class="slide-copy"><ul>
+<li><a href="clase4.html#/sysvinit_systemd">Clase 4</a>: syslog y el journal en la tabla de SysVinit y systemd. Y <a href="clase4.html#/hora_importa">por qué importa la hora</a>.</li>
+<li><a href="clase6.html#/tail">Clase 6</a>: <code>tail -f /var/log/dpkg.log</code>, <a href="clase6.html#/grep_basico"><code>grep</code></a> y <a href="clase6.html#/gzip"><code>zless</code></a>.</li>
+<li><a href="clase10.html#/diagnostico_inicial">Clase 10</a>: <code>journalctl -xeu</code>, <code>-n</code> y <code>-f</code> cuando un servicio falla.</li>
+<li><a href="clase12.html#/df_y_du">Clase 12</a>: <code>df</code> y <code>du</code>, y el disco en <code>/srv/datos</code>.</li>
+</ul></div>
+<aside class="notes"><p>hoy pasamos de mirar el log de un servicio a buscar en todos los logs del sistema.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="logs" data-state="customevent"><h2>Logs</h2>
+<div class="slide-copy"><p>Qué guardan y quién los escribe.</p></div>
+</section>
+
+<section id="que_es_un_log" data-state="no_footer"><h3>¿Qué es un log?</h3>
+<div class="slide-copy"><p>Un <strong>log</strong> (registro) es la lista de mensajes que van dejando el kernel, los servicios y los programas mientras se ejecutan.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>oct 18 15:26:40 lab2-vm sshd-session[999]: Failed password for ana from 10.0.2.2 port 50482 ssh2</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Fecha y hora</th>
+<th>Equipo</th>
+<th>Programa [PID]</th>
+<th>Mensaje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>oct 18 15:26:40</code></td>
+<td><code>lab2-vm</code></td>
+<td><code>sshd-session[999]</code></td>
+<td><code>Failed password for ana ...</code></td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><ul>
+<li>Sirve para encontrar la causa de una falla y para reconstruir qué pasó.</li>
+<li>La hora ordena los hechos: si el reloj está mal, el log pierde valor.</li>
+</ul></div>
+<aside class="notes"><p>línea real de la VM: un intento de entrar como <code>ana</code> con una contraseña equivocada. Por la hora cuidamos <code>systemd-timesyncd</code> en la clase 10.</p>
+</aside>
+</section>
+
+<section id="facilidad_y_prioridad" data-state="no_footer"><h3>Facilidad y prioridad</h3>
+<div class="slide-copy"><p>Cada mensaje lleva dos datos que vienen de syslog, el sistema de logs clásico de Unix:</p></div>
+<div class="slide-copy"><ul>
+<li><strong>Facilidad:</strong> de dónde viene. <code>kern</code>, <code>auth</code>, <code>authpriv</code>, <code>daemon</code>, <code>cron</code>, <code>mail</code>, <code>user</code>, <code>local0</code> a <code>local7</code>.</li>
+<li><strong>Prioridad:</strong> qué tan grave es.</li>
+</ul></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>emerg</code></td>
+<td><code>alert</code></td>
+<td><code>crit</code></td>
+<td><code>err</code></td>
+<td><code>warning</code></td>
+<td><code>notice</code></td>
+<td><code>info</code></td>
+<td><code>debug</code></td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Número más bajo, más grave.</p></div>
+<aside class="notes"><p>no hace falta memorizarlas. La prioridad la elige el programa: en la VM, un <code>Failed password</code> de SSH es <code>info</code>.</p>
+</aside>
+</section>
+
+<section id="journald_y_rsyslog" data-state="no_footer"><h3>journald y rsyslog</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th></th>
+<th>journald</th>
+<th>rsyslog</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qué es</td>
+<td>El servicio de logs de systemd</td>
+<td>El servicio syslog actual</td>
+</tr>
+<tr>
+<td>Guarda en</td>
+<td>Archivos binarios, con índices</td>
+<td>Archivos de texto en <code>/var/log</code></td>
+</tr>
+<tr>
+<td>Se lee con</td>
+<td><code>journalctl</code></td>
+<td><code>less</code>, <code>tail</code>, <code>grep</code></td>
+</tr>
+<tr>
+<td>Debian 13</td>
+<td>Sí, en disco</td>
+<td>No viene instalado</td>
+</tr>
+<tr>
+<td>Rocky 9</td>
+<td>Sí, en memoria</td>
+<td>Sí</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>journald recibe todo. Si hay rsyslog, copia los mensajes a texto.</p></div>
+<aside class="notes"><p>journald guarda en disco si existe <code>/var/log/journal</code> (Debian lo crea al instalar, Rocky no). En Rocky el journal se pierde al reiniciar y el historial queda en los archivos de rsyslog. Debian dejó de instalar rsyslog en la versión 12. Cada entrada del journal tiene muchos campos además del mensaje: se ven con <code>journalctl -o verbose</code>.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="journalctl" data-state="customevent"><h2>journalctl</h2>
+<div class="slide-copy"><p>Buscar en el journal.</p></div>
+</section>
+
+<section id="lo_que_ya_usamos" data-state="no_footer"><h3>Lo que ya usamos</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo journalctl -u ssh -n 20    # últimas 20 líneas
+sudo journalctl -u ssh -f       # en vivo; Ctrl+C sale
+sudo journalctl -xeu ssh        # lo que sugiere systemd</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Opción</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-u ssh</code></td>
+<td>Solo los mensajes del servicio <code>ssh</code></td>
+</tr>
+<tr>
+<td><code>-e</code></td>
+<td>Abre el log en el final, donde están los mensajes más nuevos</td>
+</tr>
+<tr>
+<td><code>-x</code></td>
+<td>Agrega una explicación debajo de algunos mensajes de systemd</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Sin <code>sudo</code>, solo se ven los mensajes propios. Los grupos <code>adm</code> y <code>systemd-journal</code> leen todo sin <code>sudo</code>.</p></div>
+<aside class="notes"><p>repaso de la <a href="clase10.html#/diagnostico_inicial">clase 10</a>. Sin <code>-e</code>, <code>journalctl</code> abre el log desde el mensaje más viejo y hay que bajar hasta el final. Las líneas que agrega <code>-x</code> empiezan con <code>░░</code> y no son del log: por ejemplo, debajo de <code>Failed to start demo-falla.service</code> aparecen <code>░░ Subject: A start job for unit demo-falla.service has failed</code> y una explicación que repite lo mismo con más palabras. Para los mensajes de los programas no agrega nada. Por eso alcanza con <code>-u</code> y <code>-e</code>; <code>-xeu</code> aparece porque es lo que recomienda <code>systemctl</code> cuando un servicio falla. Sumar un operador a <code>adm</code> (<a href="clase8.html#/grupo_principal_y_suplementarios">clase 8</a>) le da lectura de los logs sin darle <code>sudo</code>.</p>
+</aside>
+</section>
+
+<section id="por_tiempo_y_por_arranque" data-state="no_footer"><h3>Por tiempo y por arranque</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo journalctl --since "10 min ago"
+sudo journalctl --since "2026-10-18 15:27" --until "2026-10-18 15:28"</code></pre>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo journalctl -b          # desde el último encendido
+sudo journalctl -b -1 -e    # final del encendido anterior</code></pre>
+<aside class="notes"><p>el caso típico: «el servidor se reinició solo anoche». <code>-b -1 -e</code> muestra qué pasó justo antes de apagarse. En Rocky no funciona porque el journal se borra al reiniciar: hay que mirar <code>/var/log/messages</code>.</p>
+</aside>
+</section>
+
+<section id="por_prioridad" data-state="no_footer"><h3>Por prioridad</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -b -p err
+oct 18 15:17:35 lab2-vm systemd-ssh-generator[224]: Failed to query local AF_VSOCK CID
+oct 18 15:17:36 lab2-vm kernel: vmwgfx ...: [drm] *ERROR* ... unsupported hypervisor.</code></pre>
+<div class="slide-copy"><ul>
+<li><code>-p err</code>: <code>err</code> y todo lo más grave. También rangos: <code>-p warning..err</code>.</li>
+<li>No todo error es un problema.</li>
+</ul></div>
+<aside class="notes"><p>salida real, con los mensajes recortados. Son avisos de VirtualBox que aparecen en cada arranque. Parte del oficio es reconocer el ruido de fondo de cada equipo.</p>
+</aside>
+</section>
+
+<section id="por_programa_y_por_texto" data-state="no_footer"><h3>Por programa y por texto</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo journalctl -u ssh                # por unidad
+sudo journalctl -t sshd-session       # por etiqueta
+sudo journalctl -k                    # solo el núcleo
+sudo journalctl -u ssh --grep "Failed password"</code></pre>
+<div class="slide-copy"><p>¡Ojo con el nombre de la unidad!</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -u sshd --since 15:26
+-- No entries --</code></pre>
+<aside class="notes"><p>en Debian la unidad es <code>ssh</code> y <code>sshd</code> es un alias. <code>systemctl</code> acepta el alias; <code>journalctl</code> no. En Rocky la unidad es <code>sshd</code>. <code>--no-pager</code> permite encadenar con <code>grep</code> (<a href="clase6.html#/tuberias">clase 6</a>).</p>
+</aside>
+</section>
+
+<section id="el_journal_ocupa_disco" data-state="no_footer"><h3>El journal ocupa disco</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl --disk-usage
+Archived and active journals take up 176.9M in the file system.</code></pre>
+<div class="slide-copy"><ul>
+<li>Se limita solo: hasta el 10 % del sistema de archivos (<code>SystemMaxUse=</code> en <code>/etc/systemd/journald.conf</code>).</li>
+<li>Para liberar espacio: <code>sudo journalctl --vacuum-size=100M</code>.</li>
+</ul></div>
+<aside class="notes"><p><code>--vacuum</code> se usa cuando la raíz se llena y el journal es parte del problema. Nunca borrar archivos del journal con <code>rm</code>.</p>
+</aside>
+</section>
+
+<section id="consultas" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="logs_de_texto" data-state="customevent"><h2>Logs de texto</h2>
+<div class="slide-copy"><p>rsyslog y <code>/var/log</code>.</p></div>
+</section>
+
+<section id="donde_mirar" data-state="no_footer"><h3>Dónde mirar</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th></th>
+<th>Debian 13</th>
+<th>Debian con rsyslog</th>
+<th>Rocky 9</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Todo menos accesos</td>
+<td><code>journalctl</code></td>
+<td><code>/var/log/syslog</code></td>
+<td><code>/var/log/messages</code></td>
+</tr>
+<tr>
+<td>Accesos</td>
+<td><code>journalctl -u ssh</code></td>
+<td><code>/var/log/auth.log</code></td>
+<td><code>/var/log/secure</code></td>
+</tr>
+<tr>
+<td>Núcleo</td>
+<td><code>journalctl -k</code></td>
+<td><code>/var/log/kern.log</code> y <code>syslog</code></td>
+<td><code>/var/log/messages</code></td>
+</tr>
+</tbody></table>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo apt install rsyslog</code></pre>
+<div class="slide-copy"><p>Otros: <code>/var/log/apt/history.log</code> (<a href="clase11.html#/instalar_y_quitar">clase 11</a>), <code>/var/log/dnf.log</code> en Rocky.</p></div>
+<aside class="notes"><p>el journal tiene todo. En los archivos, los accesos van aparte, en <code>auth.log</code> o <code>secure</code>, y no están en <code>syslog</code> ni en <code>messages</code>. Los mensajes del núcleo sí están en <code>syslog</code>, y <code>kern.log</code> es una copia aparte solo con ellos. <code>messages</code>, en Rocky, guarda desde <code>info</code> y deja afuera también el correo y cron. En el Lab 13.1 se instala rsyslog, que copia desde que se instala: lo anterior queda solo en el journal. Los archivos quedan <code>root:adm</code> con modo <code>0640</code>.</p>
+</aside>
+</section>
+
+<section id="una_linea_de_texto" data-state="no_footer"><h3>Una línea de texto</h3>
+<div class="slide-copy"><p>Debian 13:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>2026-10-18T15:27:50.890849-03:00 lab2-vm sshd-session[1307]: Failed password for ana from 10.0.2.2 port 56382 ssh2</code></pre>
+<div class="slide-copy"><p>Rocky 9:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Oct 18 15:27:15 localhost sshd-session[2033]: Failed password for invalid user ana from 10.0.2.2 port 34668 ssh2</code></pre>
+<div class="slide-copy"><p>Las mismas partes: fecha, equipo, programa [PID] y mensaje.</p></div>
+<aside class="notes"><p>Debian usa fecha completa con zona horaria; Rocky, el formato clásico sin año. En Rocky <code>ana</code> no existe, por eso dice <code>invalid user</code>.</p>
+</aside>
+</section>
+
+<section id="las_reglas_de_rsyslog" data-state="no_footer"><h3>Las reglas de rsyslog</h3>
+<div class="slide-copy"><p><code>/etc/rsyslog.conf</code> en Debian:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>*.*;auth,authpriv.none		-/var/log/syslog
+auth,authpriv.*			/var/log/auth.log
+kern.*				-/var/log/kern.log
+*.emerg				:omusrmsg:*</code></pre>
+<div class="slide-copy"><ul>
+<li>Cada regla: <code>facilidad.prioridad</code> y destino.</li>
+<li><code>syslog</code> recibe todo menos los accesos, que van a <code>auth.log</code>.</li>
+</ul></div>
+<aside class="notes"><p>solo se leen. El <code>-</code> delante del archivo indica que no se fuerza la escritura a disco en cada línea. <code>*.emerg</code> muestra las emergencias en la terminal de todos. Rocky: <code>authpriv.*</code> va a <code>/var/log/secure</code>.</p>
+</aside>
+</section>
+
+<section id="logs_en_otro_equipo" data-state="no_footer"><h3>Logs en otro equipo</h3>
+<div class="slide-copy"><ul>
+<li>rsyslog puede <strong>enviar</strong> los logs por la red y también <strong>recibirlos</strong>.</li>
+<li>Si alguien entra con root, puede borrar los logs locales, pero no los que ya salieron.</li>
+<li>Un solo lugar para revisar los logs de varios servidores.</li>
+</ul></div>
+<aside class="notes"><p>solo se nombra. En el Lab 13.2 la VM Rocky recibe los logs de la Debian. Herramientas como Graylog o Loki centralizan y buscan logs de muchos equipos: fuera del curso.</p>
+</aside>
+</section>
+
+<section id="quien_entro_last" data-state="no_footer"><h3>Quién entró: last</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ last -n 3
+cristian pts/0        10.0.2.2         Sun Oct 18 15:26 - 15:27  (00:00)
+reboot   system boot  6.12.105+deb13-a Sun Oct 18 15:17 - still running
+reboot   system boot  6.12.105+deb13-a Mon Oct  5 01:10 - crash</code></pre>
+<div class="slide-copy"><ul>
+<li>Sesiones interactivas y arranques. <code>crash</code>: no hubo apagado ordenado.</li>
+<li>En Rocky también están <code>lastb</code> (intentos fallidos) y <code>lastlog</code>.</li>
+</ul></div>
+<aside class="notes"><p>en Debian 13 <code>last</code> viene del paquete <code>wtmpdb</code>, y <code>lastb</code> y <code>lastlog</code> no existen: los intentos fallidos se buscan en el journal. Los <code>crash</code> son de cerrar VirtualBox sin apagar la VM (<a href="clase10.html#/apagar_la_vm_no_es_lo_mismo">clase 10</a>).</p>
+</aside>
+</section>
+
+<section id="rotacion_con_logrotate" data-state="no_footer"><h3>Rotación con logrotate</h3>
+<div class="slide-copy"><p>Un log de texto crece sin límite. logrotate renombra el actual, crea uno vacío, comprime los viejos y borra los que sobran.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>syslog          ← el actual
+syslog.1        ← la semana pasada
+syslog.2.gz
+syslog.3.gz
+syslog.4.gz     ← en la próxima rotación se borra</code></pre>
+<div class="slide-copy"><ul>
+<li>Configuración: <code>/etc/logrotate.conf</code> y <code>/etc/logrotate.d/</code>.</li>
+<li>Lo dispara <code>logrotate.timer</code> una vez por día.</li>
+<li>Probar sin tocar nada: <code>sudo logrotate -d /etc/logrotate.d/rsyslog</code>.</li>
+</ul></div>
+<aside class="notes"><p>la configuración de rsyslog en Debian: <code>rotate 4</code>, <code>weekly</code>, <code>compress</code>, <code>delaycompress</code> (deja el <code>.1</code> sin comprimir), <code>missingok</code>, <code>notifempty</code>. Rocky agrega <code>dateext</code>: <code>messages-20261012</code> en vez de <code>messages.1</code>. Los <code>.gz</code> se leen con <code>zless</code> (<a href="clase6.html#/gzip">clase 6</a>). journald no usa logrotate: rota solo. Los temporizadores, en la clase 16.</p>
+</aside>
+</section>
+
+<section id="logger_escribir_en_el_log" data-state="no_footer"><h3>logger: escribir en el log</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>logger -t respaldo -p user.err "No se pudo copiar /srv/datos"</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ journalctl -t respaldo
+oct 18 15:27:52 lab2-vm respaldo[1339]: No se pudo copiar /srv/datos</code></pre>
+<div class="slide-copy"><ul>
+<li><code>-t</code>: etiqueta. <code>-p</code>: facilidad y prioridad.</li>
+<li>Con rsyslog, también queda en <code>/var/log/syslog</code>.</li>
+</ul></div>
+<aside class="notes"><p>sirve para que un script deje rastro. Lo usamos en la clase 15. Cualquier usuario puede escribir con cualquier etiqueta: un mensaje en el log no prueba quién lo escribió.</p>
+</aside>
+</section>
+
+<section id="consultas_2" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="leer_los_logs" data-state="customevent"><h2>Leer los logs</h2>
+<div class="slide-copy"><p>Tres casos.</p></div>
+</section>
+
+<section id="caso_1_intentos_de_acceso_por_ssh" data-state="no_footer"><h3>Caso 1: intentos de acceso por SSH</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -u ssh --since today --grep "Failed password"
+15:26:33 sshd-session[993]: Failed password for invalid user invitado from 10.0.2.2
+15:26:35 sshd-session[995]: Failed password for invalid user invitado from 10.0.2.2
+15:26:37 sshd-session[997]: Failed password for invalid user invitado from 10.0.2.2
+15:26:40 sshd-session[999]: Failed password for ana from 10.0.2.2</code></pre>
+<div class="slide-copy"><ul>
+<li><strong>¿Quién?</strong> <code>invitado</code> no existe; <code>ana</code> sí.</li>
+<li><strong>¿Desde dónde?</strong> <code>10.0.2.2</code>.</li>
+<li><strong>¿Cuándo y cuántos?</strong> Cuatro en siete segundos.</li>
+<li><strong>¿Entró alguien?</strong> Se busca <code>Accepted</code>.</li>
+</ul></div>
+<aside class="notes"><p>salida recortada para que entre: cada línea empieza con <code>oct 18</code> y el equipo <code>lab2-vm</code>, y termina con el puerto de origen y <code>ssh2</code> (por ejemplo, <code>port 38804 ssh2</code>). <code>invalid user</code> es el patrón de un robot que prueba nombres. Un fallo sobre una cuenta que existe preocupa más. <code>10.0.2.2</code> es la NAT de VirtualBox, o sea, el anfitrión. Los intentos fallidos son <code>info</code> y <code>notice</code>: con <code>-p warning</code> no aparecen. Con <code>auth.log</code>, cuidado: sudo registra el comando, y <code>sudo grep "Failed password" /var/log/auth.log</code> puede encontrarse a sí mismo.</p>
+</aside>
+</section>
+
+<section id="caso_2_un_servicio_que_no_arranca" data-state="no_footer"><h3>Caso 2: un servicio que no arranca</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -u respaldo-etc -n 4
+(tarr)[1628]: ...: Failed at step EXEC spawning /usr/bin/tarr: No such file or directory
+systemd[1]: respaldo-etc.service: Main process exited, code=exited, status=203/EXEC
+systemd[1]: respaldo-etc.service: Failed with result 'exit-code'.
+systemd[1]: Failed to start respaldo-etc.service - Copia de /etc a /srv/datos.</code></pre>
+<div class="slide-copy"><p>La última línea dice <strong>que</strong> falló. La primera dice <strong>por qué</strong>.</p></div>
+<aside class="notes"><p>un error de tipeo en <code>ExecStart</code>. Mismo orden que en la clase 10: <code>status</code>, <code>journalctl -u</code>, corregir, <code>restart</code>, verificar. Salida recortada para que entre: sin fecha ni equipo, y con <code>...</code> en lugar de <code>respaldo-etc.service</code> en la primera línea. <code>systemctl --failed</code> lista las unidades en falla.</p>
+</aside>
+</section>
+
+<section id="caso_3_disco_lleno" data-state="no_footer"><h3>Caso 3: disco lleno</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -u respaldo-etc
+tar[1551]: gzip: stdout: No space left on device
+tar[1549]: /usr/bin/tar: /srv/datos/etc.tar.gz: No se puede efectuar write: Tubería rota
+...
+systemd[1]: Failed to start respaldo-etc.service - Copia de /etc a /srv/datos.</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ df -h /srv/datos
+S.ficheros     Tamaño Usados  Disp Uso% Montado en
+/dev/sdb1        2,0G   2,0G     0 100% /srv/datos</code></pre>
+<div class="slide-copy"><p>Después, <code>du</code> para encontrar qué ocupa el espacio (<a href="clase12.html#/df_y_du">clase 12</a>).</p></div>
+<aside class="notes"><p>salida recortada (sin fecha ni equipo, y sin dos líneas de systemd). Con <code>-p err</code> solo aparece <code>Failed to start</code>: para diagnosticar se lee toda la unidad. ext4 reserva un 5 % para root: con <code>df</code> en 100 % un usuario ya no escribe, pero un servicio que corre como root sí, hasta que se acaba la reserva.</p>
+</aside>
+</section>
+
+<section id="el_log_es_la_evidencia" data-state="no_footer"><h3>El log es la evidencia</h3>
+<div class="slide-copy"><ol>
+<li><strong>Detectar:</strong> los <code>Failed password</code> en el log.</li>
+<li><strong>Contener:</strong> bloquear la cuenta o el origen.</li>
+<li><strong>Recuperar:</strong> si alguien entró, cambiar credenciales y revisar qué hizo.</li>
+<li><strong>Documentar:</strong> guardar las líneas, con hora y origen, antes de que se roten.</li>
+</ol></div>
+<div class="slide-copy"><p>Los logs tienen datos personales (usuarios, IP, comandos): no son de lectura pública.</p></div>
+<aside class="notes"><p>con lo que ya tenemos, contener es bloquear la contraseña de la cuenta (<a href="clase8.html#/estados_de_una_contrasena">clase 8</a>). fail2ban lee estos mismos logs y bloquea las IP que fallan muchas veces: lo vemos en la clase 23. A veces queda una contraseña tipeada en el campo del usuario, como <code>Invalid user</code>.</p>
+</aside>
+</section>
+
+<section id="resumen" data-state="no_footer"><h3>Resumen</h3>
+<div class="slide-copy"><ul>
+<li><strong>journald</strong> guarda todo. Se lee con <code>journalctl</code>: <code>-u</code>, <code>-t</code>, <code>-b</code>, <code>--since</code>, <code>-p</code>, <code>--grep</code>.</li>
+<li><strong>rsyslog</strong> copia a texto: <code>syslog</code> y <code>auth.log</code> en Debian, <code>messages</code> y <code>secure</code> en Rocky. También envía logs a otro equipo.</li>
+<li><strong>logrotate</strong> rota, comprime y borra los logs de texto.</li>
+<li><strong>logger</strong> escribe en el log desde un script.</li>
+<li>Ante una falla, leer las líneas de antes del error.</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<!-- SECCIÓN LABS/PRÁCTICA -->
+
+<section id="labs" data-state="hide_footer" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h2>Actividades prácticas y laboratorios</h2></section>
+
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorios 13.1 y 13.2</h3>
+<div class="slide-copy"><p><strong>Objetivo:</strong> investigar dos incidentes con los logs y juntar los logs de las dos VM.</p></div>
+<div class="slide-copy"><ul>
+<li>13.1: recorrer el journal, instalar rsyslog en la Debian e investigar dos incidentes.</li>
+<li>13.2: la VM Rocky recibe los logs de la Debian.</li>
+</ul></div>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab13/lab13.1.md" target="_blank" rel="noopener noreferrer">Laboratorio 13.1 — Logs del sistema</a><br><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab13/lab13.2.md" target="_blank" rel="noopener noreferrer">Laboratorio 13.2 — Logs en otro equipo</a></p></div>
+<aside class="notes"><p>los dos laboratorios están escritos y probados en las VM (2026-10-18), sin publicar todavía. El 13.1 necesita <code>/srv/datos</code> del Lab 11.2. El 13.2 necesita rsyslog en la Debian (lo instala el 13.1) y una regla de reenvío de puertos en la VM Rocky, porque las dos VM están en NAT y no se ven entre sí: la Debian envía a <code>10.0.2.2:2514</code> (el anfitrión) y VirtualBox lo pasa al puerto 514 de Rocky. Probado el 2026-10-18.</p>
+</aside>
+</section>
+
+<section id="referencias" data-state="no_footer"><h3>Referencias</h3>
+<div class="slide-copy"><ul>
+<li>Ayuda local: <code>man journalctl</code>, <code>man journald.conf</code>, <code>man rsyslog.conf</code>, <code>man logrotate</code>, <code>man logger</code>, <code>man last</code>.</li>
+<li><a href="https://www.freedesktop.org/software/systemd/man/latest/journalctl.html" target="_blank" rel="noopener noreferrer">journalctl(1)</a>.</li>
+<li><a href="https://www.rsyslog.com/doc/" target="_blank" rel="noopener noreferrer">Documentación de rsyslog</a>.</li>
+<li><a href="https://www.debian.org/releases/bookworm/amd64/release-notes/ch-information.en.html#changes-to-system-logging" target="_blank" rel="noopener noreferrer">Debian 12: rsyslog ya no se instala por defecto</a>.</li>
+</ul></div>
+</section>
+</section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                 secret: null,
+                 id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
+                 url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>
