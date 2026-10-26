@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 15</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .reveal .slide-copy { font-size: 60%; line-height: 1.3; }
+        .reveal .slide-copy p { margin: 0.6em 0; }
+        .reveal .slide-copy blockquote { width: 92%; }
+        .reveal .slide-copy ul, .reveal .slide-copy ol { margin-bottom: 0.4em; }
+        .reveal .slide-copy code { white-space: nowrap; }
+        .reveal .account-table th, .reveal .account-table td { padding: 0.22em 0.45em; }
+
+        /* Clase 12: tablas y bloques de código (base de la clase 11). */
+        .reveal .compact-table { width: 94%; font-size: 60%; line-height: 1.18; margin: 0.3em auto; }
+        .reveal .compact-table th, .reveal .compact-table td { padding: 0.18em 0.4em; }
+        .reveal .compact-table code { white-space: nowrap; }
+        /* El botón de copiar se ubica en la esquina de .codeblock: el contenedor
+           tiene que medir lo mismo que el bloque para que el botón quede adentro. */
+        .reveal pre { width: 92%; font-size: 50%; margin: 0.4em auto; }
+        .reveal pre code { max-height: none; }
+        .reveal .codeblock { width: 92%; margin: 0.4em auto; }
+        .reveal .codeblock > pre { width: 100%; margin: 0; }
+        .reveal .codeblock > button { transform: scale(0.75); transform-origin: top right; }
+        .reveal .salida-nota { font-size: 80%; opacity: 0.7; margin: 0.1em 0 !important; }
+        .reveal .slide-copy ul ul { margin-top: 0.1em; }
+        #labs_clase h3 { font-size: 1.05em; }
+        /* Margen para que el botón de copiar no tape el final de las líneas. */
+        .reveal .codeblock > pre > code { padding-right: 2.6em; }
+        /* Salidas con líneas largas: letra más chica. */
+        #enlace_simbolico pre { font-size: 45%; }
+        /* Portada: repartir el título en dos líneas parejas. */
+        #inicio h4 { text-wrap: balance; }
+        #discos_fisicos .compact-table td:first-child { white-space: nowrap; }
+        #inicio h4 { text-wrap: balance; }
+        #labs_clase h3 { font-size: 1.05em; }
+
+/* Logo IDEP de la última diapositiva: es negro, se invierte en modo oscuro. */
+html.dark-theme #fin img { filter: invert(1); }
+        /* Clase 15: las salidas largas pasan a la línea siguiente en vez de mostrar barra. */
+        .reveal pre code.text { white-space: pre-wrap; }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+<section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 15: Shell scripting para administración</h4><small><p>Módulo 2 — Administración de Servidores</p></small></section>
+
+<section id="index" data-state="no_footer"><h3>Temas de la clase 15</h3>
+<div class="slide-copy"><ul><li><a href="#/scripts">Scripts</a></li><li><a href="#/variables_y_argumentos">Variables y argumentos</a></li><li><a href="#/decidir">if condicional</a></li><li><a href="#/codigo_de_salida_y_errores">Código de salida y errores</a></li><li><a href="#/repetir_y_elegir">Repetir y elegir</a></li><li><a href="#/antes_de_confiar">Revisar scripts</a></li><li><a href="#/labs">Actividades prácticas y laboratorios</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+</section>
+
+<section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
+<div class="slide-copy"><p>Al finalizar vas a poder:</p></div>
+<div class="slide-copy"><ul>
+<li>Escribir un script y ejecutarlo.</li>
+<li>Usar variables y recibir un argumento.</li>
+<li>Revisar si un comando salió bien y avisar si no.</li>
+<li>Repetir una tarea sobre una lista.</li>
+<li>Escribir un script que falle de forma previsible.</li>
+</ul></div>
+</section>
+
+<section id="lo_que_ya_vimos" data-state="no_footer"><h3>Lo que ya vimos</h3>
+<div class="slide-copy"><ul>
+<li><a href="clase6.html#/comillas">Clase 6</a>: comillas, <a href="clase6.html#/tuberias">tuberías</a> y comodines.</li>
+<li><a href="clase7.html#/nano_abrir">Clase 7</a>: <code>nano</code> y las redirecciones <a href="clase7.html#/redireccion_crear"><code>&gt;</code></a> y <a href="clase7.html#/redireccion_agregar"><code>&gt;&gt;</code></a>.</li>
+<li><a href="clase9.html#/chmod_forma_simbolica">Clase 9</a>: <code>chmod +x</code>.</li>
+<li><a href="clase14.html#/logger_escribir_en_el_log">Clase 14</a>: <code>logger</code> para dejar un mensaje en el log.</li>
+</ul></div>
+<aside class="notes"><p>todo lo de hoy se arma con comandos que ya conocen. Lo nuevo es ponerlos en un archivo.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="scripts" data-state="customevent"><h2>Scripts</h2>
+<div class="slide-copy"><p>Los mismos comandos, guardados en un archivo.</p></div>
+</section>
+
+<section id="que_es_un_script" data-state="no_footer"><h3>¿Qué es un script?</h3>
+<div class="slide-copy"><p>Un <strong>script</strong> es un archivo de texto con comandos, uno debajo del otro. La shell los ejecuta en orden, como si los escribiéramos nosotros.</p></div>
+<div class="slide-copy"><p>Conviene escribir uno cuando una tarea:</p></div>
+<div class="slide-copy"><ul>
+<li>se repite;</li>
+<li>tiene varios pasos y no queremos olvidar ninguno;</li>
+<li>va a correr sin nadie mirando (clase 16).</li>
+</ul></div>
+<aside class="notes"><p>insistir en que son los comandos de siempre, guardados en un archivo.</p>
+</aside>
+</section>
+
+<section id="el_primer_script" data-state="no_footer"><h3>El primer script</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>nano estado.sh</code></pre>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>#!/bin/bash
+# Estado del equipo
+
+df -h /
+free -h
+uptime</code></pre>
+<div class="slide-copy"><ul>
+<li><code>#!/bin/bash</code>: qué programa lee el archivo. Va en la primera línea. A esta línea se le llama "shebang".</li>
+<li><code>#</code>: comentario. La shell lo saltea.</li>
+<li>El resto son comandos que se ejecutan en orden.</li>
+</ul></div>
+<aside class="notes"><p>en Debian <code>/bin/sh</code> es <code>dash</code>, otra shell más chica. Por eso pedimos <code>bash</code> de forma explícita.</p>
+</aside>
+</section>
+
+<section id="ejecutarlo" data-state="no_footer"><h3>Ejecutarlo</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ bash estado.sh
+S.ficheros     Tamaño Usados  Disp Uso% Montado en
+/dev/sda2         19G   1,6G   17G   9% /
+...
+
+$ ./estado.sh
+-bash: ./estado.sh: Permiso denegado
+
+$ chmod +x estado.sh
+
+$ ./estado.sh
+S.ficheros     Tamaño Usados  Disp Uso% Montado en
+...</code></pre>
+<div class="slide-copy"><ul>
+<li>Con <code>bash</code> delante no hace falta permiso de ejecución.</li>
+<li>Para ejecutarlo por su nombre, <code>chmod +x</code>.</li>
+</ul></div>
+</section>
+
+<section id="por_que" data-state="no_footer"><h3>¿Por qué <code>./</code>?</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ estado.sh
+-bash: estado.sh: orden no encontrada</code></pre>
+<div class="slide-copy"><ul>
+<li>Un nombre sin ruta se busca solo en los directorios de <code>PATH</code>.</li>
+<li>El directorio actual no está en <code>PATH</code>. <code>./</code> dice «el que está acá».</li>
+<li>Los scripts del administrador van en <code>/usr/local/sbin</code>, con dueño <code>root</code> y modo <code>755</code>.</li>
+<li>Con el siguiente comando podemos ver el valor de <code>PATH</code>: y donde están los comandos.</li>
+<div class="slide-copy"><ul>
+</ul></div>
+
+<aside class="notes"><p>si otra cuenta puede editar un script que corre como <code>root</code>, puede hacer que <code>root</code> ejecute lo que quiera. Enlace a <a href="clase5.html#/errores1">errores frecuentes</a> de la clase 5.</p>
+</aside>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>echo $PATH</code></pre>
+</section>
+</section>
+
+<section>
+<section id="variables_y_argumentos" data-state="customevent"><h2>Variables y argumentos</h2>
+
+</section>
+
+<section id="que_es_una_variable" data-state="no_footer"><h3>¿Qué es una variable?</h3>
+<div class="slide-copy"><p>Una <strong>variable</strong> es un nombre que guarda un valor. Es como una etiqueta pegada a una caja: escribimos el nombre y la shell usa lo que hay adentro.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ NOMBRE=Ana
+$ echo "Hola $NOMBRE"
+Hola Ana</code></pre>
+<div class="slide-copy"><ul>
+<li>Se asigna <strong>sin espacios</strong> alrededor del <code>=</code>.</li>
+<li>Se lee con <code>$</code> adelante.</li>
+</ul></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ NOMBRE = Ana
+-bash: NOMBRE: orden no encontrada</code></pre>
+<aside class="notes"><p>el error de los espacios es el más común del primer día: con espacios, la shell toma <code>NOMBRE</code> como un comando.</p>
+</aside>
+</section>
+
+<section id="variables" data-state="no_footer"><h3>Variables en un script</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>#!/bin/bash
+# Copia los registros de apt
+
+ORIGEN=/var/log/apt
+DESTINO=/srv/respaldos
+
+cp -r "$ORIGEN" "$DESTINO"
+echo "Copié $ORIGEN en $DESTINO"</code></pre>
+<div class="slide-copy"><ul>
+<li>Por convención van en mayúsculas, como las que ya existen: <code>$USER</code>, <code>$HOME</code>, <code>$PATH</code>.</li>
+<li>En un script conviene usarlas siempre:<ul><li>el valor se escribe una sola vez, arriba y a la vista;</li><li>si cambia, se corrige una sola línea;</li><li>el nombre dice qué es: <code>DESTINO</code> se entiende mejor que la ruta;</li><li>no hay que repetir rutas largas, que es donde aparecen los errores de tipeo.</li></ul></li>
+</ul></div>
+</section>
+
+<section id="comillas_dobles" data-state="no_footer"><h3>Comillas dobles</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ NOMBRE="informe final"
+$ touch $NOMBRE
+$ ls
+estado.sh  final  informe
+$ rm final informe
+$ touch "$NOMBRE"
+$ ls
+ estado.sh  'informe final'</code></pre>
+<div class="slide-copy"><p>Sin comillas, la shell corta el valor en los espacios. Regla: <strong>toda variable va entre comillas dobles</strong>.</p></div>
+<aside class="notes"><p>las simples no reemplazan la variable (<a href="clase6.html#/comillas">clase 6</a>). Por eso, dobles.</p>
+</aside>
+</section>
+
+<section id="guardar_la_salida_de_un_comando" data-state="no_footer"><h3>Guardar la salida de un comando</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ FECHA=$(date +%F)
+$ echo "copia-$FECHA"
+copia-2026-10-20</code></pre>
+<div class="slide-copy"><p><code>$(comando)</code> se reemplaza por lo que el comando muestra.</p></div>
+<aside class="notes"><p>ya lo usaron en la clase 11 con <a href="clase11.html#/consultas_con_dpkg"><code>dpkg -S $(which tree)</code></a>. El formato año-mes-día ordena bien los archivos.</p>
+</aside>
+</section>
+
+<section id="que_es_un_argumento" data-state="no_footer"><h3>¿Qué es un argumento?</h3>
+<div class="slide-copy"><p>Un <strong>argumento</strong> es lo que escribimos después del nombre de un comando para decirle con qué trabajar.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>ls -l /etc
+./archivar.sh /srv/respaldos</code></pre>
+<div class="slide-copy"><ul>
+<li>En <code>ls -l /etc</code>, <code>-l</code> es una opción y <code>/etc</code> es el argumento: el directorio que queremos ver.</li>
+<li>Un script también recibe argumentos. Así el mismo script sirve para distintos directorios.</li>
+</ul></div>
+<aside class="notes"><p>opciones y argumentos ya se vieron en la <a href="clase5.html#/opciones_argumentos">clase 5</a>. Acá lo nuevo es que nuestro script también los puede recibir.</p>
+</aside>
+</section>
+
+<section id="argumentos" data-state="no_footer"><h3>Argumentos</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>#!/bin/bash
+echo "Este script se llama $0"
+echo "Recibió: $1"</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ./args.sh /srv/respaldos
+Este script se llama ./args.sh
+Recibió: /srv/respaldos
+$ ./args.sh
+Este script se llama ./args.sh
+Recibió: </code></pre>
+<div class="slide-copy"><ul>
+    <li><code>$0</code> es el nombre del script.</li>
+    <li><code>$1</code> es lo que va después del nombre. <code>$2</code>, el segundo.</li>
+<li>Si no se pasa nada, <code>$1</code> queda vacío y el script sigue igual.</li>
+</ul></div>
+<aside class="notes"><p><code>read</code> pide un dato por teclado. No lo usamos: un script que corre solo no tiene a quién preguntarle.</p>
+</aside>
+</section>
+
+<section id="un_valor_por_defecto" data-state="no_footer"><h3>Un valor por defecto</h3>
+<div class="slide-copy"><p>Si no se pasa el argumento, el script puede usar un valor elegido de antemano:</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>#!/bin/bash
+DESTINO=${1:-/srv/respaldos}
+echo "Copio en $DESTINO"</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ./destino.sh
+Copio en /srv/respaldos
+$ ./destino.sh /tmp
+Copio en /tmp</code></pre>
+<div class="slide-copy"><ul>
+<li><code>${1:-/srv/respaldos}</code> se lee: «<code>$1</code>, y si está vacío, <code>/srv/respaldos</code>».</li>
+</ul></div>
+<aside class="notes"><p>sirve para la clase 16, cuando cron llame al script sin argumentos. Si el argumento es algo que se va a borrar o modificar, es más seguro no tener valor por defecto y salir pidiéndolo.</p>
+</aside>
+</section>
+
+<section id="consultas" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+
+</section>
+
+<section>
+<section id="decidir" data-state="customevent"><h2>if condicional</h2>
+
+</section>
+
+<section id="if" data-state="no_footer"><h3><code>if</code></h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>#!/bin/bash
+if [ -d "$1" ]; then
+    echo "$1 es un directorio"
+else
+    echo "$1 no es un directorio"
+fi</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ./esdir.sh /etc
+/etc es un directorio
+$ ./esdir.sh /noexiste
+/noexiste no es un directorio</code></pre>
+<div class="slide-copy"><ul>
+<li>Espacios dentro de los corchetes: <code>[-d</code> da <code>orden no encontrada</code>.</li>
+<li><code>fi</code> cierra el <code>if</code>. <code>else</code> es opcional.</li>
+</ul></div>
+</section>
+
+<section id="pruebas" data-state="no_footer"><h3>Condiciones</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Condición</th>
+<th>Se cumple si</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[ "$1" = "estado" ]</code></td>
+<td>el texto es igual a <code>estado</code></td>
+</tr>
+<tr>
+<td><code>[ -z "$1" ]</code></td>
+<td>el texto está vacío</td>
+</tr>
+<tr>
+<td><code>[ -d "$1" ]</code></td>
+<td>es un directorio</td>
+</tr>
+<tr>
+<td><code>[ -f "$1" ]</code></td>
+<td>es un archivo</td>
+</tr>
+<tr>
+<td><code>[ ! -d "$1" ]</code></td>
+<td><strong>no</strong> es un directorio</td>
+</tr>
+<tr>
+<td><code>[ "$N" -eq 0 ]</code></td>
+<td>el número es igual a 0</td>
+</tr>
+<tr>
+<td><code>[ "$N" -ne 0 ]</code></td>
+<td>el número es distinto de 0</td>
+</tr>
+</tbody></table>
+</section>
+
+
+</section>
+
+<section>
+<section id="codigo_de_salida_y_errores" data-state="customevent"><h2>Código de salida y errores</h2>
+
+</section>
+
+<section id="codigo_de_salida" data-state="no_footer"><h3>Código de salida</h3>
+<div class="slide-copy"><p>Cuando un comando termina deja dos cosas: lo que muestra en pantalla y un número que no se ve, el <strong>código de salida</strong>. <strong>0</strong> quiere decir que salió bien; otro valor indica un problema.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ls /etc/hostname; echo $?
+/etc/hostname
+0
+$ ls /noexiste; echo $?
+ls: no se puede acceder a '/noexiste': No existe el fichero o el directorio
+2</code></pre>
+<div class="slide-copy"><ul>
+<li><code>$?</code> es el código del último comando. Se mira inmediatamente después.</li>
+</ul></div>
+<aside class="notes"><p>cada programa decide su número. <code>grep</code> devuelve 1 cuando no encuentra nada, y no es una falla.</p>
+</aside>
+</section>
+
+<section id="usarlo_en_un_script" data-state="no_footer"><h3>Usarlo en un script</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>cp -r /var/log/apt "$DESTINO/apt-$FECHA"
+
+if [ $? -ne 0 ]; then
+    echo "No se pudo copiar"
+    exit 1
+fi</code></pre>
+<div class="slide-copy"><ul>
+<li>Entre el comando y el <code>if</code> no va ninguna otra línea.</li>
+<li><code>exit 0</code> o <code>exit 1</code> dicen si el script funcionó, a quien lo llame.</li>
+</ul></div>
+<aside class="notes"><p><code>sudo apt update &amp;&amp; sudo apt upgrade</code> del Lab 3: <code>&amp;&amp;</code> ejecuta el segundo solo si el primero salió con 0. <code>||</code>, solo si falló. Los nombramos sin usarlos.</p>
+</aside>
+</section>
+
+<section id="repaso_redirecciones" data-state="no_footer"><h3>Repaso: <code>&gt;</code> y <code>&gt;&gt;</code></h3>
+<div class="slide-copy"><p>En la <a href="clase7.html#/redireccion_crear">clase 7</a> mandamos la salida de un comando a un archivo en lugar de la pantalla.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ echo "primera" &gt; notas.txt
+$ echo "segunda" &gt;&gt; notas.txt
+$ cat notas.txt
+primera
+segunda
+$ echo "otra" &gt; notas.txt
+$ cat notas.txt
+otra</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Símbolo</th>
+<th>Qué hace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&gt;</code></td>
+<td>Crea el archivo o reemplaza lo que tenía</td>
+</tr>
+<tr>
+<td><code>&gt;&gt;</code></td>
+<td>Crea el archivo o agrega al final</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>repaso de <a href="clase7.html#/redireccion_crear"><code>&gt;</code></a> y <a href="clase7.html#/redireccion_agregar"><code>&gt;&gt;</code></a>. Hace falta para la diapositiva siguiente: <code>&gt;</code> solo captura la salida normal.</p>
+</aside>
+</section>
+
+<section id="dos_salidas" data-state="no_footer"><h3>Dos salidas</h3>
+<div class="slide-copy"><p>Lo que un comando muestra sale por dos caminos: la <strong>salida normal</strong> (el resultado) y la <strong>salida de error</strong> (los mensajes de error). En la pantalla se ven juntas.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ls /etc/hostname /noexiste &gt; salida.txt
+ls: no se puede acceder a '/noexiste': No existe el fichero o el directorio
+$ cat salida.txt
+/etc/hostname
+$ ls /etc/hostname /noexiste 2&gt; errores.txt
+/etc/hostname</code></pre>
+<div class="slide-copy"><ul>
+<li><code>&gt;</code> guarda la salida normal. Los errores van por otro canal.</li>
+<li><code>2&gt;</code> guarda los errores.</li>
+</ul></div>
+</section>
+
+<section id="dev_null" data-state="no_footer"><h3><code>/dev/null</code></h3>
+<div class="slide-copy"><p><code>/dev/null</code> es un archivo especial del sistema que descarta todo lo que se le escribe. Funciona como un tacho de basura sin fondo.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ find /etc -name "*.conf" | wc -l
+find: ‘/etc/credstore’: Permiso denegado
+find: ‘/etc/ssl/private’: Permiso denegado
+find: ‘/etc/credstore.encrypted’: Permiso denegado
+58
+$ find /etc -name "*.conf" 2&gt; /dev/null | wc -l
+58</code></pre>
+<div class="slide-copy"><p>Lo que se manda ahí no lo ve nadie, aunque sea un error importante.</p></div>
+</section>
+
+<section id="mensajes_de_error_en_el_script" data-state="no_footer"><h3>Mensajes de error en el script</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>echo "No existe el directorio $DESTINO" &gt;&amp;2
+logger -t archivar -p user.err "Falló el archivado en $DESTINO"</code></pre>
+<div class="slide-copy"><ul>
+<li><code>&gt;&amp;2</code> manda el mensaje por el canal de error.</li>
+<li><code>logger</code> deja rastro en el log aunque nadie mire la pantalla.</li>
+</ul></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -t archivar
+oct 20 23:47:37 lab2-vm archivar[914]: Falló el archivado en /srv/respaldos</code></pre>
+</section>
+
+<section id="consultas_2" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+
+</section>
+
+<section>
+<section id="repetir_y_elegir" data-state="customevent"><h2>Repetir y elegir</h2>
+
+</section>
+
+<section id="for" data-state="no_footer"><h3><code>for</code></h3>
+<div class="slide-copy"><p><code>for</code> repite los mismos comandos una vez por cada elemento de una lista. A esto se le llama <strong>iterar</strong>: en cada vuelta, la variable toma el valor siguiente.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ for u in ana bruno carla; do echo "Usuario: $u"; done
+Usuario: ana
+Usuario: bruno
+Usuario: carla</code></pre>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>for f in /var/log/*.log; do
+    ls -lh "$f"
+done</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>-rw-r--r-- 1 root root 0 oct  5 00:44 /var/log/alternatives.log
+-rw-r--r-- 1 root root 35K oct 18 23:40 /var/log/dpkg.log</code></pre>
+<div class="slide-copy"><p>La lista puede ser de palabras o de archivos, con un comodín.</p></div>
+</section>
+
+<section id="case" data-state="no_footer"><h3><code>case</code></h3>
+<div class="slide-copy"><p><code>case</code> compara un valor con varias opciones y ejecuta solo el bloque de la que coincide.</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>#!/bin/bash
+case "$1" in
+    estado)
+        systemctl is-active ssh
+        ;;
+    espacio)
+        df -h /
+        ;;
+    *)
+        echo "Uso: $0 estado|espacio" &gt;&amp;2
+        exit 1
+        ;;
+esac</code></pre>
+<div class="slide-copy"><ul>
+<li>El script anterior hace que si le llega como argumento "estado", muestre el estado del servicio ssh y si llega "espacio", muestre el uso del espacio en disco.</li>
+<li>Una opción por cada valor del argumento. <code>*</code> atrapa el resto.</li>
+</ul></div>
+<aside class="notes"><p>los scripts de <code>/etc/init.d</code> tienen esta forma, con <code>start</code> y <code>stop</code> (<a href="clase4.html#/sysvinit_systemd">clase 4</a>). Funciones: mencionarlas con el ejemplo de <code>error()</code> del apunte, sin practicar.</p>
+</aside>
+</section>
+
+<section id="ejemplo_revisar_servicios" data-state="no_footer"><h3>Ejemplo: revisar servicios</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>#!/bin/bash
+# Muestra el estado de varios servicios
+
+for s in ssh cron systemd-timesyncd apache2; do
+    echo "$s: $(systemctl is-active $s)"
+done</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ./servicios.sh
+ssh: active
+cron: active
+systemd-timesyncd: active
+apache2: inactive</code></pre>
+<div class="slide-copy"><p>Una sola orden para revisar todo lo que nos importa (<a href="clase10.html#/diagnostico_inicial">clase 10</a>).</p></div>
+<aside class="notes"><p><code>apache2</code> no está instalado en la VM y aun así responde <code>inactive</code>. Otro ejemplo del mismo tipo: crear varias cuentas con <code>for u in ana bruno carla; do sudo useradd -m "$u"; done</code> (clase 8).</p>
+</aside>
+</section>
+
+<section id="ejemplo_copiar_configuraciones" data-state="no_footer"><h3>Ejemplo: copiar configuraciones</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>#!/bin/bash
+# Copia archivos de /etc antes de modificarlos
+
+DESTINO=/srv/respaldos
+FECHA=$(date +%F)
+
+for f in hosts fstab hostname; do
+    cp "/etc/$f" "$DESTINO/$f-$FECHA"
+done
+
+ls "$DESTINO"</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo ./copiar-config.sh
+fstab-2026-10-26
+hostname-2026-10-26
+hosts-2026-10-26</code></pre>
+<div class="slide-copy"><p>Antes de tocar una configuración, una copia con la fecha.</p></div>
+</section>
+</section>
+
+<section>
+<section id="antes_de_confiar" data-state="customevent"><h2>Revisar scripts</h2>
+
+</section>
+
+<section id="revisar_un_script" data-state="no_footer"><h3>Revisar un script</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ bash -n roto.sh
+roto.sh: línea 4: error sintáctico: no se esperaba el final del fichero
+$ bash -x esdir.sh /etc
++ '[' -d /etc ']'
++ echo '/etc es un directorio'
+/etc es un directorio</code></pre>
+<div class="slide-copy"><ul>
+<li><code>bash -n</code> revisa la sintaxis sin ejecutar.</li>
+<li><code>bash -x</code> muestra cada línea con las variables ya reemplazadas.</li>
+<li>Probar también los casos que fallan: sin argumento, ruta que no existe, sin permisos.</li>
+</ul></div>
+</section>
+
+<section id="una_variable_vacia" data-state="no_footer"><h3>Una variable vacía</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ DIR=""
+$ echo rm -rf "$DIR"/*
+rm -rf /bin /boot /dev /etc /home ... /usr /var</code></pre>
+<div class="slide-copy"><ul>
+<li>Con <code>DIR</code> vacío, <code>"$DIR"/*</code> es <code>/*</code>.</li>
+<li>Antes de borrar, mostrar con <code>echo</code> qué se borraría.</li>
+<li>Revisar con <code>[ -z ... ]</code> que la variable tenga algo.</li>
+</ul></div>
+<aside class="notes"><p>se muestra con <code>echo</code> adelante. Nunca ejecutarlo sin el <code>echo</code>.</p>
+</aside>
+</section>
+
+<section id="un_script_que_te_da_una_ia" data-state="no_footer"><h3>Un script que te da una IA</h3>
+<div class="slide-copy"><p>Antes de ejecutarlo, leerlo y responder:</p></div>
+<div class="slide-copy"><ul>
+<li>¿Qué toca? Buscar <code>rm</code>, <code>&gt;</code>, <code>sudo</code>, <code>chmod</code>, <code>systemctl</code>.</li>
+<li>¿Las variables van entre comillas? ¿Qué pasa si una queda vacía?</li>
+<li>¿Revisa los argumentos? ¿Avisa si algo falla?</li>
+<li>¿Lo probé primero en un lugar sin riesgo, con <code>bash -n</code> o <code>bash -x</code>?</li>
+</ul></div>
+<div class="slide-copy"><p>No ejecutar con <code>sudo</code> un script que no leímos, ni un <code>curl ... | bash</code>. No pegar en un chat de IA contraseñas, claves ni configuraciones internas.</p></div>
+<aside class="notes"><p>hoy casi nadie escribe un script largo sin ayuda. La clase da lo necesario para entender lo que propone la IA y darse cuenta si algo está mal. <code>shellcheck</code> hace parte de esta revisión de forma automática (paso opcional del lab).</p>
+</aside>
+</section>
+
+<section id="lo_que_vas_a_ver_en_scripts_ajenos" data-state="no_footer"><h3>Lo que vas a ver en scripts ajenos</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Escrito así</th>
+<th>Quiere decir</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>set -euo pipefail</code></td>
+<td>cortar el script ante el primer error</td>
+</tr>
+<tr>
+<td><code>${1:-valor}</code></td>
+<td><code>$1</code>, o <code>valor</code> si está vacío</td>
+</tr>
+<tr>
+<td><code>if ! comando; then</code></td>
+<td>si el comando falló</td>
+</tr>
+<tr>
+<td><code>[[ ... ]]</code></td>
+<td>como <code>[ ... ]</code>, propio de Bash</td>
+</tr>
+<tr>
+<td><code>nombre() { ... }</code></td>
+<td>una función: un bloque con nombre que se llama varias veces</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>solo para reconocerlos, no para practicarlos. <code>set -euo pipefail</code>: <code>-e</code> corta ante el primer comando que falla, <code>-u</code> trata como error una variable que no existe y <code>pipefail</code> hace que una tubería falle si falla cualquiera de sus comandos. Probado en la VM: con <code>ls /noexiste</code> el script termina ahí, con código 2.</p>
+</aside>
+</section>
+
+<section id="consultas_3" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+
+<section id="resumen" data-state="no_footer"><h3>Resumen</h3>
+<div class="slide-copy"><ul>
+<li>Un script son comandos guardados, con <code>#!/bin/bash</code> arriba y <code>chmod +x</code>.</li>
+<li>Variables sin espacios en el <code>=</code> y siempre entre comillas dobles.</li>
+<li><code>$1</code> es el argumento; revisarlo antes de usarlo o darle un valor por defecto.</li>
+<li><code>if [ ... ]</code> decide; <code>$?</code> dice si el último comando salió bien.</li>
+<li><code>&gt;&amp;2</code> y <code>logger</code> para avisar; <code>exit 1</code> cuando algo falla.</li>
+<li><code>for</code> para repetir y <code>case</code> para elegir.</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<!-- SECCIÓN LABS/PRÁCTICA -->
+
+<section id="labs" data-state="hide_footer" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h2>Actividades prácticas y laboratorios</h2></section>
+
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorio 14</h3>
+<div class="slide-copy"><p><strong>Objetivo:</strong> escribir un script que copie los registros de apt, avise si falla y deje rastro en el log.</p></div>
+<div class="slide-copy"><ul>
+<li>Primer script: estado del equipo.</li>
+<li><code>archivar.sh</code>, armado de a un paso: argumento, <code>if</code>, <code>$?</code>, mensajes de error y <code>logger</code>.</li>
+<li>Probarlo con los casos que fallan: sin argumento, sin <code>sudo</code> y con el disco lleno.</li>
+</ul></div>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab14/lab14.md" target="_blank" rel="noopener noreferrer">Laboratorio 14 — Scripts de administración</a></p></div>
+<aside class="notes"><p>el Laboratorio 14 está escrito y probado en la VM (2026-10-26). No depende de laboratorios anteriores, salvo el acceso por SSH del Lab 3: usa un <code>tmpfs</code> de 5 MB en <code>/srv/respaldos</code> para el disco lleno. <code>shellcheck</code> y el script de servicios son opcionales.</p>
+</aside>
+</section>
+
+<section id="referencias" data-state="no_footer"><h3>Referencias</h3>
+<div class="slide-copy"><ul>
+<li>Ayuda local: <code>man bash</code>, <code>help if</code>, <code>help for</code>, <code>help case</code>, <code>man logger</code>.</li>
+<li><a href="https://www.gnu.org/software/bash/manual/" target="_blank" rel="noopener noreferrer">Manual de Bash (GNU)</a>.</li>
+<li><a href="https://www.shellcheck.net/" target="_blank" rel="noopener noreferrer">ShellCheck</a>.</li>
+</ul></div>
+</section>
+</section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                 secret: null,
+                 id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
+                 url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>
