@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 16</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .reveal .slide-copy { font-size: 60%; line-height: 1.3; }
+        .reveal .slide-copy p { margin: 0.6em 0; }
+        .reveal .slide-copy blockquote { width: 92%; }
+        .reveal .slide-copy ul, .reveal .slide-copy ol { margin-bottom: 0.4em; }
+        .reveal .slide-copy code { white-space: nowrap; }
+        .reveal .account-table th, .reveal .account-table td { padding: 0.22em 0.45em; }
+
+        /* Clase 12: tablas y bloques de código (base de la clase 11). */
+        .reveal .compact-table { width: 94%; font-size: 60%; line-height: 1.18; margin: 0.3em auto; }
+        .reveal .compact-table th, .reveal .compact-table td { padding: 0.18em 0.4em; }
+        .reveal .compact-table code { white-space: nowrap; }
+        /* El botón de copiar se ubica en la esquina de .codeblock: el contenedor
+           tiene que medir lo mismo que el bloque para que el botón quede adentro. */
+        .reveal pre { width: 92%; font-size: 50%; margin: 0.4em auto; }
+        .reveal pre code { max-height: none; }
+        .reveal .codeblock { width: 92%; margin: 0.4em auto; }
+        .reveal .codeblock > pre { width: 100%; margin: 0; }
+        .reveal .codeblock > button { transform: scale(0.75); transform-origin: top right; }
+        .reveal .salida-nota { font-size: 80%; opacity: 0.7; margin: 0.1em 0 !important; }
+        .reveal .slide-copy ul ul { margin-top: 0.1em; }
+        #labs_clase h3 { font-size: 1.05em; }
+        /* Margen para que el botón de copiar no tape el final de las líneas. */
+        .reveal .codeblock > pre > code { padding-right: 2.6em; }
+        /* Salidas con líneas largas: letra más chica. */
+        #enlace_simbolico pre { font-size: 45%; }
+        /* Portada: repartir el título en dos líneas parejas. */
+        #inicio h4 { text-wrap: balance; }
+        #discos_fisicos .compact-table td:first-child { white-space: nowrap; }
+        #inicio h4 { text-wrap: balance; }
+        #labs_clase h3 { font-size: 1.05em; }
+
+/* Logo IDEP de la última diapositiva: es negro, se invierte en modo oscuro. */
+html.dark-theme #fin img { filter: invert(1); }
+        /* Clase 16: las salidas largas pasan a la línea siguiente en vez de mostrar barra. */
+        .reveal pre code.text { white-space: pre-wrap; }
+        /* Clase 16: salidas de journal y list-timers sin cortes, con letra más chica. */
+        #que_es_cron pre code.text, #que_el_aviso_quede_en_el_journal pre code.text,
+        #los_que_ya_estan_en_la_vm pre code.text { white-space: pre; }
+        #que_es_cron pre { font-size: 44%; }
+        #corrio pre { font-size: 44%; }
+        #que_el_aviso_quede_en_el_journal pre { font-size: 46%; }
+        #los_que_ya_estan_en_la_vm pre { font-size: 42%; }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+<section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 16: Tareas programadas y avisos del sistema</h4><small><p>Módulo 2 — Administración de Servidores</p></small></section>
+
+<section id="index" data-state="no_footer"><h3>Temas de la clase 16</h3>
+<div class="slide-copy"><ul><li><a href="#/tareas_programadas">Tareas programadas</a></li><li><a href="#/cron">cron</a></li><li><a href="#/anacron">anacron</a></li><li><a href="#/como_me_entero_si_falla">¿Cómo me entero si falla?</a></li><li><a href="#/temporizadores_de_systemd">Temporizadores de systemd</a></li><li><a href="#/actualizaciones_automaticas">Actualizaciones automáticas</a></li><li><a href="#/labs">Actividades prácticas y laboratorios</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+</section>
+
+<section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
+<div class="slide-copy"><p>Al finalizar vas a poder:</p></div>
+<div class="slide-copy"><ul>
+<li>Programar un script con cron.</li>
+<li>Usar anacron para una tarea que no se puede saltear.</li>
+<li>Leer un temporizador de systemd.</li>
+<li>Encontrar en el journal lo que dejó una tarea que falló.</li>
+<li>Activar las actualizaciones automáticas.</li>
+</ul></div>
+</section>
+
+<section id="lo_que_ya_vimos" data-state="no_footer"><h3>Lo que ya vimos</h3>
+<div class="slide-copy"><ul>
+<li><a href="clase4.html#/hora">Clase 4</a>: hora y zona horaria con <code>timedatectl</code>.</li>
+<li><a href="clase10.html#/servicios_con_systemd">Clase 10</a>: servicios y unidades de systemd.</li>
+<li><a href="clase14.html#/journalctl">Clase 14</a>: <code>journalctl</code> y <a href="clase14.html#/logger_escribir_en_el_log"><code>logger</code></a>.</li>
+<li><a href="clase15.html#/el_primer_script">Clase 15</a>: el script <code>archivar.sh</code>, las <a href="clase15.html#/dos_salidas">dos salidas</a> y <a href="clase15.html#/dev_null"><code>/dev/null</code></a>.</li>
+</ul></div>
+<aside class="notes"><p>hoy programamos el script de la clase pasada para que corra solo.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="tareas_programadas" data-state="customevent"><h2>Tareas programadas</h2>
+<div class="slide-copy"><p>El sistema ejecuta tareas pre-programadas.</p></div>
+</section>
+
+<section id="que_es_una_tarea_programada" data-state="no_footer"><h3>¿Qué es una tarea programada?</h3>
+<div class="slide-copy"><p>Un comando o un script que el sistema ejecuta solo (sin intervención del administrador), a una hora fija o cada cierto tiempo.</p></div>
+<div class="slide-copy"><p>En Linux, por defecto, ya tiene varias:</p></div>
+<div class="slide-copy"><ul>
+<li>rotar los logs;</li>
+<li>actualizar la lista de paquetes;</li>
+<li>limpiar <code>/tmp</code>.</li>
+</ul></div>
+<div class="slide-copy"><p>Tres formas de programarlas: <code>cron</code>, <code>anacron</code> y los temporizadores de systemd.</p></div>
+</section>
+
+<section id="sin_intervencion_del_administrador" data-state="no_footer"><h3>Sin intervención del administrador</h3>
+<div class="slide-copy"><ul>
+<li>La tarea no tiene terminal: lo que muestra no aparece en ninguna pantalla.</li>
+<li>Si falla, nadie se entera, salvo que lo hayamos previsto. Por ejemplo, dejando un aviso en el journal o mandando un correo.</li>
+</ul></div>
+<div class="slide-copy"><p>Por eso hoy hay dos preguntas: cómo programarla y cómo saber qué pasó.</p></div>
+</section>
+</section>
+
+<section>
+<section id="cron" data-state="customevent"><h2>cron</h2>
+
+</section>
+
+<section id="que_es_cron" data-state="no_footer"><h3>¿Qué es cron?</h3>
+<div class="slide-copy"><p>Un servicio que se despierta cada minuto, lee las tablas de tareas y ejecuta las que coinciden con la hora.</p></div>
+<div class="slide-copy"><p>Cada tabla se llama <strong>crontab</strong>.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ systemctl status cron
+● cron.service - Regular background program processing daemon
+     Loaded: loaded (/usr/lib/systemd/system/cron.service; enabled; preset: enabled)
+     Active: active (running) since Wed 2026-10-28 20:09:20 -03; 3h 41min ago</code></pre>
+<div class="slide-copy"><blockquote>En Debian el servicio es <code>cron</code> mientras que en Rocky el servicio se llama <code>crond</code> (paquete <code>cronie</code>).</blockquote></div>
+</section>
+
+<section id="que_es_un_crontab" data-state="no_footer"><h3>¿Qué es un crontab?</h3>
+<div class="slide-copy"><p>Es un archivo de texto plano con cierta sintaxis que interpreta el servicio y ejecuta.</p></div>
+<div class="slide-copy"><p>Contiene cinco campos de tiempo y después el comando. Una línea de <code>crontab</code>se ve así:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim># min  hora  día  mes  día-semana  comando
+  30   2     *    *    *           /usr/local/sbin/comando.sh</code></pre>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Línea</th>
+<th>Cuándo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>30 2 * * *</code></td>
+<td>todos los días a las 2:30</td>
+</tr>
+<tr>
+<td><code>*/10 * * * *</code></td>
+<td>cada 10 minutos</td>
+</tr>
+<tr>
+<td><code>0 3 * * 1</code></td>
+<td>los lunes a las 3</td>
+</tr>
+<tr>
+<td><code>0 8 * * 1-5</code></td>
+<td>de lunes a viernes a las 8</td>
+</tr>
+<tr>
+<td><code>0 8 1 * *</code></td>
+<td>el día 1 de cada mes a las 8</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p><code>*</code> quiere decir «cualquiera». El domingo es 0 o 7.</p></div>
+<div class="slide-copy"><blockquote>Podemos apoyarnos en <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer">crontab.guru</a> que traduce una línea a palabras (en inglés). Útil para comprobar antes de guardar.</blockquote></div>
+</section>
+
+<section id="el_crontab_es_por_usuario" data-state="no_footer"><h3>El crontab es por usuario</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>crontab -e        # editar
+crontab -l        # listar
+sudo crontab -e   # el de root</code></pre>
+<div class="slide-copy"><ul>
+<li>La tarea corre con el usuario propietario de la tabla.</li>
+<li>Las de root corren como root.</li>
+<li>Se guardan en <code>/var/spool/cron/crontabs/</code>. No se editan a mano: <code>crontab -e</code> revisa la línea al guardar.</li>
+</ul></div>
+<div class="slide-copy"><blockquote>La primera vez que se ejecuta <code>crontab -e</code> Debian pregunta qué editor usar (<code>nano</code>, <code>vi</code>). Si aún no tenemos nada en nuestro <code>crontab</code>, el comando <code>crontab -l</code> dice <code>no crontab for usuario</code>.</blockquote></div>
+</section>
+
+<section id="quien_puede_programar_tareas" data-state="no_footer"><h3>¿Quién puede programar tareas?</h3>
+<div class="slide-copy"><ul>
+<li>Si root ejecuta un script que otra cuenta puede modificar, esa cuenta ejecuta como root lo que quiera (riesgo de seguridad).</li>
+<li>Por eso el script va en <code>/usr/local/sbin</code>, de <code>root</code> y con permisos <code>755</code> (<a href="clase15.html#/revisar_un_script">ref: clase 15</a>).</li>
+</ul></div>
+</section>
+
+<section id="las_tareas_del_sistema" data-state="no_footer"><h3>Las tareas del sistema</h3>
+<div class="slide-copy"><p>Además de los crontab de cada cuenta, hay tablas del sistema: <code>/etc/crontab</code> y los archivos de <code>/etc/cron.d/</code>. Ahí dejan sus tareas los paquetes.</p></div>
+<div class="slide-copy"><p>Tienen un campo más, la cuenta que ejecuta:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim># crontab -e de root
+30 2 * * *      /usr/local/sbin/archivar.sh /srv/respaldos
+
+# /etc/cron.d/archivar
+30 2 * * * root /usr/local/sbin/archivar.sh /srv/respaldos</code></pre>
+<div class="slide-copy"><p>Una línea real de <code>/etc/crontab</code> en la VM:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>17 * * * * root cd / &amp;&amp; run-parts --report /etc/cron.hourly</code></pre>
+<div class="slide-copy"><p>A los 17 minutos de cada hora, root ejecuta los scripts de <code>/etc/cron.hourly</code>.</p></div>
+<aside class="notes"><p>se editan con un editor (no con <code>crontab -e</code>) y no tienen revisión al guardar. En Debian el nombre del archivo de <code>/etc/cron.d/</code> no puede tener punto. <code>cron.daily</code>, <code>cron.weekly</code> y <code>cron.monthly</code> se ven en la sección de anacron, que es quien los ejecuta. Si preguntan por <code>/etc/cron.d/e2scrub_all</code>: revisa los ext4 sobre LVM (<a href="clase13.html">clase 13</a>) y su línea empieza con <code>test -e /run/systemd/system ||</code>, así que con systemd cron no hace nada y la tarea la hace un temporizador.</p>
+</aside>
+</section>
+
+<section id="el_entorno_de_cron" data-state="no_footer"><h3>El entorno de cron</h3>
+<div class="slide-copy"><p>Lo que tiene una tarea de root en la VM:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>HOME=/root
+LOGNAME=root
+PATH=/usr/bin:/bin
+LANG=es_AR.UTF-8
+SHELL=/bin/sh</code></pre>
+<div class="slide-copy"><ul>
+<li><code>LANG</code> es el idioma que tenga configurado el sistema.</li>
+<li><code>PATH</code> corto: usar rutas completas.</li>
+<li>No lee <code>.bashrc</code>.</li>
+<li><code>%</code> en la línea de cron es especial: el <code>date +%F</code> va adentro del script.</li>
+</ul></div>
+<aside class="notes"><p>con <code>echo hoy es $(date +%F)</code> directo en la línea, la VM dio <code>/bin/sh: 1: Syntax error: end of file unexpected (expecting ")")</code>. Se escribe <code>\%</code>.</p>
+</aside>
+</section>
+
+<section id="hora_y_zona_horaria" data-state="no_footer"><h3>Hora y zona horaria</h3>
+<div class="slide-copy"><ul>
+<li>cron usa la hora del sistema. Si la zona horaria está mal, la tarea corre a otra hora.</li>
+<li>Se revisa con <code>timedatectl</code> (<a href="clase4.html#/hora">clase 4</a>).</li>
+<li>En Debian, cron usa el idioma del sistema: los mensajes salen en español, como en la terminal.</li>
+</ul></div>
+</section>
+
+<section id="corrio" data-state="no_footer"><h3>¿Corrió?</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -u cron --since today
+oct 28 20:17:01 lab2-vm CRON[2077]: (root) CMD (/usr/local/sbin/archivar.sh /srv/prueba16 &gt; /dev/null)</code></pre>
+<div class="slide-copy"><p>Cada ejecución deja una línea <code>CMD</code> con la cuenta y el comando.</p></div>
+<aside class="notes"><p>hace falta <code>sudo</code> porque la cuenta no está en el grupo <code>adm</code>. En Rocky el servicio es <code>crond</code> y además queda en <code>/var/log/cron</code>.</p>
+</aside>
+</section>
+
+<section id="consultas" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="anacron" data-state="customevent"><h2>anacron</h2>
+
+</section>
+
+<section id="que_es_anacron" data-state="no_footer"><h3>¿Qué es anacron?</h3>
+<div class="slide-copy"><ul>
+<li>cron ejecuta a una hora. Si el equipo estaba apagado, ese día no corre.</li>
+<li>anacron ejecuta una vez por día, semana o mes. Anota cuándo corrió cada tarea y, cuando lo llaman, pone al día las atrasadas.</li>
+</ul></div>
+<div class="slide-copy"><p>Sirve para equipos que no están siempre encendidos.</p></div>
+</section>
+
+<section id="el_archivo_etc_anacrontab" data-state="no_footer"><h3>El archivo /etc/anacrontab</h3>
+<div class="slide-copy"><p>Es la única tabla de anacron. Solo la usa root. En la VM:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+HOME=/root
+LOGNAME=root
+
+1         5   cron.daily    run-parts --report /etc/cron.daily
+7         10  cron.weekly   run-parts --report /etc/cron.weekly
+@monthly  15  cron.monthly  run-parts --report /etc/cron.monthly</code></pre>
+<div class="slide-copy"><ul>
+<li>Arriba, el entorno de las tareas, como en cron. Acá el <code>PATH</code> incluye <code>/usr/local/sbin</code>.</li>
+<li>Abajo, una tarea por línea.</li>
+</ul></div>
+<aside class="notes"><p>salida sin los comentarios y sin la línea <code>@yearly</code>. En Rocky agrega <code>RANDOM_DELAY=45</code> (demora al azar de hasta 45 minutos) y <code>START_HOURS_RANGE=3-22</code> (solo arranca tareas entre las 3 y las 22).</p>
+</aside>
+</section>
+
+<section id="una_linea_de_anacrontab" data-state="no_footer"><h3>Una línea de anacrontab</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim># período  espera  nombre      comando
+  1        5       cron.daily  run-parts --report /etc/cron.daily</code></pre>
+<div class="slide-copy"><ul>
+<li>Período: cada cuántos días. <code>1</code> es todos los días, <code>7</code> una vez por semana, <code>@monthly</code> una vez por mes.</li>
+<li>Espera: minutos que aguarda desde que arranca anacron. Cada tarea tiene una distinta para no correr todas juntas.</li>
+<li>Nombre: identifica la tarea. Con ese nombre guarda la fecha de la última vez.</li>
+<li>Comando: lo que ejecuta, como root.</li>
+</ul></div>
+<div class="slide-copy"><p>Se lee así: «si pasó un día desde la última vez de <code>cron.daily</code>, esperar 5 minutos y ejecutar <code>run-parts</code>».</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo cat /var/spool/anacron/cron.daily
+20261025</code></pre>
+</section>
+
+<section id="cron_daily_weekly_y_monthly" data-state="no_footer"><h3>cron.daily, weekly y monthly</h3>
+<div class="slide-copy"><p>Directorios con scripts que corren una vez por día, semana o mes.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ls /etc/cron.daily
+0anacron  apt-compat  dpkg  logrotate  man-db</code></pre>
+<div class="slide-copy"><ul>
+<li>Los ejecuta anacron (las líneas de arriba). Sin anacron, los ejecuta cron desde <code>/etc/crontab</code>.</li>
+<li>No tienen hora fija: corren la primera vez que llaman a anacron en el día, más la espera.</li>
+<li><code>run-parts</code> los corre de a uno, en orden alfabético, y espera a que termine cada uno.</li>
+<li>Para sumar una tarea alcanza con dejar el script ahí, de root y ejecutable.</li>
+</ul></div>
+<aside class="notes"><p>en Debian el nombre del archivo no puede tener punto: <code>run-parts</code> saltea <code>archivar.sh</code> (probado en la VM). En <code>/etc/crontab</code> de Debian está <code>test -x /usr/sbin/anacron || { ... run-parts ... }</code>, el mismo truco que <code>e2scrub_all</code>. Debian llama a anacron sin <code>-s</code>: <code>cron.weekly</code> arranca a los 10 minutos y se puede superponer con <code>cron.daily</code>; Rocky usa <code>anacron -s</code> y los pone en fila. En Rocky solo arrancan entre las 3 y las 22, con una demora al azar de hasta 45 minutos.</p>
+</aside>
+</section>
+
+<section id="quien_llama_a_anacron" data-state="no_footer"><h3>¿Quién llama a anacron?</h3>
+<div class="slide-copy"><p>anacron no queda corriendo: algo lo tiene que llamar.</p></div>
+<div class="slide-copy"><ul>
+<li>Debian: <code>anacron.timer</code>, una vez por hora entre las 7 y las 23.</li>
+<li>Rocky: cron, una vez por hora (<code>/etc/cron.hourly/0anacron</code>).</li>
+</ul></div>
+<div class="slide-copy"><blockquote><strong>Importante:</strong> con batería, anacron no corre. VirtualBox le pasa a la VM la batería del anfitrión: con la notebook desenchufada, tampoco corren <code>cron.daily</code>, <code>cron.weekly</code> ni <code>cron.monthly</code>.</blockquote></div>
+<aside class="notes"><p>pasó en la validación. VirtualBox le muestra a la VM la batería del anfitrión, y con la notebook desenchufada el journal decía <code>ConditionACPower=true was not met</code>: <code>cron.daily</code> quedó con la fecha de tres días antes. En Rocky, <code>0anacron</code> hace la misma comprobación. Ejecutado a mano, corre igual.</p>
+</aside>
+</section>
+
+<section id="cron_o_anacron" data-state="no_footer"><h3>¿cron o anacron?</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th></th>
+<th>cron</th>
+<th>anacron</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cuándo</td>
+<td>a una hora</td>
+<td>una vez por período</td>
+</tr>
+<tr>
+<td>Si estaba apagado</td>
+<td>no corre</td>
+<td>corre después</td>
+</tr>
+<tr>
+<td>Período más corto</td>
+<td>un minuto</td>
+<td>un día</td>
+</tr>
+<tr>
+<td>Quién</td>
+<td>cualquier cuenta</td>
+<td>root</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>anacron cuenta en días: el primer campo de <code>/etc/anacrontab</code> es un número de días (o <code>@monthly</code>, <code>@yearly</code>). <code>cron.hourly</code> no es de anacron, lo ejecuta cron en las dos distribuciones. En Rocky, cron llama a anacron una vez por hora (<code>/etc/cron.hourly/0anacron</code>), pero eso es cuándo revisa si hay algo atrasado, no cada cuánto corren sus tareas.</p>
+</aside>
+</section>
+
+<section id="consultas_2" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="como_me_entero_si_falla" data-state="customevent"><h2>¿Cómo me entero si falla?</h2>
+
+</section>
+
+<section id="adonde_va_la_salida" data-state="no_footer"><h3>¿Adónde va la salida?</h3>
+<div class="slide-copy"><p>cron toma lo que la tarea escribe y lo manda por correo. Sin un servidor de correo instalado, como en las VM:</p></div>
+<div class="slide-copy"><ul>
+<li>Debian lo descarta:</li>
+</ul></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>CRON[3455]: (CRON) info (No MTA installed, discarding output)</code></pre>
+<div class="slide-copy"><ul>
+<li>Rocky lo guarda en el journal y en <code>/var/log/cron</code>:</li>
+</ul></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>CROND[2174]: (root) CMDOUT (No existe el directorio /noexiste)</code></pre>
+<aside class="notes"><p>en Debian, sin hacer nada, el error se pierde. anacron hace lo mismo: <code>Can't find sendmail ... not mailing output</code>.</p>
+</aside>
+</section>
+
+<section id="que_el_aviso_quede_en_el_journal" data-state="no_footer"><h3>Que el aviso quede en el journal</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>30 2 * * * /usr/local/sbin/archivar.sh /srv/respaldos 2&gt;&amp;1 | logger -t archivar</code></pre>
+<div class="slide-copy"><ul>
+<li><code>2&gt;&amp;1</code>: junta la salida de error con la normal (<a href="clase15.html#/dos_salidas">clase 15</a>).</li>
+<li><code>| logger -t archivar</code>: la manda al journal con la etiqueta <code>archivar</code> (<a href="clase14.html#/logger_escribir_en_el_log">clase 14</a>).</li>
+</ul></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo journalctl -t archivar --since today
+oct 28 23:38:10 lab2-vm archivar[3605]: No existe el directorio /noexiste</code></pre>
+<aside class="notes"><p>el script ya llama a <code>logger</code> cuando falla la copia, pero si el directorio no existe sale antes, sin pasar por <code>logger</code>. Con la tubería no se pierde ningún mensaje.</p>
+</aside>
+</section>
+
+<section id="y_el_correo" data-state="no_footer"><h3>¿Y el correo?</h3>
+<div class="slide-copy"><ul>
+<li>Con un servidor de correo instalado, cron manda la salida por correo a la cuenta propietaria.</li>
+<li><code>MAILTO=</code> en el crontab elige a quién.</li>
+<li>Configurado con un servidor SMTP externo, llega a una casilla real.</li>
+</ul></div>
+<div class="slide-copy"><p>No lo hacemos en el curso.</p></div>
+<aside class="notes"><p>se anunció en la clase 2; decir que se nombra acá. Hoy lo habitual es leer el journal o juntar los logs en otro equipo (<a href="clase14.html#/logs_en_otro_equipo">clase 14</a>).</p>
+</aside>
+</section>
+
+<section id="consultas_3" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="temporizadores_de_systemd" data-state="customevent"><h2>Temporizadores de systemd</h2>
+
+</section>
+
+<section id="que_es_un_temporizador" data-state="no_footer"><h3>¿Qué es un temporizador?</h3>
+<div class="slide-copy"><p>Una unidad <code>.timer</code> que, a la hora indicada, arranca el servicio con el mismo nombre.</p></div>
+<div class="slide-copy"><ul>
+<li><code>logrotate.timer</code> → <code>logrotate.service</code></li>
+<li>El servicio dice qué se hace; el temporizador, cuándo.</li>
+</ul></div>
+<div class="slide-copy"><p>Son unidades de systemd, como las de la <a href="clase10.html#/servicios_con_systemd">clase 10</a>.</p></div>
+</section>
+
+<section id="los_que_ya_estan_en_la_vm" data-state="no_footer"><h3>Los que ya están en la VM</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ systemctl list-timers
+NEXT                          LEFT UNIT                    ACTIVATES
+Thu 2026-10-29 00:21:52 -03  30min logrotate.timer         logrotate.service
+Thu 2026-10-29 06:07:05 -03     6h apt-daily-upgrade.timer apt-daily-upgrade.service
+Thu 2026-10-29 07:34:54 -03     7h anacron.timer           anacron.service
+Thu 2026-10-29 11:43:56 -03    11h apt-daily.timer         apt-daily.service
+...
+9 timers listed.</code></pre>
+<div class="slide-copy"><ul>
+<li><code>NEXT</code> y <code>LEFT</code>: cuándo toca y cuánto falta.</li>
+<li><code>UNIT</code> y <code>ACTIVATES</code>: el temporizador y el servicio que arranca.</li>
+<li>En la terminal también aparecen <code>LAST</code> y <code>PASSED</code>: cuándo corrió por última vez.</li>
+</ul></div>
+<aside class="notes"><p>salida recortada: son nueve temporizadores y se sacaron las columnas <code>LAST</code> y <code>PASSED</code> para que entre en la diapositiva (<code>anacron.timer</code> tenía <code>LAST</code> 23:37). Los otros: <code>dpkg-db-backup</code>, <code>man-db</code>, <code>systemd-tmpfiles-clean</code>, <code>e2scrub_all</code> (clase 13) y <code>fstrim</code>. Rocky tiene cuatro: <code>systemd-tmpfiles-clean</code>, <code>logrotate</code>, <code>dnf-makecache</code> y <code>raid-check</code>. <code>LAST</code> es cuándo se disparó, no si el servicio funcionó: <code>anacron.timer</code> figura a las 23:37 y anacron no corrió por la batería.</p>
+</aside>
+</section>
+
+<section id="leer_un_temporizador" data-state="no_footer"><h3>Leer un temporizador</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ systemctl cat logrotate.timer
+[Unit]
+Description=Daily rotation of log files
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=1h
+Persistent=true</code></pre>
+<div class="slide-copy"><ul>
+<li><code>OnCalendar</code>: cuándo. <code>daily</code> es todos los días a las 00:00.</li>
+<li><code>RandomizedDelaySec</code>: hasta una hora de demora al azar.</li>
+<li><code>Persistent=true</code>: si estaba apagado, corre al encender.</li>
+</ul></div>
+<aside class="notes"><p>salida recortada. <code>systemd-analyze calendar "*-*-* 02:30"</code> dice cuándo sería la próxima vez; sirve para probar una expresión. La demora al azar evita que miles de equipos vayan al mismo servidor a la misma hora.</p>
+</aside>
+</section>
+
+<section id="uno_propio" data-state="no_footer"><h3>Uno propio</h3>
+<div class="slide-copy"><p><code>/etc/systemd/system/archivar.timer</code></p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>[Timer]
+OnCalendar=*-*-* 02:30
+Persistent=true
+
+[Install]
+WantedBy=timers.target</code></pre>
+<div class="slide-copy"><p><code>*-*-* 02:30</code>: cualquier año, mes y día, a las 2:30. En cron, <code>30 2 * * *</code>.</p></div>
+<div class="slide-copy"><p><code>/etc/systemd/system/archivar.service</code></p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/archivar.sh /srv/respaldos</code></pre>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo systemctl daemon-reload
+sudo systemctl enable --now archivar.timer</code></pre>
+<aside class="notes"><p>solo se muestra, no está en el lab. Se habilita el <code>.timer</code>. Probado en la VM: lo que muestra el script queda en el journal sin <code>logger</code> (<code>archivar.sh[3993]: Listo: ...</code>), y si falla, la unidad queda en <code>failed</code> y aparece en <code>systemctl --failed</code>.</p>
+</aside>
+</section>
+
+<section id="cron_anacron_o_temporizador" data-state="no_footer"><h3>¿cron, anacron o temporizador?</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th></th>
+<th>cron</th>
+<th>anacron</th>
+<th>Temporizador</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Una tarea</td>
+<td>una línea</td>
+<td>una línea</td>
+<td>dos archivos</td>
+</tr>
+<tr>
+<td>Si estaba apagado</td>
+<td>no corre</td>
+<td>corre después</td>
+<td>corre al encender</td>
+</tr>
+<tr>
+<td>Lo que muestra</td>
+<td>por correo o se pierde</td>
+<td>por correo o se pierde</td>
+<td>en el journal</td>
+</tr>
+<tr>
+<td>Si falla</td>
+<td>hay que preverlo</td>
+<td>hay que preverlo</td>
+<td>queda en <code>failed</code></td>
+</tr>
+<tr>
+<td>Próxima vez</td>
+<td>hay que calcularla</td>
+<td>sin hora fija</td>
+<td><code>list-timers</code></td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>cron para algo rápido a una hora fija; anacron para «una vez por día» en un equipo que se apaga; temporizador para lo que no se puede perder. Las distribuciones pasan sus tareas a temporizadores, pero cron va a seguir apareciendo.</p>
+</aside>
+</section>
+
+<section id="revisar_un_servidor" data-state="no_footer"><h3>Revisar un servidor</h3>
+<div class="slide-copy"><p>¿Qué se ejecuta solo en este equipo?</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo crontab -l
+sudo ls /var/spool/cron/crontabs
+cat /etc/crontab
+ls /etc/cron.d /etc/cron.daily
+cat /etc/anacrontab
+systemctl list-timers --all</code></pre>
+<div class="slide-copy"><p>Es un lugar donde puede quedar algo que se vuelve a ejecutar aunque se cierre la sesión.</p></div>
+<div class="slide-copy"><blockquote>En Rocky las tablas están en <code>/var/spool/cron</code>.</blockquote></div>
+</section>
+
+<section id="consultas_4" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="actualizaciones_automaticas" data-state="customevent"><h2>Actualizaciones automáticas</h2>
+
+</section>
+
+<section id="por_que_automaticas" data-state="no_footer"><h3>¿Por qué automáticas?</h3>
+<div class="slide-copy"><ul>
+<li>Las correcciones de seguridad salen seguido.</li>
+<li>Un servidor que nadie actualiza queda expuesto a fallas que ya tienen arreglo.</li>
+<li>Se automatizan las de seguridad y las de la versión estable. Pasar de Debian 13 a 14 se hace a mano (<a href="clase11.html#/upgrade_y_full_upgrade">clase 11</a>).</li>
+</ul></div>
+</section>
+
+<section id="que_conviene_actualizar_solo" data-state="no_footer"><h3>¿Qué conviene actualizar solo?</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Qué</th>
+<th>¿Automático?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correcciones de seguridad</td>
+<td>sí</td>
+</tr>
+<tr>
+<td>Correcciones de la versión estable</td>
+<td>según el servidor</td>
+</tr>
+<tr>
+<td>Pasar a la versión siguiente (Debian 13 → 14)</td>
+<td>no, a mano</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Las de seguridad corrigen una falla sin cambiar cómo funciona el programa. Por eso se pueden instalar sin nadie mirando.</p></div>
+</section>
+
+<section id="los_riesgos" data-state="no_footer"><h3>Los riesgos</h3>
+<div class="slide-copy"><ul>
+<li>Una actualización puede romper un servicio.</li>
+<li>Una corrección del kernel no sirve hasta reiniciar.</li>
+<li>Un servicio actualizado sigue con el programa viejo en memoria hasta que se reinicia.</li>
+</ul></div>
+<div class="slide-copy"><p>En un servidor importante se prueba primero en otro equipo o se actualiza en un horario acordado, una ventana de mantenimiento.</p></div>
+<aside class="notes"><p>el reinicio automático viene apagado en Debian y en Rocky. Instalar solo no reinicia nada: hay que revisar si quedó un reinicio pendiente.</p>
+</aside>
+</section>
+
+<section id="como_funciona" data-state="no_footer"><h3>¿Cómo funciona?</h3>
+<div class="slide-copy"><p>Dos pasos, cada uno con su temporizador:</p></div>
+<div class="slide-copy"><ol>
+<li>Bajar la lista de paquetes.</li>
+<li>Instalar lo que corresponda.</li>
+</ol></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th></th>
+<th>Debian</th>
+<th>Rocky</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Paquete</td>
+<td><code>unattended-upgrades</code></td>
+<td><code>dnf-automatic</code></td>
+</tr>
+<tr>
+<td>Temporizadores</td>
+<td><code>apt-daily</code>, <code>apt-daily-upgrade</code></td>
+<td><code>dnf-automatic</code></td>
+</tr>
+<tr>
+<td>Qué instala</td>
+<td>seguridad y versión estable</td>
+<td>lo que diga <code>automatic.conf</code></td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>En Debian 13, instalar <code>unattended-upgrades</code> lo deja activo. En Rocky, <code>dnf-automatic</code> viene apagado y hay que encenderlo. Lo hacemos en el laboratorio.</p></div>
+<aside class="notes"><p>lo que enciende la actualización en Debian es <code>/etc/apt/apt.conf.d/20auto-upgrades</code>. Sin ese archivo los dos temporizadores corren y no hacen nada. El paquete lo crea al instalarse, porque la pregunta de debconf es de prioridad baja y su respuesta predeterminada es «sí» (comprobado el 2026-10-30 con una instalación limpia; la nota de la clase 11 decía lo contrario). <code>dpkg-reconfigure -plow unattended-upgrades</code> vuelve a preguntar. Qué instala lo dice <code>50unattended-upgrades</code>. En Rocky el temporizador viene apagado y <code>automatic.conf</code> trae <code>apply_updates = no</code>: baja y no instala. Los temporizadores de apt tienen <code>ConditionACPower=true</code>: en la VM no corren con la notebook a batería.</p>
+</aside>
+</section>
+
+<section id="como_se_que_hizo" data-state="no_footer"><h3>¿Cómo sé qué hizo?</h3>
+<div class="slide-copy"><ul>
+<li>Debian: <code>/var/log/unattended-upgrades/</code>.</li>
+<li>Rocky: el journal del servicio y <code>/var/log/dnf.log</code>.</li>
+<li><code>systemctl list-timers</code> dice cuándo corrió y cuándo toca.</li>
+</ul></div>
+<div class="slide-copy"><p>Sin servidor de correo, si una actualización falla nadie avisa: hay que mirar estos registros de vez en cuando.</p></div>
+<div class="slide-copy"><blockquote><strong>Tip:</strong> con muchos servidores, <a href="https://github.com/TheDuffman85/linux-update-dashboard" target="_blank" rel="noopener noreferrer">Linux Update Dashboard</a> muestra en una página web las actualizaciones pendientes de todos. Se conecta a cada uno por SSH. Comunidad activa y bien mantenida. <a href="https://github.com/TheDuffman85/linux-update-dashboard/issues/194" target="_blank">Aceptan sugerencias ;)</a></blockquote></div>
+</section>
+
+<section id="consultas_5" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+
+<section id="resumen" data-state="no_footer"><h3>Resumen</h3>
+<div class="slide-copy"><ul>
+<li>cron ejecuta a una hora; las tareas de root corren como root.</li>
+<li>anacron pone al día lo que quedó atrasado, una vez por período.</li>
+<li>Sin servidor de correo, lo que muestra la tarea se pierde: <code>2&gt;&amp;1 | logger</code> y <code>journalctl -t</code>.</li>
+<li>Un temporizador es una unidad: <code>list-timers</code> y el journal.</li>
+<li>Las actualizaciones de seguridad se pueden automatizar: <code>unattended-upgrades</code> en Debian, <code>dnf-automatic</code> en Rocky.</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<!-- SECCIÓN LABS/PRÁCTICA -->
+
+<section id="labs" data-state="hide_footer" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h2>Actividades prácticas y laboratorios</h2></section>
+
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica — Laboratorio 15</h3>
+<div class="slide-copy"><p><strong>15.1:</strong> programar un script y encontrar sus avisos en el journal.</p></div>
+<div class="slide-copy"><ul>
+<li>Programar <code>archivar.sh</code> con cron y ver qué pasa con su salida.</li>
+<li>Mandar los avisos al journal y provocar un error.</li>
+<li>Una tarea propia con anacron.</li>
+</ul></div>
+<div class="slide-copy"><p><strong>15.2:</strong> activar las actualizaciones automáticas de seguridad.</p></div>
+<div class="slide-copy"><ul>
+<li>Con Debian o con Rocky, a elección: <code>unattended-upgrades</code> o <code>dnf-automatic</code>.</li>
+<li>Probarlo, ejecutarlo y leer su registro.</li>
+</ul></div>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab15/lab15.1.md" target="_blank" rel="noopener noreferrer">Laboratorio 15.1 — Tareas programadas</a><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab15/lab15.2.md" target="_blank" rel="noopener noreferrer"><br>Laboratorio 15.2 — Actualizaciones automáticas</a></p></div>
+<aside class="notes"><p>los dos laboratorios todavía no están escritos. No dependen del Lab 14 ni uno del otro: el 15.1 trae el script completo y el 15.2 solo necesita la VM Debian con SSH. En el 15.1 Rocky es opcional al final; el 15.2 empieza preguntando con qué distribución hacerlo y tiene una parte completa para cada una.</p>
+</aside>
+</section>
+
+<section id="referencias" data-state="no_footer"><h3>Referencias</h3>
+<div class="slide-copy"><ul>
+<li>Ayuda local: <code>man 5 crontab</code>, <code>man anacron</code>, <code>man 5 anacrontab</code>, <code>man systemd.timer</code>, <code>man unattended-upgrade</code>.</li>
+<li><a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer">crontab.guru</a>.</li>
+<li><a href="https://wiki.debian.org/UnattendedUpgrades" target="_blank" rel="noopener noreferrer">Debian Wiki — UnattendedUpgrades</a>.</li>
+</ul></div>
+</section>
+</section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                 secret: null,
+                 id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
+                 url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>
