@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 17</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .reveal .slide-copy { font-size: 60%; line-height: 1.3; }
+        .reveal .slide-copy p { margin: 0.6em 0; }
+        .reveal .slide-copy blockquote { width: 92%; }
+        .reveal .slide-copy ul, .reveal .slide-copy ol { margin-bottom: 0.4em; }
+        .reveal .slide-copy code { white-space: nowrap; }
+        .reveal .account-table th, .reveal .account-table td { padding: 0.22em 0.45em; }
+
+        /* Clase 12: tablas y bloques de código (base de la clase 11). */
+        .reveal .compact-table { width: 94%; font-size: 60%; line-height: 1.18; margin: 0.3em auto; }
+        .reveal .compact-table th, .reveal .compact-table td { padding: 0.18em 0.4em; }
+        .reveal .compact-table code { white-space: nowrap; }
+        /* El botón de copiar se ubica en la esquina de .codeblock: el contenedor
+           tiene que medir lo mismo que el bloque para que el botón quede adentro. */
+        .reveal pre { width: 92%; font-size: 50%; margin: 0.4em auto; }
+        .reveal pre code { max-height: none; }
+        .reveal .codeblock { width: 92%; margin: 0.4em auto; }
+        .reveal .codeblock > pre { width: 100%; margin: 0; }
+        .reveal .codeblock > button { transform: scale(0.75); transform-origin: top right; }
+        .reveal .salida-nota { font-size: 80%; opacity: 0.7; margin: 0.1em 0 !important; }
+        .reveal .slide-copy ul ul { margin-top: 0.1em; }
+        #labs_clase h3 { font-size: 1.05em; }
+        /* Margen para que el botón de copiar no tape el final de las líneas. */
+        .reveal .codeblock > pre > code { padding-right: 2.6em; }
+        /* Salidas con líneas largas: letra más chica. */
+        #enlace_simbolico pre { font-size: 45%; }
+        /* Portada: repartir el título en dos líneas parejas. */
+        #inicio h4 { text-wrap: balance; }
+        #discos_fisicos .compact-table td:first-child { white-space: nowrap; }
+        #inicio h4 { text-wrap: balance; }
+        #labs_clase h3 { font-size: 1.05em; }
+
+/* Logo IDEP de la última diapositiva: es negro, se invierte en modo oscuro. */
+html.dark-theme #fin img { filter: invert(1); }
+        /* Clase 17: las salidas largas pasan a la línea siguiente en vez de mostrar barra. */
+        .reveal pre code.text { white-space: pre-wrap; }
+        /* Clase 17: diagramas SVG con versión clara y oscura (como en la clase 13). */
+        .reveal img.diagrama { display: block; margin: 0.3em auto; max-height: 52vh; width: auto; max-width: 96%; }
+        .reveal img.diagrama.tema-oscuro { display: none; }
+        html.dark-theme .reveal img.diagrama.tema-claro { display: none; }
+        html.dark-theme .reveal img.diagrama.tema-oscuro { display: block; }
+        /* Clase 17: ajustes por diapositiva. */
+        #rocky_configuracion_con_menus img.terminal-screenshot { max-height: 34vh; margin: 0.1em auto; }
+        #donde_se_configura_la_red .compact-table { width: 96%; font-size: 56%; }
+        #por_que_falta_la_ruta table { font-size: 72%; margin: 0 auto; }
+        #donde_se_configura_la_red .compact-table td:first-child { white-space: nowrap; }
+        #donde_se_configura_la_red .compact-table code { white-space: normal; overflow-wrap: normal; }
+        #donde_se_configura_la_red .compact-table td:nth-child(2) { min-width: 6.5em; }
+        #donde_se_configura_la_red .compact-table td { vertical-align: top; }
+        #nombres_de_las_interfaces .compact-table td:first-child { white-space: nowrap; }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+<section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 17: Redes</h4><small><p>Módulo 2: Administración de Servidores</p></small></section>
+
+<section id="index" data-state="no_footer"><h3>Temas de la clase 17</h3>
+<div class="slide-copy"><ul><li><a href="#/conceptos_de_red">Conceptos de red</a></li><li><a href="#/ver_y_configurar_la_red">Ver y configurar la red</a></li><li><a href="#/nombres_del_lado_del_cliente">Resolución de nombres de host</a></li><li><a href="#/diagnostico">Diagnóstico</a></li><li><a href="#/que_escucha_y_donde">Qué escucha y dónde</a></li><li><a href="#/la_red_del_laboratorio">La red del laboratorio</a></li><li><a href="#/labs">Actividades prácticas y laboratorios</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+</section>
+
+<section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
+<div class="slide-copy"><p>Al finalizar vas a poder:</p></div>
+<div class="slide-copy"><ul>
+<li>Leer la configuración de red de un servidor: dirección, máscara, puerta de enlace y DNS.</li>
+<li>Dejar una dirección fija que sobreviva al reinicio.</li>
+<li>Saber dónde se configura la red en Debian, en Ubuntu y en Rocky.</li>
+<li>Diagnosticar paso a paso por qué un equipo no llega a un destino.</li>
+<li>Ver qué servicios escuchan y en qué interfaz.</li>
+</ul></div>
+</section>
+
+<section id="lo_que_ya_vimos" data-state="no_footer"><h3>Lo que ya vimos</h3>
+<div class="slide-copy"><ul>
+<li><a href="clase2.html#/modos_red">Clase 2</a>: los modos de red de VirtualBox.</li>
+<li><a href="clase4.html#/esquema_red">Clase 4</a>: el esquema con una sola placa NAT y el reenvío del puerto 2222 al 22.</li>
+<li><a href="clase4.html#/verificar_ssh">Clase 4</a>: <code>ss -tlnp</code> para ver si sshd escucha.</li>
+<li><a href="clase10.html#/servicios_con_systemd">Clase 10</a>: servicios con <code>systemctl</code>.</li>
+<li><a href="clase14.html#/journalctl">Clase 14</a>: <code>journalctl</code>, donde quedan los mensajes de la red.</li>
+</ul></div>
+<aside class="notes"><p>hoy abrimos el tramo de redes. Hasta ahora la red fue algo que simplemente andaba; hoy aprendemos a leerla, cambiarla y diagnosticarla. La clase 18 sigue con SSH.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="conceptos_de_red" data-state="customevent"><h2>Conceptos de red</h2>
+
+</section>
+
+<section id="interfaz_y_direccion_ip" data-state="no_footer"><h3>Interfaz y dirección IP</h3>
+<div class="slide-copy"><p>Una interfaz es la puerta del equipo hacia una red: una placa de red, real o virtual.</p></div>
+<div class="slide-copy"><p>Una dirección IP es el número que identifica al equipo en esa red, como el número de una casa en una calle.</p></div>
+<div class="slide-copy"><p>Una interfaz puede tener varias direcciones o ninguna. <code>enp0s8</code>, la segunda placa de la VM (la de la <a href="#/diseno_de_red_de_labs">red del laboratorio</a>), arranca sin dirección.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ip -br -4 a
+lo               UNKNOWN        127.0.0.1/8
+enp0s3           UP             10.0.2.15/24</code></pre>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/iproute2/ip-address.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip -br -4 a</code></a> lista las interfaces con sus direcciones. <code>-br</code> es el formato breve y <code>-4</code> muestra solo las direcciones IPv4.</p></div>
+<div class="slide-copy"><p><code>lo</code> es la interfaz interna del equipo; <code>enp0s3</code>, la placa de la VM.</p></div>
+<aside class="notes"><p>sin <code>-4</code>, <code>ip -br a</code> muestra también las direcciones IPv6 (las que tienen <code>:</code>), que hoy no usamos. En las VM del curso las apagamos en el laboratorio para que las salidas queden limpias. Los nombres como <code>enp0s3</code> indican el lugar de la placa en el bus; ya aparecieron con <code>ip a</code> en la clase 4. Mostrar <code>ip a</code> completo solo en la sección 3.</p>
+</aside>
+</section>
+
+<section id="nombres_de_las_interfaces" data-state="no_footer"><h3>Nombres de las interfaces</h3>
+<div class="slide-copy"><p>Los nombres predecibles los arma systemd/udev a partir del hardware, y los usan Debian, Ubuntu y Rocky. Empiezan con <code>en</code> (Ethernet) o <code>wl</code> (Wi-Fi).</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Qué indica</th>
+<th>Dónde se ve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lo</code></td>
+<td>el propio equipo</td>
+<td>todos los sistemas</td>
+</tr>
+<tr>
+<td><code>eth0</code></td>
+<td>clásico, numerado en orden</td>
+<td>Docker, WSL, Raspberry Pi OS</td>
+</tr>
+<tr>
+<td><code>eno1</code></td>
+<td>placa integrada (firmware)</td>
+<td>placa madre del equipo</td>
+</tr>
+<tr>
+<td><code>ens33</code></td>
+<td>ranura PCI (firmware)</td>
+<td>típico de VMware</td>
+</tr>
+<tr>
+<td><code>enp0s3</code></td>
+<td>bus 0, ranura 3 del PCI</td>
+<td>típico de VirtualBox: nuestras VM</td>
+</tr>
+<tr>
+<td><code>wlo1</code> / <code>wlp2s0</code></td>
+<td>Wi-Fi, nombre predecible</td>
+<td>equipos con Wi-Fi</td>
+</tr>
+<tr>
+<td><code>wlan0</code></td>
+<td>Wi-Fi, nombre clásico</td>
+<td>Raspberry Pi OS, <code>net.ifnames=0</code></td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>la regla está en <a href="https://manpages.debian.org/trixie/systemd/systemd.net-naming-scheme.7.es.html" target="_blank" rel="noopener noreferrer">systemd.net-naming-scheme(7)</a>: <code>o</code> es el índice de una placa integrada, <code>s</code> la ranura (slot) que informa el firmware, y <code>p</code> más <code>s</code> el bus y la ranura PCI (<code>enp0s3</code>: bus 0, ranura 3). Para Wi-Fi vale lo mismo con <code>wl</code>. systemd empezó a usarlos en la versión 197 (<a href="https://systemd.io/PREDICTABLE_INTERFACE_NAMES/" target="_blank" rel="noopener noreferrer">Predictable Network Interface Names</a>). Debian los usa desde Debian 9 (wiki de Debian, <em>NetworkInterfaceNames</em>), Ubuntu lo documenta en su guía de redes (<code>eno1</code>, <code>enp0s25</code>) y Rocky hereda el esquema de RHEL (udev asigna nombres fijos según firmware, topología y ubicación). <code>eth0</code> aparece en contenedores Docker (la documentación de Docker lo muestra dentro del contenedor) y en WSL 2 (los reportes del repositorio de WSL). En Raspberry Pi OS lo usual es <code>eth0</code> y <code>wlan0</code>, y <code>raspi-config</code> permite activar los nombres predecibles; depende de la versión: se comprueba con <code>ip -br a</code>. <code>ens33</code> es el nombre típico de una placa de VMware, que le asigna la ranura PCI 33 (lo explican la documentación de Photon OS de VMware y la comunidad de Broadcom). Con <code>net.ifnames=0</code> en la línea de comandos del kernel se vuelve a <code>eth0</code>.</p>
+</aside>
+</section>
+
+<section id="la_red_y_la_mascara" data-state="no_footer"><h3>La red y la máscara</h3>
+<div class="slide-copy"><p>Una red es el conjunto de equipos que se hablan directamente, sin pasar por un router. Las direcciones de una misma red comparten el comienzo.</p></div>
+<div class="slide-copy"><p>La máscara dice cuánto del comienzo es la red. En <code>10.0.2.15/24</code>, el <code>/24</code> significa que los primeros 24 bits (<code>10.0.2</code>) identifican la red y el resto (<code>15</code>) identifica al equipo.</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Dirección</th>
+<th>Red</th>
+<th>Equipos posibles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>10.0.2.15/24</code></td>
+<td><code>10.0.2.0</code></td>
+<td>254 (del <code>.1</code> al <code>.254</code>)</td>
+</tr>
+<tr>
+<td><code>192.168.50.10/24</code></td>
+<td><code>192.168.50.0</code></td>
+<td>254</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Dos equipos con <code>/24</code> y el mismo comienzo (<code>192.168.50</code>) se ven directo. Con <code>192.168.51</code>, ya son redes distintas.</p></div>
+<div class="slide-copy"><p>La <code>192.168.50.0</code> es la red interna del laboratorio, la que armamos <a href="#/diseno_de_red_de_labs">al final de la clase</a>.</p></div>
+<aside class="notes"><p><code>/24</code> equivale a <code>255.255.255.0</code>. No hacemos cuentas de subredes; alcanza con <code>/24</code> y con reconocer cuándo dos direcciones están en la misma red.</p>
+</aside>
+</section>
+
+<section id="puerta_de_enlace_y_dns" data-state="no_footer"><h3>Puerta de enlace y DNS</h3>
+<div class="slide-copy"><p>Para hablar con un equipo de otra red, el paquete se entrega a la puerta de enlace (gateway): el router que conecta nuestra red con las demás. En la VM es <code>10.0.2.2</code>.</p></div>
+<div class="slide-copy"><p>El DNS es el servicio que traduce nombres (<code>debian.org</code>) a direcciones. En la VM es <code>10.0.2.3</code>. Lo vemos con más detalle en la clase 19; hoy solo cómo lo usa el cliente.</p></div>
+<div class="slide-copy"><p>Con <a href="https://manpages.debian.org/trixie/manpages-es/ping.8.es.html" target="_blank" rel="noopener noreferrer"><code>ping</code></a> comprobamos que la puerta de enlace responda:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ping -c 3 10.0.2.2
+64 bytes from 10.0.2.2: icmp_seq=1 ttl=64 time=0.447 ms
+64 bytes from 10.0.2.2: icmp_seq=2 ttl=64 time=0.643 ms
+64 bytes from 10.0.2.2: icmp_seq=3 ttl=64 time=0.778 ms</code></pre>
+<aside class="notes"><p>salida recortada. <code>ping</code> manda un pedido y espera una respuesta; sirve para saber si hay camino. Lo vamos a usar todo el tiempo.</p>
+</aside>
+</section>
+
+<section id="puertos" data-state="no_footer"><h3>Puertos</h3>
+<div class="slide-copy"><p>La IP identifica al equipo; el puerto, al servicio dentro del equipo, como el departamento en un edificio.</p></div>
+<div class="slide-copy"><ul>
+<li>Van del 0 al 65535. Del 1 al 1023 son los de servicios conocidos: en Linux solo root puede abrirlos.</li>
+<li>Cada número existe en TCP y en UDP. TCP abre una conexión y controla que todo llegue; UDP manda mensajes sueltos.</li>
+</ul></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Puerto</th>
+<th>Protocolo</th>
+<th>Servicio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>22</td>
+<td>TCP</td>
+<td>SSH</td>
+</tr>
+<tr>
+<td>53</td>
+<td>UDP y TCP</td>
+<td>DNS</td>
+</tr>
+<tr>
+<td>67 y 68</td>
+<td>UDP</td>
+<td>DHCP</td>
+</tr>
+<tr>
+<td>80</td>
+<td>TCP</td>
+<td>web (HTTP)</td>
+</tr>
+<tr>
+<td>443</td>
+<td>TCP</td>
+<td>web cifrada (HTTPS)</td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Un servicio escucha en un puerto. Por eso anda el reenvío de la <a href="clase4.html#/esquema_red">clase 4</a>: el 2222 de la laptop va al 22 de la VM.</p></div>
+<aside class="notes"><p>la lista completa de puertos conocidos está en <code>/etc/services</code>. Más adelante, <code>ss -tlnp</code> muestra TCP (la <code>t</code>) y <code>ss -ulnp</code> UDP (la <code>u</code>).</p>
+</aside>
+</section>
+
+<section id="dhcp_o_direccion_fija" data-state="no_footer"><h3>DHCP o dirección fija</h3>
+<div class="slide-copy"><p>Dos maneras de que una interfaz tenga dirección:</p></div>
+<div class="slide-copy"><ul>
+<li>DHCP: un servicio de la red le reparte una. Es lo que hace la NAT de VirtualBox, y por eso <code>enp0s3</code> tiene <code>10.0.2.15</code> sin que hayamos escrito nada.</li>
+<li>Fija: la escribimos en la configuración.</li>
+</ul></div>
+<div class="slide-copy"><p>Un servidor suele llevar dirección fija: otros equipos lo buscan siempre en el mismo lugar. Una dirección repartida por DHCP puede cambiar.</p></div>
+<div class="slide-copy"><p>En una red interna de VirtualBox no hay servicio DHCP. Ahí la dirección fija hace falta.</p></div>
+</section>
+
+<section id="direcciones_privadas_y_localhost" data-state="no_footer"><h3>Direcciones privadas y localhost</h3>
+<div class="slide-copy"><p>Hay rangos reservados para redes internas, que no se usan en Internet:</p></div>
+<table class="compact-table">
+<thead>
+<tr>
+<th>Rango</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>10.0.0.0/8</code></td>
+<td><code>10.0.2.15</code></td>
+</tr>
+<tr>
+<td><code>172.16.0.0/12</code></td>
+<td><code>172.16.10.12</code></td>
+</tr>
+<tr>
+<td><code>192.168.0.0/16</code></td>
+<td><code>192.168.50.10</code></td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Muchas casas y oficinas usan las mismas direcciones privadas porque cada red es aparte. Para salir a Internet, el router las traduce a una dirección pública (eso es NAT).</p></div>
+<div class="slide-copy"><p><code>127.0.0.1</code> es el propio equipo (<code>localhost</code>). Un servicio que escucha solo ahí no se alcanza desde afuera. Lo usamos al final de la clase.</p></div>
+</section>
+
+<section id="la_tabla_de_ruteo" data-state="no_footer"><h3>La tabla de ruteo</h3>
+<div class="slide-copy"><p>El equipo decide por qué interfaz sale cada paquete mirando su tabla de ruteo, que se lee con <a href="https://manpages.debian.org/trixie/iproute2/ip-route.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip route</code></a>.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ip route
+default via 10.0.2.2 dev enp0s3 proto dhcp src 10.0.2.15 metric 1002
+10.0.2.0/24 dev enp0s3 proto dhcp scope link src 10.0.2.15 metric 1002</code></pre>
+<div class="slide-copy"><ul>
+<li><code>10.0.2.0/24 dev enp0s3</code>: para esa red, salir directo por <code>enp0s3</code>.</li>
+<li><code>default via 10.0.2.2</code>: para cualquier otro destino, entregarlo a la puerta de enlace. Es la ruta por defecto.</li>
+</ul></div>
+<aside class="notes"><p><code>proto</code>, <code>scope</code> y <code>metric</code> se pasan por alto; <code>metric</code> sirve cuando hay dos rutas al mismo destino (la de menor valor gana). Un equipo tiene una sola ruta por defecto en condiciones normales.</p>
+</aside>
+</section>
+
+<section id="consultas" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="ver_y_configurar_la_red" data-state="customevent"><h2>Ver y configurar la red</h2>
+
+</section>
+
+<section id="leer_lo_que_hay" data-state="no_footer"><h3>Leer lo que hay</h3>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/iproute2/ip-address.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip a</code></a> muestra el detalle de cada interfaz:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ip a
+2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:c6:71:ba brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
+       valid_lft 86370sec preferred_lft 75570sec
+3: enp0s8: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 08:00:27:87:01:11 brd ff:ff:ff:ff:ff:ff</code></pre>
+<div class="slide-copy"><ul>
+<li><code>state UP</code> o <code>DOWN</code>: la interfaz está encendida o apagada.</li>
+<li><code>link/ether</code>: la dirección física (MAC) de la placa.</li>
+<li><code>inet</code>: la dirección IPv4. <code>dynamic</code> dice que vino por DHCP.</li>
+<li><code>enp0s8</code> es la placa nueva (la segunda, en la red interna del laboratorio): sin <code>inet</code> y <code>DOWN</code>.</li>
+</ul></div>
+<aside class="notes"><p>salida recortada (se sacó <code>lo</code> y las líneas IPv6). <code>ip -br a</code> es lo que usamos en el día a día; <code>ip a</code> para ver el detalle. <code>ip link</code> muestra solo las interfaces, sin direcciones.</p>
+</aside>
+</section>
+
+<section id="las_rutas_y_la_ruta_hacia_un_destino" data-state="no_footer"><h3>Las rutas y la ruta hacia un destino</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ip route get 8.8.8.8
+8.8.8.8 via 10.0.2.2 dev enp0s3 src 10.0.2.15 uid 1000
+    cache</code></pre>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/iproute2/ip-route.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip route get</code></a> pregunta cómo saldría un paquete hacia un destino: por qué interfaz y por qué puerta de enlace. Es la mejor pregunta cuando algo no llega.</p></div>
+<div class="slide-copy"><p>Lo vamos a usar en el diagnóstico.</p></div>
+</section>
+
+<section id="cambios_temporales" data-state="no_footer"><h3>Cambios temporales</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo ip addr add 192.168.50.10/24 dev enp0s8
+$ sudo ip link set enp0s8 up
+$ ip -br -4 a
+lo               UNKNOWN        127.0.0.1/8
+enp0s3           UP             10.0.2.15/24
+enp0s8           UP             192.168.50.10/24</code></pre>
+<div class="slide-copy"><ul>
+<li><a href="https://manpages.debian.org/trixie/iproute2/ip-address.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip addr add</code></a> pone la dirección y <a href="https://manpages.debian.org/trixie/iproute2/ip-link.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip link set up</code></a> enciende la interfaz. La ruta a <code>192.168.50.0/24</code> aparece sola.</li>
+<li>No quedan guardados en ningún archivo: al reiniciar se pierden.</li>
+<li><code>sudo ip addr del 192.168.50.10/24 dev enp0s8</code> la quita, y <code>enp0s8</code> deja de aparecer en <code>ip -br -4 a</code>.</li>
+</ul></div>
+<div class="slide-copy"><p>Sirve para probar. Para que quede, hay que escribir la configuración.</p></div>
+<aside class="notes"><p>salida real de la VM Debian (<code>validacion/ip-4-2026-11-01.txt</code>). <code>enp0s8</code> es la segunda placa, en la red interna <code>redcurso</code>; se agrega en el laboratorio.</p>
+</aside>
+</section>
+
+<section id="debian_archivo_de_configuracion" data-state="no_footer"><h3>Debian: archivo de configuración</h3>
+<div class="slide-copy"><p>En Debian la red la arma <code>ifupdown</code> y se configura en texto plano, en <a href="https://manpages.debian.org/trixie/ifupdown/interfaces.5.es.html" target="_blank" rel="noopener noreferrer"><code>/etc/network/interfaces</code></a>.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim># /etc/network/interfaces (el que viene en la VM)
+source /etc/network/interfaces.d/*
+
+allow-hotplug enp0s3
+iface enp0s3 inet dhcp</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim># /etc/network/interfaces.d/enp0s8  (dirección fija, en un archivo propio)
+auto enp0s8
+iface enp0s8 inet static
+    address 192.168.50.10/24</code></pre>
+<div class="slide-copy"><ul>
+<li><code>auto</code>: se levanta al arrancar.</li>
+<li><code>inet static</code> y <code>address</code>: dirección fija, con la máscara.</li>
+<li>Sin <code>gateway</code>: la salida sigue siendo por <code>enp0s3</code>.</li>
+</ul></div>
+<aside class="notes"><p>salida del <code>interfaces</code> recortada (sin la interfaz <code>lo</code> ni las líneas de IPv6). La línea <code>source</code> es la que lee <code>interfaces.d/</code>. Si alguien pone un <code>gateway</code> en cada interfaz, queda con dos rutas por defecto: sin una salida clara.</p>
+</aside>
+</section>
+
+<section id="levantar_y_bajar_interfaces" data-state="no_footer"><h3>Levantar y bajar interfaces</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo ifup enp0s8
+$ ip -br -4 a
+enp0s8           DOWN           192.168.50.10/24
+$ ip -br -4 a   # unos segundos después
+enp0s8           UP             192.168.50.10/24</code></pre>
+<div class="slide-copy"><ul>
+<li><a href="https://manpages.debian.org/trixie/ifupdown/ifup.8.es.html" target="_blank" rel="noopener noreferrer"><code>ifup</code></a> levanta la interfaz con lo que dice el archivo. No imprime nada si anda bien.</li>
+<li>Justo después puede verse <code>DOWN</code>: el enlace tarda 2 o 3 segundos en subir. Esperar antes de dar la configuración por fallida.</li>
+<li>Para cambiarla: primero <a href="https://manpages.debian.org/trixie/ifupdown/ifdown.8.es.html" target="_blank" rel="noopener noreferrer"><code>ifdown</code></a>, después editar, y por último <code>ifup</code>. Si se edita antes, <code>ifdown</code> da <code>Error: ipv4: Address not found.</code></li>
+</ul></div>
+</section>
+
+<section id="un_riesgo_reiniciar_la_red" data-state="no_footer"><h3>Un riesgo: reiniciar la red</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo systemctl restart networking
+$ ip -br a
+enp0s3           UP             fd17:625c:f037:2:d6c7:d927:be43:d878/64 fe80::364:3345:a464:8e46/64</code></pre>
+<div class="slide-copy"><p>Con <a href="https://manpages.debian.org/trixie/systemd/systemctl.1.es.html" target="_blank" rel="noopener noreferrer"><code>systemctl restart networking</code></a>, durante unos segundos <code>enp0s3</code> queda sin IPv4 y sin ruta por defecto, hasta que el DHCP renueva. En un servidor remoto, la sesión SSH se puede cortar.</p></div>
+<div class="slide-copy"><p>Para una dirección fija nueva alcanza con <code>ifup</code> de esa interfaz. Reiniciar <code>networking</code> afecta a todas.</p></div>
+<div class="slide-copy"><p>Después de reiniciar el equipo, la dirección fija sigue ahí: el archivo manda.</p></div>
+<aside class="notes"><p>la salida es de la prueba, tomada justo después del reinicio del servicio. En la VM la sesión por NAT sobrevivió, pero no hay garantía. En la clase 10 vimos que <code>restart</code> corta lo que el servicio estaba haciendo; con <code>networking</code>, lo que se corta es la red por la que entramos.</p>
+</aside>
+</section>
+
+<section id="ubuntu_netplan" data-state="no_footer"><h3>Ubuntu: netplan</h3>
+<div class="slide-copy"><p>Ubuntu Server no usa <code>/etc/network/interfaces</code>. Usa <a href="https://manpages.debian.org/trixie/netplan.io/netplan.8.en.html" target="_blank" rel="noopener noreferrer"><code>netplan</code></a>: un archivo YAML en <code>/etc/netplan/</code> que describe la red. De ahí netplan genera la configuración para el servicio que la aplica (<code>systemd-networkd</code> o <code>NetworkManager</code>).</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim># /etc/netplan/01-estatica.yaml  (ejemplo de Ubuntu)
+network:
+  version: 2
+  ethernets:
+    enp0s3:
+      addresses:
+        - 192.168.1.50/24
+      routes:
+        - to: default
+          via: 192.168.1.1
+      nameservers:
+        addresses:
+          - 192.168.1.1
+          - 8.8.8.8</code></pre>
+<aside class="notes"><p>es lo que se encuentra en Ubuntu; en Debian y en Rocky no lo usamos. El ejemplo se validó con <code>netplan generate</code> en Ubuntu 26.04 (netplan 1.2), sin aplicarlo. En Ubuntu Desktop, NetworkManager guarda cada conexión como un YAML de netplan (<code>/etc/netplan/90-NM-&lt;uuid&gt;.yaml</code>): netplan está aunque nadie lo haya escrito a mano.</p>
+</aside>
+</section>
+
+<section id="netplan_probar_y_aplicar" data-state="no_footer"><h3>Netplan: probar y aplicar</h3>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo netplan try
+sudo netplan apply</code></pre>
+<div class="slide-copy"><ul>
+<li><a href="https://manpages.debian.org/trixie/netplan.io/netplan-try.8.en.html" target="_blank" rel="noopener noreferrer"><code>netplan try</code></a> aplica la configuración y la deshace sola si no se confirma en 120 segundos. Útil en un servidor remoto: si se corta la conexión, vuelve atrás.</li>
+<li><a href="https://manpages.debian.org/trixie/netplan.io/netplan-apply.8.en.html" target="_blank" rel="noopener noreferrer"><code>netplan apply</code></a> la aplica definitivamente.</li>
+<li>El YAML se escribe con espacios. Con un tabulador, netplan saltea el archivo:</li>
+</ul></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Invalid YAML: tabs are not allowed for indent</code></pre>
+<div class="slide-copy"><ul>
+<li>El archivo va con permisos <code>600</code>; si otros lo pueden leer, netplan avisa.</li>
+</ul></div>
+<aside class="notes"><p>solo teoría, no hay práctica de netplan. En archivos viejos aparece <code>gateway4:</code>; netplan lo acepta con el aviso `<code> </code>gateway4<code> has been deprecated, use default routes instead</code><code> y hoy se escribe </code>routes:<code> con </code>to: default<code>. Mensajes tomados de la prueba en el anfitrión (</code>validacion/netplan-anfitrion-2026-10-30.txt`).</p>
+</aside>
+</section>
+
+<section id="rocky_networkmanager" data-state="no_footer"><h3>Rocky: NetworkManager</h3>
+<div class="slide-copy"><p>En Rocky la red la maneja NetworkManager. Cada configuración es un perfil, un archivo en <code>/etc/NetworkManager/system-connections/</code>, y <a href="https://manpages.debian.org/trixie/network-manager/nmcli.1.es.html" target="_blank" rel="noopener noreferrer"><code>nmcli</code></a> es la herramienta para crearlos y verlos.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ nmcli device
+DEVICE  TYPE      STATE                   CONNECTION
+enp0s3  ethernet  conectado               enp0s3
+enp0s8  ethernet  conectado               interna
+lo      loopback  connected (externally)  lo</code></pre>
+<div class="slide-copy"><ul>
+<li><code>nmcli device</code>: las interfaces y qué perfil usa cada una.</li>
+<li><code>nmcli con show</code>: los perfiles.</li>
+<li>Con una placa nueva, NetworkManager arma solo un perfil «Conexión cableada 1» con DHCP. En una red interna no hay DHCP: queda en «conectando» sin dirección hasta que creamos uno propio.</li>
+</ul></div>
+<div class="slide-copy"><p>El perfil se puede crear con <code>nmcli</code> o con <a href="https://manpages.debian.org/trixie/network-manager/nmtui.1.en.html" target="_blank" rel="noopener noreferrer"><code>nmtui</code></a>, que es el mismo NetworkManager con menús.</p></div>
+<aside class="notes"><p>el estado «conectando (obteniendo configuración IP)» de la placa nueva está registrado y es lo que van a ver los alumnos antes de crear <code>interna</code>. El perfil automático vive en <code>/run</code>, no en disco, y desaparece al reiniciar.</p>
+</aside>
+</section>
+
+<section id="rocky_configuracion_con_menus" data-state="no_footer"><h3>Rocky: configuración con menús</h3>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/network-manager/nmtui.1.en.html" target="_blank" rel="noopener noreferrer"><code>nmtui</code></a> arma el perfil con menús en la terminal, sin tener que recordar las opciones de <a href="https://manpages.debian.org/trixie/network-manager/nmcli.1.es.html" target="_blank" rel="noopener noreferrer"><code>nmcli</code></a>. Se usa con <code>sudo</code>. En el laboratorio, Rocky se configura con <code>nmtui</code>.</p></div>
+<img src="img/c17/nmtui-05-formulario-ipv4.png" alt="nmtui: perfil interna en enp0s8, IPv4 manual con 192.168.50.20/24 y sin puerta de enlace" class="terminal-screenshot">
+<div class="slide-copy"><ul>
+<li>Tab y flechas para moverse, Enter para elegir, Espacio para marcar.</li>
+<li>Al aceptar, NetworkManager guarda el perfil en <code>/etc/NetworkManager/system-connections/</code> y lo activa.</li>
+<li>Lo que hace <code>nmtui</code> se ve igual con <code>nmcli con show</code>.</li>
+</ul></div>
+<aside class="notes"><p>captura de la VM Rocky 9.8 en español. <code>NetworkManager-tui</code> ya viene instalado. Sin <code>sudo</code>, al aceptar sale «Insufficient privileges» y no guarda.</p>
+</aside>
+</section>
+
+<section id="donde_se_configura_la_red" data-state="no_footer"><h3>Dónde se configura la red</h3>
+<table class="compact-table">
+<thead>
+<tr>
+<th></th>
+<th>Debian</th>
+<th>Ubuntu</th>
+<th>Rocky</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quién maneja la red</td>
+<td>ifupdown</td>
+<td>netplan sobre systemd-networkd o NetworkManager</td>
+<td>NetworkManager</td>
+</tr>
+<tr>
+<td>Dónde se escribe</td>
+<td><code>/<wbr>etc/<wbr>network/<wbr>interfaces</code> y <code>interfaces.d/</code></td>
+<td><code>/<wbr>etc/<wbr>netplan/<wbr>*.yaml</code></td>
+<td><code>/<wbr>etc/<wbr>NetworkManager/<wbr>system-connections/<wbr></code></td>
+</tr>
+<tr>
+<td>Cómo se aplica</td>
+<td><a href="https://manpages.debian.org/trixie/ifupdown/ifup.8.es.html" target="_blank" rel="noopener noreferrer"><code>ifup</code></a> / <a href="https://manpages.debian.org/trixie/ifupdown/ifdown.8.es.html" target="_blank" rel="noopener noreferrer"><code>ifdown</code></a></td>
+<td><a href="https://manpages.debian.org/trixie/netplan.io/netplan-try.8.en.html" target="_blank" rel="noopener noreferrer"><code>netplan try</code></a> / <a href="https://manpages.debian.org/trixie/netplan.io/netplan-apply.8.en.html" target="_blank" rel="noopener noreferrer"><code>netplan apply</code></a></td>
+<td><a href="https://manpages.debian.org/trixie/network-manager/nmcli.1.es.html" target="_blank" rel="noopener noreferrer"><code>nmcli con up</code></a> o <a href="https://manpages.debian.org/trixie/network-manager/nmtui.1.en.html" target="_blank" rel="noopener noreferrer"><code>nmtui</code></a></td>
+</tr>
+</tbody></table>
+<div class="slide-copy"><p>Lo mismo en cada caso: una dirección, una máscara y, si hace falta, una puerta de enlace y un DNS.</p></div>
+</section>
+
+<section id="consultas_3" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="nombres_del_lado_del_cliente" data-state="customevent"><h2>Resolución de nombres de host</h2>
+<div class="slide-copy"><p>Cómo el equipo traduce el nombre de otro equipo a su dirección IP.</p></div>
+
+</section>
+
+<section id="archivos_de_resolucion" data-state="no_footer"><h3>Archivos de resolución</h3>
+<div class="slide-copy"><p>Podemos usar nombres de equipo en lugar de direcciones IP. El sistema los traduce con estos archivos.</p></div>
+<div class="slide-copy"><ul>
+<li><a href="https://manpages.debian.org/trixie/manpages-es/hosts.5.es.html" target="_blank" rel="noopener noreferrer"><code>/etc/hosts</code></a>: una libreta local. Una línea por equipo: dirección y nombre. <code>rocky</code> es la otra VM, en la <a href="#/diseno_de_red_de_labs">red interna</a>.</li>
+<li><a href="https://manpages.debian.org/trixie/manpages/resolv.conf.5.es.html" target="_blank" rel="noopener noreferrer"><code>/etc/resolv.conf</code></a>: a qué servidores DNS preguntar. En la VM lo escribe <a href="https://manpages.debian.org/trixie/dhcpcd-base/dhcpcd.8.en.html" target="_blank" rel="noopener noreferrer"><code>dhcpcd</code></a> (en Rocky, NetworkManager).</li>
+</ul></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ cat /etc/hosts
+127.0.0.1	localhost
+127.0.1.1	lab2-vm
+192.168.50.20 rocky</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ cat /etc/resolv.conf
+# Generated by dhcpcd from enp0s3.dhcp, enp0s3.ra
+domain lan
+nameserver 10.0.2.3</code></pre>
+<aside class="notes"><p>salida recortada (se sacaron líneas de comentarios y de IPv6 de <code>/etc/hosts</code>). La línea <code>192.168.50.20 rocky</code> es la que se agrega en el laboratorio. <code>resolv.conf</code> se vuelve a escribir cuando dhcpcd renueva o se reinicia la red: una edición a mano no es duradera.</p>
+</aside>
+</section>
+
+<section id="probar_la_resolucion" data-state="no_footer"><h3>Probar la resolución</h3>
+<div class="slide-copy"><p>El sistema consulta primero <code>/etc/hosts</code> y después el DNS. Una entrada en <code>/etc/hosts</code> gana sobre el DNS.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ getent hosts rocky
+192.168.50.20   rocky
+$ ping -c 2 rocky
+PING rocky (192.168.50.20) 56(84) bytes of data.
+64 bytes from rocky (192.168.50.20): icmp_seq=1 ttl=64 time=1.24 ms</code></pre>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/manpages/getent.1.es.html" target="_blank" rel="noopener noreferrer"><code>getent hosts</code></a> resuelve un nombre igual que lo hacen los programas. Si no imprime nada, el nombre no se resuelve.</p></div>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/bind9-dnsutils/dig.1.en.html" target="_blank" rel="noopener noreferrer"><code>dig</code></a> y <a href="https://manpages.debian.org/trixie/bind9-host/host.1.en.html" target="_blank" rel="noopener noreferrer"><code>host</code></a> hacen consultas DNS directas: los vemos en la clase 19.</p></div>
+<aside class="notes"><p>el orden lo fija la línea <code>hosts: files dns</code> de <code>/etc/nsswitch.conf</code>: primero <code>files</code> (<code>/etc/hosts</code>), después <code>dns</code>. No se muestra en las diapositivas; si preguntan, es ahí donde se cambia.</p>
+</aside>
+</section>
+
+<section id="consultas_4" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="diagnostico" data-state="customevent"><h2>Diagnóstico</h2>
+
+</section>
+
+<section id="el_orden_de_abajo_hacia_arriba" data-state="no_footer"><h3>El orden: de abajo hacia arriba</h3>
+<div class="slide-copy"><p>Cuando un equipo no llega a un destino, se revisa por capas. Cada una depende de la anterior:</p></div>
+<div class="slide-copy"><ol>
+<li>La interfaz está arriba: <a href="https://manpages.debian.org/trixie/iproute2/ip-address.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip -br a</code></a>.</li>
+<li>Tiene dirección: <code>ip -br a</code>.</li>
+<li>Hay ruta hacia el destino: <a href="https://manpages.debian.org/trixie/iproute2/ip-route.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip route get</code></a>.</li>
+<li>Llega a la puerta de enlace: <a href="https://manpages.debian.org/trixie/manpages-es/ping.8.es.html" target="_blank" rel="noopener noreferrer"><code>ping 10.0.2.2</code></a>.</li>
+<li>Llega a una IP externa: <code>ping 8.8.8.8</code>.</li>
+<li>Resuelve el nombre: <a href="https://manpages.debian.org/trixie/manpages/getent.1.es.html" target="_blank" rel="noopener noreferrer"><code>getent hosts debian.org</code></a>.</li>
+</ol></div>
+<div class="slide-copy"><p>Se busca el primer paso que falla.</p></div>
+</section>
+
+<section id="comprobar_que_se_llegue_al_host" data-state="no_footer"><h3>Comprobar que se llegue al host</h3>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/manpages-es/ping.8.es.html" target="_blank" rel="noopener noreferrer"><code>ping</code></a> manda un pedido a otro equipo y espera la respuesta: si vuelve, hay camino. <code>-c 3</code> manda tres pedidos y termina.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ping -c 3 8.8.8.8
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=118 time=11.7 ms
+...
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ping -c 3 debian.org
+64 bytes from 151.101.130.132: icmp_seq=1 ttl=59 time=20.7 ms
+...
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms</code></pre>
+<div class="slide-copy"><p>Con la IP y con el nombre responde: la red anda. Cuando falla, el mensaje de <code>ping</code> a veces engaña. El que no engaña es <a href="https://manpages.debian.org/trixie/iproute2/ip-route.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip route get</code></a>: dice por dónde sale el paquete.</p></div>
+<aside class="notes"><p>salidas recortadas. Si el <code>ping</code> por IP anda y el del nombre no, el problema es la resolución, no la red.</p>
+</aside>
+</section>
+
+<section id="interfaz_caida_o_red_equivocada" data-state="no_footer"><h3>Interfaz caída o red equivocada</h3>
+<div class="slide-copy"><p>Desde Debian, <a href="https://manpages.debian.org/trixie/manpages-es/ping.8.es.html" target="_blank" rel="noopener noreferrer"><code>ping 192.168.50.20</code></a> no llega (es la VM Rocky, en la red interna). Dos causas distintas dan el mismo síntoma:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ping -c 3 -W 2 192.168.50.20
+From 172.16.10.12 icmp_seq=1 Destination Port Unreachable
+3 packets transmitted, 0 received, +1 errors, 100% packet loss</code></pre>
+<div class="slide-copy"><p><code>-c 3</code> manda tres pedidos y <code>-W 2</code> espera hasta 2 segundos cada respuesta.</p></div>
+<div class="slide-copy"><p>Esa dirección (<code>172.16.10.12</code>) no es de las VM: es de un router de afuera. El mensaje no dice qué falló. La pista está en la ruta, con <a href="https://manpages.debian.org/trixie/iproute2/ip-route.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip route get</code></a>:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ip route get 192.168.50.20
+192.168.50.20 via 10.0.2.2 dev enp0s3 src 10.0.2.15 uid 1000</code></pre>
+<div class="slide-copy"><p>Sale por la NAT (<code>enp0s3</code>) y no por la red interna (<code>enp0s8</code>). Falta la ruta a <code>192.168.50.0/24</code>.</p></div>
+</section>
+<section id="por_que_falta_la_ruta" data-state="no_footer"><h3>¿Por qué falta la ruta?</h3>
+<div class="slide-copy"><p>Se mira <a href="https://manpages.debian.org/trixie/iproute2/ip-address.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip -br a</code></a>:</p></div>
+<table>
+<thead>
+<tr>
+<th><code>ip -br a</code> muestra</th>
+<th>Causa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enp0s8  DOWN  192.168.50.10/24</code> o sin dirección</td>
+<td>interfaz caída: <a href="https://manpages.debian.org/trixie/ifupdown/ifup.8.es.html" target="_blank" rel="noopener noreferrer"><code>ifup enp0s8</code></a></td>
+</tr>
+<tr>
+<td><code>enp0s8  UP  192.168.51.10/24</code></td>
+<td>red equivocada: corregir el archivo</td>
+</tr>
+</tbody></table>
+<aside class="notes"><p>estas dos fallas son del laboratorio. En la caída con <code>ip link set down</code> la dirección queda; con <code>ifdown</code> se pierde. En las dos, la ruta a la red interna desaparece de <code>ip route</code>. En la red equivocada la placa está arriba, pero en otra red: <code>192.168.51.0/24</code>.</p>
+</aside>
+</section>
+
+<section id="el_nombre_no_resuelve" data-state="no_footer"><h3>El nombre no resuelve</h3>
+<div class="slide-copy"><p>El <a href="https://manpages.debian.org/trixie/manpages-es/ping.8.es.html" target="_blank" rel="noopener noreferrer"><code>ping</code></a> por IP anda y el del nombre no: la red está bien y falla la resolución.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ getent hosts rocky
+$ echo $?
+2
+$ ping -c 3 rocky
+ping: rocky: Fallo temporal en la resolución del nombre
+$ ping -c 2 192.168.50.20
+64 bytes from 192.168.50.20: icmp_seq=1 ttl=64 time=1.48 ms</code></pre>
+<div class="slide-copy"><ul>
+<li>Un nombre que falta en <code>/etc/hosts</code> falla enseguida.</li>
+<li>Un <code>nameserver</code> equivocado: <code>ping debian.org</code> falla en unos 5 segundos y <code>ping 8.8.8.8</code> anda.</li>
+<li>Un <code>nameserver</code> que no contesta: <a href="https://manpages.debian.org/trixie/manpages/getent.1.es.html" target="_blank" rel="noopener noreferrer"><code>getent hosts</code></a> tarda unos 12 segundos en rendirse. Si un comando se queda colgado antes de fallar, sospechar del DNS.</li>
+</ul></div>
+<div class="slide-copy"><p>Se revisa <code>/etc/hosts</code> y <code>/etc/resolv.conf</code>.</p></div>
+<aside class="notes"><p>si el nombre sigue sin resolver con los dos archivos bien, queda mirar el orden de consulta en <code>/etc/nsswitch.conf</code> (<code>hosts: files dns</code>). Con <code>LANG=C</code> el mensaje sale <code>Temporary failure in name resolution</code>. Con la IP mal escrita en <code>/etc/hosts</code> (<code>192.168.50.21 rocky</code>), <code>getent</code> devuelve esa IP equivocada y el ping da <code>Destination Host Unreachable</code> desde la propia dirección: el nombre sí resolvió, a otra cosa.</p>
+</aside>
+</section>
+
+<section id="los_saltos_hasta_el_destino" data-state="no_footer"><h3>Los saltos hasta el destino</h3>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/traceroute/traceroute.1.es.html" target="_blank" rel="noopener noreferrer"><code>traceroute</code></a> muestra los saltos que da un paquete hasta el destino: cada router por el que pasa.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ traceroute -n 8.8.8.8
+traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  10.0.2.2  0.390 ms  0.290 ms  0.365 ms
+ 2  172.16.10.1  4.239 ms  4.017 ms  3.991 ms
+ 3  192.168.100.1  3.868 ms  3.778 ms  3.696 ms
+ ...
+ 9  8.8.8.8  8.794 ms  9.199 ms  7.866 ms</code></pre>
+<div class="slide-copy"><p>El primer salto es la NAT de VirtualBox; los siguientes son de la red del anfitrión. Un <code>* * *</code> es un salto que no contesta.</p></div>
+<div class="slide-copy"><p>No siempre viene instalado. Debian y Ubuntu: <a href="https://manpages.debian.org/trixie/apt/apt.8.es.html" target="_blank" rel="noopener noreferrer"><code>sudo apt install traceroute</code></a>. Rocky: <a href="https://dnf.readthedocs.io/en/latest/command_ref.html" target="_blank" rel="noopener noreferrer"><code>sudo dnf install traceroute</code></a>; ahí viene <a href="https://manpages.debian.org/trixie/iputils-tracepath/tracepath.8.en.html" target="_blank" rel="noopener noreferrer"><code>tracepath</code></a>, parecido.</p></div>
+<aside class="notes"><p>salida recortada, tomada en la red del docente; no es reproducible.</p>
+</aside>
+</section>
+
+<section id="consultas_5" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="que_escucha_y_donde" data-state="customevent"><h2>Qué escucha y dónde</h2>
+
+</section>
+
+<section id="que_servicios_escuchan" data-state="no_footer"><h3>Qué servicios escuchan</h3>
+<div class="slide-copy"><p>Cada servicio que escucha es una puerta abierta a la red. <a href="https://manpages.debian.org/trixie/iproute2/ss.8.es.html" target="_blank" rel="noopener noreferrer"><code>ss</code></a> muestra cuáles.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ss -tlnp
+State  Recv-Q Send-Q Local Address:Port Peer Address:Port Process
+LISTEN 0      128          0.0.0.0:22        0.0.0.0:*
+LISTEN 0      128             [::]:22           [::]:*</code></pre>
+<div class="slide-copy"><ul>
+<li><code>-t</code> TCP, <code>-l</code> los que escuchan, <code>-n</code> números en lugar de nombres, <code>-p</code> el proceso (con <code>sudo</code>).</li>
+<li><code>Local Address</code>: en qué dirección escucha. <code>0.0.0.0</code> es todas las interfaces.</li>
+<li>Solo sshd, en el puerto 22.</li>
+</ul></div>
+<div class="slide-copy"><p><code>ss -ulnp</code> hace lo mismo para UDP: ahí aparecen los clientes DHCP.</p></div>
+<aside class="notes"><p>salida de <code>ss -tlnp</code> sin <code>sudo</code>, por eso falta la columna <code>Process</code>. <code>[::]</code> es el equivalente de <code>0.0.0.0</code> para IPv6.</p>
+</aside>
+</section>
+
+<section id="local_o_todas_las_interfaces" data-state="no_footer"><h3>Local o todas las interfaces</h3>
+<div class="slide-copy"><p>Un servicio de prueba, en Debian, con <a href="https://manpages.debian.org/trixie/python3-minimal/python3.1.en.html" target="_blank" rel="noopener noreferrer"><code>python3 -m http.server</code></a>:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ python3 -m http.server 8080 --bind 127.0.0.1
+$ ss -tlnp | grep 8080
+LISTEN 0      5          127.0.0.1:8080      0.0.0.0:*    users:(("python3",pid=1430,fd=3))</code></pre>
+<div class="slide-copy"><p>Desde Rocky, con <a href="https://manpages.debian.org/trixie/curl/curl.1.es.html" target="_blank" rel="noopener noreferrer"><code>curl</code></a>:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ curl http://192.168.50.10:8080/
+curl: (7) Failed to connect to 192.168.50.10 port 8080: Conexión rehusada</code></pre>
+<div class="slide-copy"><p>Se vuelve a lanzar con <code>--bind 0.0.0.0</code>:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>LISTEN 0      5            0.0.0.0:8080      0.0.0.0:*    users:(("python3",pid=1453,fd=3))
+$ curl -s -o /dev/null -w '%{http_code}\n' http://192.168.50.10:8080/
+200</code></pre>
+<div class="slide-copy"><p>Misma aplicación y mismo puerto: solo cambia la dirección en que escucha.</p></div>
+<aside class="notes"><p>Debian no trae <code>curl</code>; se usa desde Rocky. Después se corta el servidor con <code>Ctrl+C</code>.</p>
+</aside>
+</section>
+
+<section id="escuchar_solo_donde_hace_falta" data-state="no_footer"><h3>Escuchar solo donde hace falta</h3>
+<div class="slide-copy"><ul>
+<li>Si un servicio es solo para el propio equipo, que escuche en <code>127.0.0.1</code>.</li>
+<li>Si es para una red interna, en la dirección de esa interfaz.</li>
+<li>Un servicio que no se usa se apaga y se deshabilita (<a href="clase10.html#/servicios_con_systemd">clase 10</a>).</li>
+</ul></div>
+<div class="slide-copy"><p><code>sshd</code> escucha en todas las interfaces (<code>0.0.0.0:22</code>). En la clase 18 vemos cómo ajustarlo.</p></div>
+</section>
+
+<section id="consultas_6" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+
+</section>
+
+<section>
+<section id="la_red_del_laboratorio" data-state="customevent"><h2>La red del laboratorio</h2>
+
+</section>
+
+<section id="los_modos_de_red_de_virtualbox" data-state="no_footer"><h3>Los modos de red de VirtualBox</h3>
+<div class="slide-copy"><p>La <a href="clase2.html#/modos_red">clase 2</a> presentó la tabla de modos: NAT, red NAT, puente, red interna y host-only.</p></div>
+<div class="slide-copy"><p>También planteó como esquema fijo una placa NAT más una host-only. Desde la <a href="clase4.html#/esquema_red">clase 4</a> trabajamos con una sola placa NAT y el reenvío de puertos, que alcanzó para llegar por SSH.</p></div>
+<div class="slide-copy"><p>Hoy hace falta que las dos VM se vean entre sí. La NAT no lo permite. Para eso sumamos una segunda placa en modo red interna.</p></div>
+<aside class="notes"><p>decirlo con naturalidad: lo de la clase 2 era una primera propuesta y el curso fue por otro camino. No cambia nada de lo que ya hicieron; se agrega una placa.</p>
+</aside>
+</section>
+
+<section id="diseno_de_red_de_labs" data-state="no_footer"><h3>Diseño de red de labs</h3>
+<img src="img/c17/red-labs.svg" alt="Diseño de red de los labs: el anfitrión llega a cada VM por su NAT (2222 a Debian, 2223 a Rocky); cada VM tiene enp0s3 en NAT con 10.0.2.15 y enp0s8 en la red interna redcurso, 192.168.50.10 y 192.168.50.20" class="diagrama tema-claro"><img src="img/c17/red-labs-oscuro.svg" alt="Diseño de red de los labs: el anfitrión llega a cada VM por su NAT (2222 a Debian, 2223 a Rocky); cada VM tiene enp0s3 en NAT con 10.0.2.15 y enp0s8 en la red interna redcurso, 192.168.50.10 y 192.168.50.20" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li>La primera placa sigue en NAT: Internet y SSH, como siempre.</li>
+<li>La segunda placa va a una red interna: solo se ven las VM que estén en ella.</li>
+<li>Crear la red y agregar la placa se hace en VirtualBox, en el laboratorio.</li>
+</ul></div>
+<aside class="notes"><p>diagrama en <code>img/red-labs.svg</code>, con versión oscura <code>img/red-labs-oscuro.svg</code>, como los de la clase 13. «gw» es la puerta de enlace. En el HTML se copian a <code>linux410/img/c17/</code>.</p>
+</aside>
+</section>
+
+<section id="dos_vm_con_la_misma_direccion" data-state="no_footer"><h3>Dos VM con la misma dirección</h3>
+<div class="slide-copy"><p>Las dos VM tienen <code>10.0.2.15</code> en la NAT y no chocan: cada NAT de VirtualBox es una red aparte, que solo conoce su VM.</p></div>
+<div class="slide-copy"><p>Por eso tampoco se ven entre sí por ahí.</p></div>
+<div class="slide-copy"><p>La red interna es una red común para las dos, y ahí cada una necesita una dirección propia. No hay DHCP, así que van fijas: <code>192.168.50.10</code> para Debian y <code>192.168.50.20</code> para Rocky.</p></div>
+</section>
+
+<section id="consultas_2" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+
+<section id="resumen" data-state="no_footer"><h3>Resumen</h3>
+<div class="slide-copy"><ul>
+<li>Una interfaz tiene dirección, máscara y, hacia afuera, una puerta de enlace.</li>
+<li><a href="https://manpages.debian.org/trixie/iproute2/ip-address.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip a</code></a>, <a href="https://manpages.debian.org/trixie/iproute2/ip-route.8.es.html" target="_blank" rel="noopener noreferrer"><code>ip route</code></a> e <code>ip route get</code> leen la red; <code>ip addr add</code> es temporal.</li>
+<li>Debian: <code>/etc/network/interfaces.d/</code> con <a href="https://manpages.debian.org/trixie/ifupdown/ifup.8.es.html" target="_blank" rel="noopener noreferrer"><code>ifup</code></a> e <a href="https://manpages.debian.org/trixie/ifupdown/ifdown.8.es.html" target="_blank" rel="noopener noreferrer"><code>ifdown</code></a>. Ubuntu: <a href="https://manpages.debian.org/trixie/netplan.io/netplan.8.en.html" target="_blank" rel="noopener noreferrer"><code>netplan</code></a>. Rocky: <a href="https://manpages.debian.org/trixie/network-manager/nmcli.1.es.html" target="_blank" rel="noopener noreferrer"><code>nmcli</code></a> o <a href="https://manpages.debian.org/trixie/network-manager/nmtui.1.en.html" target="_blank" rel="noopener noreferrer"><code>nmtui</code></a>.</li>
+<li><code>/etc/hosts</code> se consulta antes que el DNS.</li>
+<li>Diagnóstico por capas: interfaz, dirección, ruta, puerta de enlace, IP externa, nombre. <a href="https://manpages.debian.org/trixie/iproute2/ss.8.es.html" target="_blank" rel="noopener noreferrer"><code>ss -tlnp</code></a> dice qué escucha y dónde.</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<!-- SECCIÓN LABS/PRÁCTICA -->
+
+<section id="labs" data-state="hide_footer" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h2>Actividades prácticas y laboratorios</h2></section>
+
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica: Laboratorio 16</h3>
+<div class="slide-copy"><ul>
+<li>Agregar la red interna y la segunda placa a cada VM.</li>
+<li>Dirección fija en Debian (<code>interfaces.d</code>) y en Rocky (<a href="https://manpages.debian.org/trixie/network-manager/nmtui.1.en.html" target="_blank" rel="noopener noreferrer"><code>nmtui</code></a>); comprobar que sobrevive al reinicio.</li>
+<li><a href="https://manpages.debian.org/trixie/manpages-es/ping.8.es.html" target="_blank" rel="noopener noreferrer"><code>ping</code></a> entre las VM y nombres en <code>/etc/hosts</code>.</li>
+<li>Tres fallas para diagnosticar con el orden de la clase.</li>
+<li><a href="https://manpages.debian.org/trixie/iproute2/ss.8.es.html" target="_blank" rel="noopener noreferrer"><code>ss -tlnp</code></a> en las dos VM.</li>
+</ul></div>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab16/lab16.md" target="_blank" rel="noopener noreferrer">Laboratorio 16: Redes</a></p></div>
+<aside class="notes"><p>el laboratorio todavía no está escrito; la ruta es la prevista según el mapa de repositorios. Sin depender de laboratorios anteriores: solo Debian con SSH y la OVA de Rocky.</p>
+</aside>
+</section>
+
+<section id="referencias" data-state="no_footer"><h3>Referencias</h3>
+<div class="slide-copy"><ul>
+<li>Ayuda local: <a href="https://manpages.debian.org/trixie/ifupdown/interfaces.5.es.html" target="_blank" rel="noopener noreferrer"><code>man interfaces</code></a>, <a href="https://manpages.debian.org/trixie/iproute2/ip.8.en.html" target="_blank" rel="noopener noreferrer"><code>man ip</code></a>, <a href="https://manpages.debian.org/trixie/network-manager/nmcli.1.es.html" target="_blank" rel="noopener noreferrer"><code>man nmcli</code></a>, <a href="https://manpages.debian.org/trixie/network-manager/nmtui.1.en.html" target="_blank" rel="noopener noreferrer"><code>man nmtui</code></a>, <a href="https://manpages.debian.org/trixie/netplan.io/netplan-try.8.en.html" target="_blank" rel="noopener noreferrer"><code>man netplan-try</code></a>, <a href="https://manpages.debian.org/trixie/iproute2/ss.8.es.html" target="_blank" rel="noopener noreferrer"><code>man ss</code></a>.</li>
+<li>Nombres de interfaces: <a href="https://manpages.debian.org/trixie/systemd/systemd.net-naming-scheme.7.es.html" target="_blank" rel="noopener noreferrer">systemd.net-naming-scheme(7)</a> y <a href="https://systemd.io/PREDICTABLE_INTERFACE_NAMES/" target="_blank" rel="noopener noreferrer">Predictable Network Interface Names</a>.</li>
+<li><a href="https://netplan.readthedocs.io/en/stable/examples/" target="_blank" rel="noopener noreferrer">Netplan: ejemplos</a>.</li>
+</ul></div>
+</section>
+</section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                 secret: null,
+                 id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
+                 url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>
