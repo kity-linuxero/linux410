@@ -1,0 +1,45 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 440' width='800' height='440' font-family='Segoe UI, Helvetica, Arial, sans-serif'>
+<title>Cómo se comprueba la clave</title>
+<defs><marker id='f' viewBox='0 0 10 10' refX='9' refY='5' markerUnits='userSpaceOnUse' markerWidth='14' markerHeight='14' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#adb5bd'/></marker><marker id='b' viewBox='0 0 10 10' refX='9' refY='5' markerUnits='userSpaceOnUse' markerWidth='16' markerHeight='16' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#74c0fc'/></marker><marker id='g' viewBox='0 0 10 10' refX='9' refY='5' markerUnits='userSpaceOnUse' markerWidth='14' markerHeight='14' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#69db7c'/></marker><marker id='r' viewBox='0 0 10 10' refX='9' refY='5' markerUnits='userSpaceOnUse' markerWidth='14' markerHeight='14' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#ff6b6b'/></marker></defs>
+<rect x='1' y='1' width='798' height='438' rx='18' fill='#1e2133' stroke='#3b3f58' stroke-width='2'/>
+<line x1='150' y1='80' x2='150' y2='340' stroke='#3b3f58' stroke-width='2'/>
+<line x1='650' y1='80' x2='650' y2='340' stroke='#3b3f58' stroke-width='2'/>
+<line x1='400' y1='104' x2='400' y2='340' stroke='#6c7380' stroke-width='2' stroke-dasharray='6 5'/>
+<rect x='40' y='20' width='220' height='56' rx='10' fill='#6b3a12' stroke='#ff922b' stroke-width='2'/>
+<circle cx='64' cy='48' r='10' fill='#6b3a12' stroke='#ff922b' stroke-width='3'/>
+<circle cx='64' cy='48' r='3' fill='#ff922b'/>
+<path d='M74,48 H96 M88,48 V56 M95,48 V54' fill='none' stroke='#ff922b' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/>
+<text x='108' y='54' text-anchor='start' font-size='18' font-weight='700' fill='#e9ecef'>Cliente (Debian)</text>
+<rect x='540' y='20' width='220' height='56' rx='10' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<path d='M558,46 V41 a8,8 0 0 1 16,0 V46' fill='none' stroke='#74c0fc' stroke-width='4' stroke-linecap='round'/>
+<rect x='552' y='45' width='28' height='20' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='3'/>
+<circle cx='566' cy='54' r='3' fill='#74c0fc'/><rect x='565' y='54' width='2' height='6' fill='#74c0fc'/>
+<text x='592' y='54' text-anchor='start' font-size='18' font-weight='700' fill='#e9ecef'>Servidor (Rocky)</text>
+<rect x='372' y='78' width='56' height='24' rx='6' fill='#1e2133' stroke='#1e2133' stroke-width='0'/>
+<text x='400' y='96' text-anchor='middle' font-size='16' font-weight='600' fill='#adb5bd'>red</text>
+<line x1='156' y1='142' x2='644' y2='142' stroke='#adb5bd' stroke-width='2.5' marker-end='url(#f)'/>
+<rect x='300.0' y='111' width='200' height='24' rx='6' fill='#1e2133' stroke='#1e2133' stroke-width='0'/>
+<text x='400' y='129' text-anchor='middle' font-size='16' font-weight='600' fill='#e9ecef'>Ofrece su clave pública</text>
+<circle cx='200' cy='123' r='13' fill='#74c0fc'/>
+<text x='200' y='129' text-anchor='middle' font-size='16' font-weight='700' fill='#1e2133'>1</text>
+<line x1='644' y1='246' x2='156' y2='246' stroke='#adb5bd' stroke-width='2.5' marker-end='url(#f)'/>
+<rect x='280.0' y='215' width='240' height='24' rx='6' fill='#1e2133' stroke='#1e2133' stroke-width='0'/>
+<text x='400' y='233' text-anchor='middle' font-size='16' font-weight='600' fill='#e9ecef'>Responde que esa clave sirve</text>
+<circle cx='600' cy='227' r='13' fill='#74c0fc'/>
+<text x='600' y='233' text-anchor='middle' font-size='16' font-weight='700' fill='#1e2133'>3</text>
+<line x1='156' y1='302' x2='644' y2='302' stroke='#adb5bd' stroke-width='2.5' marker-end='url(#f)'/>
+<rect x='220.0' y='271' width='360' height='24' rx='6' fill='#1e2133' stroke='#1e2133' stroke-width='0'/>
+<text x='400' y='289' text-anchor='middle' font-size='16' font-weight='600' fill='#e9ecef'>Firma los datos de la sesión con la privada</text>
+<circle cx='200' cy='283' r='13' fill='#74c0fc'/>
+<text x='200' y='289' text-anchor='middle' font-size='16' font-weight='700' fill='#1e2133'>4</text>
+<rect x='432' y='162' width='340' height='50' rx='10' fill='#5c4a12' stroke='#fcc419' stroke-width='2'/>
+<circle cx='454' cy='187' r='13' fill='#fcc419'/>
+<text x='454' y='193' text-anchor='middle' font-size='16' font-weight='700' fill='#1e2133'>2</text>
+<text x='476' y='193' text-anchor='start' font-size='16' font-weight='600' fill='#e9ecef'>Busca la clave en authorized_keys</text>
+<rect x='432' y='322' width='340' height='50' rx='10' fill='#1f5a2e' stroke='#69db7c' stroke-width='2'/>
+<circle cx='454' cy='347' r='13' fill='#69db7c'/>
+<text x='454' y='353' text-anchor='middle' font-size='16' font-weight='700' fill='#1e2133'>5</text>
+<text x='476' y='353' text-anchor='start' font-size='16' font-weight='600' fill='#e9ecef'>Verifica la firma y deja entrar</text>
+<rect x='40' y='388' width='720' height='38' rx='8' fill='#5c1f24' stroke='#ff6b6b' stroke-width='2'/>
+<text x='400' y='413' text-anchor='middle' font-size='16' font-weight='600' fill='#e9ecef'>La privada nunca cruza la red: solo viaja la firma.</text>
+</svg>

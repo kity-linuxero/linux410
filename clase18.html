@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Administración de servidores GNU/Linux - CFL 410 - Clase 18</title>
+    <link rel="icon" type="image/x-icon" href="/img/logos/tux.svg">
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="dist/plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="css/egg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(128, 128, 128, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle .icon {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .theme-toggle .icon-sun {
+            color: #f59e0b;
+        }
+
+        .theme-toggle .icon-moon {
+            color: #6366f1;
+        }
+
+        .theme-toggle .icon.hidden {
+            transform: rotate(90deg) scale(0);
+            opacity: 0;
+            position: absolute;
+        }
+
+        .theme-toggle .icon.visible {
+            transform: rotate(0deg) scale(1);
+            opacity: 1;
+        }
+
+        .reveal .compact-table {
+            width: 92%;
+            font-size: 70%;
+        }
+
+        .reveal .very-compact-table {
+            width: 94%;
+            font-size: 62%;
+        }
+
+        .reveal .two-columns {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .reveal .two-columns > * {
+            flex: 1;
+        }
+
+        .reveal .meme-image {
+            max-height: 47vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .meme-answer {
+            margin: 0.22rem 0;
+            font-size: 58%;
+            line-height: 1.15;
+        }
+
+        .reveal .terminal-screenshot {
+            max-height: 57vh;
+            width: auto;
+            border-radius: 0.35rem;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal .shortcut-screenshot {
+            width: 96%;
+            height: auto;
+            margin: 1rem auto;
+            border-radius: 0.25rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        }
+
+        .reveal .screenshot-column {
+            max-width: 52%;
+        }
+
+        html.print-pdf .theme-toggle,
+        html.reveal-print .theme-toggle {
+            display: none !important;
+        }
+
+        @media print {
+            .theme-toggle {
+                display: none !important;
+            }
+        }
+
+        html.dark-theme {
+            --r-background-color: #1a1a2e !important;
+            --r-main-color: #e0e0e0 !important;
+            --r-heading-color: #f0f0f0 !important;
+            --r-link-color: #64b5f6 !important;
+            --r-link-color-dark: #42a5f5 !important;
+            --r-link-color-hover: #90caf9 !important;
+            --r-selection-background-color: #64b5f6 !important;
+            --r-selection-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal-viewport {
+            background: #1a1a2e !important;
+            background-color: #1a1a2e !important;
+        }
+
+        html.dark-theme .reveal {
+            color: #e0e0e0 !important;
+        }
+
+        html.dark-theme .reveal h1,
+        html.dark-theme .reveal h2,
+        html.dark-theme .reveal h3,
+        html.dark-theme .reveal h4,
+        html.dark-theme .reveal h5,
+        html.dark-theme .reveal h6 {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .reveal a {
+            color: #64b5f6 !important;
+        }
+
+        html.dark-theme .reveal a:hover {
+            color: #90caf9 !important;
+        }
+
+        html.dark-theme .reveal .slides section[data-background-gradient] {
+            color: #f0f0f0 !important;
+        }
+
+        html.dark-theme .theme-toggle {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        html.dark-theme .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .reveal .slide-copy { font-size: 60%; line-height: 1.3; }
+        .reveal .slide-copy p { margin: 0.6em 0; }
+        .reveal .slide-copy blockquote { width: 92%; }
+        .reveal .slide-copy ul, .reveal .slide-copy ol { margin-bottom: 0.4em; }
+        .reveal .slide-copy code { white-space: nowrap; }
+        .reveal .account-table th, .reveal .account-table td { padding: 0.22em 0.45em; }
+
+        /* Clase 12: tablas y bloques de código (base de la clase 11). */
+        .reveal .compact-table { width: 94%; font-size: 60%; line-height: 1.18; margin: 0.3em auto; }
+        .reveal .compact-table th, .reveal .compact-table td { padding: 0.18em 0.4em; }
+        .reveal .compact-table code { white-space: nowrap; }
+        /* El botón de copiar se ubica en la esquina de .codeblock: el contenedor
+           tiene que medir lo mismo que el bloque para que el botón quede adentro. */
+        .reveal pre { width: 92%; font-size: 50%; margin: 0.4em auto; }
+        .reveal pre code { max-height: none; }
+        .reveal .codeblock { width: 92%; margin: 0.4em auto; }
+        .reveal .codeblock > pre { width: 100%; margin: 0; }
+        .reveal .codeblock > button { transform: scale(0.75); transform-origin: top right; }
+        .reveal .salida-nota { font-size: 80%; opacity: 0.7; margin: 0.1em 0 !important; }
+        .reveal .slide-copy ul ul { margin-top: 0.1em; }
+        #labs_clase h3 { font-size: 1.05em; }
+        /* Margen para que el botón de copiar no tape el final de las líneas. */
+        .reveal .codeblock > pre > code { padding-right: 2.6em; }
+        /* Salidas con líneas largas: letra más chica. */
+        #enlace_simbolico pre { font-size: 45%; }
+        /* Portada: repartir el título en dos líneas parejas. */
+        #inicio h4 { text-wrap: balance; }
+        #discos_fisicos .compact-table td:first-child { white-space: nowrap; }
+        #inicio h4 { text-wrap: balance; }
+        #labs_clase h3 { font-size: 1.05em; }
+
+/* Logo IDEP de la última diapositiva: es negro, se invierte en modo oscuro. */
+html.dark-theme #fin img { filter: invert(1); }
+        /* Clase 18: las salidas largas pasan a la línea siguiente en vez de mostrar barra. */
+        .reveal pre code.text { white-space: pre-wrap; }
+        /* Clase 18: diagramas SVG con versión clara y oscura (como en la clase 13). */
+        .reveal img.diagrama { display: block; margin: 0.3em auto; max-height: 52vh; width: auto; max-width: 96%; }
+        .reveal img.diagrama.tema-oscuro { display: none; }
+        html.dark-theme .reveal img.diagrama.tema-claro { display: none; }
+        html.dark-theme .reveal img.diagrama.tema-oscuro { display: block; }
+        /* Clase 18: capturas de ventana (esquinas transparentes), una sola imagen para los dos temas. */
+        .reveal img.captura-ventana { display: block; margin: 0.3em auto; max-height: 48vh; width: auto; max-width: 80%; border: 0; border-radius: 0.6rem; box-shadow: 0 8px 28px rgba(0,0,0,.2); }
+        html.dark-theme .reveal img.captura-ventana { box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 8px 28px rgba(0,0,0,.5); }
+        /* Clase 18: ajustes por diapositiva. Títulos largos en una sola línea. */
+        #por_que_es_mejor_que_la_contrasena h3,
+        #un_archivo_de_configuracion_para_el_cliente h3,
+        #sftp_desde_el_explorador_de_archivos h3,
+        #un_servicio_que_no_se_ve_desde_afuera h3 { font-size: 82%; white-space: nowrap; }
+        /* La lista numerada que sigue al bloque de código alinea con la anterior. */
+        #clave_perdida_o_filtrada .slide-copy { width: 92%; margin-left: auto; margin-right: auto; }
+        #clave_perdida_o_filtrada .slide-copy ol { text-align: left; }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="themeToggle" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">
+        <svg class="icon icon-sun visible" id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon icon-moon hidden" id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="reveal">
+        <div class="slides">
+
+<section>
+<section id="inicio" data-state="customevent" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h3>Administración de servidores GNU/Linux</h3><h4>Clase 18: Acceso remoto seguro</h4><small><p>Módulo 2: Administración de Servidores</p></small></section>
+
+<section id="index" data-state="no_footer"><h3>Temas de la clase 18</h3>
+<div class="slide-copy"><ul><li><a href="#/autenticacion_por_clave">Autenticación por ssh</a></li><li><a href="#/copiar_archivos">Copiar archivos</a></li><li><a href="#/hardening_de_sshd">Hardening de sshd</a></li><li><a href="#/tuneles_ssh">Túneles SSH</a></li><li><a href="#/labs">Actividades prácticas y laboratorios</a></li></ul><p><a href="?print-pdf">Exportar a PDF</a></p></div>
+</section>
+
+<section id="objetivos_de_la_clase" data-state="no_footer"><h3>Objetivos de la clase</h3>
+<div class="slide-copy"><p>Al finalizar vas a poder:</p></div>
+<div class="slide-copy"><ul>
+<li>Entrar a un servidor con una clave en lugar de la contraseña.</li>
+<li>Copiar archivos entre equipos por SSH.</li>
+<li>Aplicar hardening a sshd sin quedarte afuera.</li>
+<li>Llegar por un túnel SSH a un servicio que no está publicado.</li>
+</ul></div>
+</section>
+
+<section id="lo_que_ya_vimos" data-state="no_footer"><h3>Lo que ya vimos</h3>
+<div class="slide-copy"><ul>
+<li><a href="clase4.html#/conectarse">Clase 4</a>: el primer acceso por SSH, la huella del servidor y <code>known_hosts</code>.</li>
+<li><a href="clase9.html#/permisos_en_un_archivo">Clase 9</a>: los permisos de archivos y directorios.</li>
+<li><a href="clase10.html#/administrar_un_servicio">Clase 10</a>: <code>systemctl</code>, con <code>reload</code> y <code>restart</code>.</li>
+<li><a href="clase14.html#/por_programa_y_por_texto">Clase 14</a>: <code>journalctl</code> y los <code>Failed password</code> de SSH.</li>
+<li><a href="clase17.html#/local_o_todas_las_interfaces">Clase 17</a>: <code>ss -tlnp</code> y la diferencia entre <code>0.0.0.0</code> y <code>127.0.0.1</code>.</li>
+</ul></div>
+<aside class="notes"><p>cierra el tramo de redes. En la clase 4 entramos por SSH con contraseña y en la 17 vimos que sshd escucha en todas las interfaces. Hoy hacemos esa entrada más segura. En el laboratorio, Debian es el cliente y Rocky el servidor.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="autenticacion_por_clave" data-state="customevent"><h2>Autenticación por ssh</h2>
+
+</section>
+
+<section id="contrasena_o_clave" data-state="no_footer"><h3>Contraseña o clave ssh</h3>
+<div class="slide-copy"><p>Hasta ahora entramos con usuario y contraseña. La contraseña viaja cifrada, pero se puede adivinar probando una y otra vez (Fuerza bruta).</p></div>
+<div class="slide-copy"><p>La autenticación por clave ssh usa un par de archivos:</p></div>
+<div class="slide-copy"><ul>
+<li>La clave pública es el candado. Se copia en los servidores.</li>
+<li>La clave privada es la llave. No sale de tu equipo.</li>
+</ul></div>
+<div class="slide-copy"><p>Lo que se firma con la privada lo comprueba la pública, y de la pública no se puede sacar la privada.</p></div>
+<aside class="notes"><p>la comparación del candado y la llave alcanza. Si preguntan por la matemática, decir que es criptografía de clave pública y no entrar más.</p>
+</aside>
+</section>
+
+<section id="el_par_de_claves" data-state="no_footer"><h3>El par de claves ssh</h3>
+<img src="img/c18/par-claves.svg" alt="El par de claves: en Debian quedan la clave privada ~/.ssh/id_ed25519, que no sale del equipo, y la pública ~/.ssh/id_ed25519.pub; ssh-copy-id copia la pública a ~/.ssh/authorized_keys de Rocky" class="diagrama tema-claro"><img src="img/c18/par-claves-oscuro.svg" alt="El par de claves: en Debian quedan la clave privada ~/.ssh/id_ed25519, que no sale del equipo, y la pública ~/.ssh/id_ed25519.pub; ssh-copy-id copia la pública a ~/.ssh/authorized_keys de Rocky" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li>La privada (la llave) queda en Debian y no se copia a ningún lado.</li>
+<li>La pública (el candado) se copia al servidor, a <code>authorized_keys</code>.</li>
+</ul></div>
+<aside class="notes"><p>adelanta los nombres de archivo y <code>ssh-copy-id</code>, que se ven en detalle unas diapositivas más adelante.</p>
+</aside>
+</section>
+
+<section id="como_se_comprueba" data-state="no_footer"><h3>Cómo se comprueba</h3>
+<img src="img/c18/comprobacion.svg" alt="Cómo se comprueba la clave: 1, el cliente ofrece su clave pública; 2, el servidor la busca en authorized_keys; 3, responde que esa clave sirve; 4, el cliente firma los datos de la sesión con la privada; 5, el servidor verifica la firma y deja entrar. La privada nunca cruza la red" class="diagrama tema-claro"><img src="img/c18/comprobacion-oscuro.svg" alt="Cómo se comprueba la clave: 1, el cliente ofrece su clave pública; 2, el servidor la busca en authorized_keys; 3, responde que esa clave sirve; 4, el cliente firma los datos de la sesión con la privada; 5, el servidor verifica la firma y deja entrar. La privada nunca cruza la red" class="diagrama tema-oscuro">
+<aside class="notes"><p>los pasos, para contarlos sobre la imagen: el cliente ofrece su clave pública; el servidor la busca en la lista de claves permitidas del usuario; si está, responde que esa clave sirve; el cliente firma con la privada datos que son únicos de esa sesión y manda la firma; el servidor la verifica con la pública y deja entrar. Como los datos firmados cambian en cada sesión, una firma capturada no sirve para otra. En SSH 2 no hay un «desafío» aparte: hace ese papel el identificador de la sesión, que calculan los dos extremos al cifrar el canal. Si alguien lo llama desafío, la idea es la misma. Se ve en <code>ssh -v</code>, en la diapositiva «Entrar con la clave».</p>
+</aside>
+</section>
+
+<section id="por_que_es_mejor_que_la_contrasena" data-state="no_footer"><h3>Por qué es mejor que la contraseña</h3>
+<div class="slide-copy"><ul>
+<li>No hay nada que adivinar por fuerza bruta.</li>
+<li>Si el servidor está comprometido, la contraseña se la pueden llevar. Con clave, en el servidor solo está la pública.</li>
+<li>En el journal desaparecen los <code>Failed password</code> que vimos en la <a href="clase14.html#/por_programa_y_por_texto">clase 14</a>.</li>
+</ul></div>
+<div class="slide-copy"><p>Una clave privada sin passphrase, si te la roban, abre todos los servidores donde esté la pública. Por eso la protegemos.</p></div>
+</section>
+
+<section id="generar_el_par_de_claves" data-state="no_footer"><h3>Generar el par de claves</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ssh-keygen -t ed25519 -C "cristian@debian"
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/home/cristian/.ssh/id_ed25519):
+Enter passphrase (empty for no passphrase):</code></pre>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/openssh-client/ssh-keygen.1.en.html" target="_blank" rel="noopener noreferrer"><code>ssh-keygen</code></a> crea el par. <code>-t ed25519</code> elige el algoritmo y <code>-C</code> agrega un comentario al final de la pública.</p></div>
+<div class="slide-copy"><ul>
+<li><code>ed25519</code> es el algoritmo actual: claves cortas y rápidas. RSA queda para sistemas viejos.</li>
+<li>El comentario con usuario y equipo sirve para reconocer la clave después.</li>
+</ul></div>
+<aside class="notes"><p>la salida es la del inicio de <code>ssh-keygen</code>, con el nombre de archivo por defecto. En la prueba se usó <code>-f ~/.ssh/curso18_ed25519</code> y <code>-N</code> porque no había terminal. En clase se escribe la passphrase a mano. Rocky 9 exige RSA de 2048 bits o más; ed25519 no tiene ese problema.</p>
+</aside>
+</section>
+
+<section id="los_dos_archivos" data-state="no_footer"><h3>Los dos archivos</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ls -l ~/.ssh
+-rw------- 1 cristian cristian 464 nov  3 19:08 curso18_ed25519
+-rw-r--r-- 1 cristian cristian  97 nov  3 19:08 curso18_ed25519.pub
+
+$ cat ~/.ssh/curso18_ed25519.pub
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINhq6AP//WijHhpqyQ2hCipBspIXTvcIZG4B4EI5DvAD cristian@debian
+
+$ ssh-keygen -lf ~/.ssh/curso18_ed25519.pub
+256 SHA256:OkGUNvDhfDpc7Wv2VqOLSM1app1aCL3NgN7HuBDOrfc cristian@debian (ED25519)</code></pre>
+<div class="slide-copy"><ul>
+<li>La privada es <code>600</code>, solo tuya. La pública es <code>644</code> y se puede mostrar.</li>
+<li>La pública es una sola línea: tipo, clave y comentario.</li>
+<li><code>-lf</code> muestra la huella, para reconocer una clave sin leerla entera.</li>
+</ul></div>
+</section>
+
+<section id="la_passphrase" data-state="no_footer"><h3>La passphrase</h3>
+<div class="slide-copy"><p>La passphrase cifra el archivo de la clave privada. Si alguien se lleva el archivo, sin la passphrase no lo puede usar.</p></div>
+<div class="slide-copy"><ul>
+<li>Se pide al generar la clave y cada vez que se usa.</li>
+<li>Sin la passphrase correcta, la clave no se abre.</li>
+<li>Sin passphrase, quien copia el archivo entra como vos.</li>
+</ul></div>
+<div class="slide-copy"><p>Escribirla cada vez cansa. Para eso existe <code>ssh-agent</code>, que veremos en una diapositiva.</p></div>
+<aside class="notes"><p>en la prueba, <code>ssh-keygen -y</code> con una passphrase equivocada dio <code>incorrect passphrase supplied to decrypt private key</code>. El archivo está cifrado con <code>aes256-ctr</code> y <code>bcrypt</code>, y se lee en la cabecera en base64. Las claves sin passphrase se usan en automatizaciones; el equipo que las guarda es entonces el que hay que cuidar.</p>
+</aside>
+</section>
+
+<section id="copiar_la_clave_al_servidor" data-state="no_footer"><h3>Copiar la clave al servidor</h3>
+<div class="slide-copy"><p>La clave pública tiene que quedar en el servidor, en una lista de claves permitidas. <a href="https://manpages.debian.org/trixie/openssh-client/ssh-copy-id.1.en.html" target="_blank" rel="noopener noreferrer"><code>ssh-copy-id</code></a> lo hace con una sola orden. La primera vez pide la contraseña.</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ssh-copy-id -i ~/.ssh/curso18_ed25519.pub usuario@192.168.50.20</code></pre>
+<div class="slide-copy"><p>Con <code>-n</code> simula la copia y muestra qué agregaría:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ssh-copy-id -n -i ~/.ssh/curso18_ed25519.pub usuario@192.168.50.20
+...INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+Would have added the following key(s):
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINhq6AP//WijHhpqyQ2hCipBspIXTvcIZG4B4EI5DvAD cristian@debian</code></pre>
+<aside class="notes"><p>la segunda salida es real, recortada, con <code>-p 2223</code> y <code>10.0.2.2</code> en la prueba. La copia real no se hizo con <code>ssh-copy-id</code>, porque no conocemos la contraseña de <code>usuario</code> en esa VM. En el laboratorio sí va con contraseña.</p>
+</aside>
+</section>
+
+<section id="que_hace_ssh_copy_id_por_dentro" data-state="no_footer"><h3>Qué hace ssh-copy-id por dentro</h3>
+<div class="slide-copy"><ol>
+<li>Se conecta con la contraseña.</li>
+<li>Crea <code>~/.ssh</code> en el servidor, con permisos <code>700</code>.</li>
+<li>Agrega la línea de la clave pública a <code>~/.ssh/authorized_keys</code>, con permisos <code>600</code>.</li>
+</ol></div>
+<div class="slide-copy"><p><code>authorized_keys</code> es la lista de claves públicas que pueden entrar a esa cuenta, una por línea.</p></div>
+<div class="slide-copy"><p>Es lo mismo que hacer a mano:</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>cat clave.pub &gt;&gt; ~/.ssh/authorized_keys</code></pre>
+<aside class="notes"><p>en Windows no existe <code>ssh-copy-id</code>, por eso las prácticas son desde Debian. Quien quiera hacerlo desde PowerShell: <code>type $env:USERPROFILE\.ssh\id_ed25519.pub | ssh usuario@servidor "cat &gt;&gt; ~/.ssh/authorized_keys"</code>. No se probó en la VM.</p><p>Si preguntan por qué esos permisos: sshd ignora la clave si <code>~/.ssh</code> o <code>authorized_keys</code> se pueden escribir por otros (opción <code>StrictModes</code>, activa de fábrica; permisos en la <a href="clase9.html#/permisos_en_un_archivo">clase 9</a>). El cliente solo dice <code>Permission denied (publickey,...)</code> y la causa queda en el journal del servidor: <code>Authentication refused: bad ownership or modes for file /home/usuario/.ssh/authorized_keys</code>. Probado en Rocky con <code>authorized_keys</code> en <code>666</code>, <code>~/.ssh</code> en <code>777</code> y el directorio personal en <code>775</code>; los dos últimos dan <code>bad ownership or modes for directory</code>. Con <code>PasswordAuthentication yes</code> el cliente pasa a pedir la contraseña sin avisar, y parece que la clave no funcionó.</p>
+</aside>
+</section>
+
+<section id="entrar_con_la_clave" data-state="no_footer"><h3>Entrar con la clave ssh</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ssh -i ~/.ssh/curso18_ed25519 usuario@192.168.50.20
+Enter passphrase for key '/home/cristian/.ssh/curso18_ed25519':
+[usuario@rocky ~]$</code></pre>
+<div class="slide-copy"><p>Pide la passphrase de la clave, no la contraseña de <code>usuario</code>.</p></div>
+<div class="slide-copy"><p>Con <code>-v</code> se ve cómo se negocia:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ssh -v -i ~/.ssh/curso18_ed25519 usuario@192.168.50.20 true
+debug1: Offering public key: ... ED25519 SHA256:OkGUNvDhfDpc7Wv2VqOLSM1app1aCL3NgN7HuBDOrfc
+debug1: Server accepts key: ... ED25519 SHA256:OkGUNvDhfDpc7Wv2VqOLSM1app1aCL3NgN7HuBDOrfc
+Authenticated to 192.168.50.20 ([192.168.50.20]:22) using "publickey".</code></pre>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/openssh-client/ssh.1.en.html" target="_blank" rel="noopener noreferrer"><code>ssh</code></a> ofrece la clave, el servidor la acepta y se autentica sin contraseña.</p></div>
+<aside class="notes"><p>salida de <code>ssh -v</code> filtrada con <code>grep</code>. En la prueba la última línea decía <code>10.0.2.2 ([10.0.2.2]:2223)</code>. La clave estaba cargada en un agente de prueba; sin agente y sin terminal, <code>ssh</code> no puede pedir la passphrase y falla con <code>Permission denied</code>. Por eso la línea <code>Enter passphrase for key ...</code> de la primera salida es la que muestra <code>ssh</code> sin agente, y no sale del registro. El prompt de Rocky dice <code>rocky</code> con la red del laboratorio. La OVA no tiene nombre de equipo configurado (<code>hostnamectl</code> muestra <code>Static hostname: (unset)</code>), y el script del Lab 17 agrega <code>192.168.50.20 rocky</code> a <code>/etc/hosts</code>: con esa línea el nombre pasa a ser <code>rocky</code>. Sin ella el prompt dice <code>localhost</code> y <code>hostname</code> responde <code>localhost.localdomain</code>, como en la captura del alias y en el Lab 16.</p>
+</aside>
+</section>
+
+<section id="un_archivo_de_configuracion_para_el_cliente" data-state="no_footer"><h2>Archivo config</h2>
+<div class="slide-copy"><p>Para no repetir opciones, el cliente lee <code>~/.ssh/config</code>:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>Host rocky
+    HostName 192.168.50.20
+    Port 22
+    User usuario
+    IdentityFile ~/.ssh/curso18_ed25519</code></pre>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ssh rocky
+[usuario@rocky ~]$</code></pre>
+<div class="slide-copy"><ul>
+<li><code>Host</code> es el alias que escribís después de <code>ssh</code>.</li>
+<li><code>HostName</code>, <code>Port</code>, <code>User</code> e <code>IdentityFile</code> reemplazan a las opciones de la línea de comandos.</li>
+<li><code>scp</code> y <code>sftp</code> usan los mismos alias.</li>
+</ul></div>
+<aside class="notes"><p><code>Port 22</code> se puede omitir; se deja para mostrar dónde iría otro puerto. En la prueba el archivo decía <code>HostName 10.0.2.2</code> y <code>Port 2223</code>. El archivo va con <code>chmod 600 ~/.ssh/config</code>. No confundir con <code>ssh_config</code>, que está en <code>/etc/ssh/</code>.</p>
+</aside>
+</section>
+
+<section id="entrar_con_el_alias" data-state="no_footer"><h3>Entrar con el alias</h3>
+<img src="img/c18/ssh-config.png" alt="Terminal del anfitrión: ssh linux410-lab-rocky entra directo a la Rocky, sin pedir contraseña, y queda el prompt [usuario@localhost ~]$" class="captura-ventana">
+<div class="slide-copy"><p>Con el alias en <code>~/.ssh/config</code> y la clave cargada alcanza con <code>ssh</code> y el nombre del alias. No se escribe dirección, puerto, usuario ni contraseña.</p></div>
+<aside class="notes"><p>captura del anfitrión del docente, con su alias <code>linux410-lab-rocky</code> (en clase el ejemplo es <code>rocky</code>). Ahí el prompt dice <code>localhost</code> porque esa Rocky no tiene la línea de <code>/etc/hosts</code> del laboratorio. Las tres líneas <code>** WARNING</code> las agrega el cliente OpenSSH del anfitrión (10.2) cuando la conexión no usa un intercambio de claves post-cuántico; la Rocky tiene OpenSSH 9.9. Es solo un aviso y deja entrar igual. Si preguntan: un atacante que hoy guarde el tráfico cifrado podría descifrarlo en el futuro con una computadora cuántica. Desde Debian puede no aparecer, según la versión del cliente.</p>
+</aside>
+</section>
+
+<section id="un_comando_sin_abrir_sesion" data-state="no_footer"><h3>Un comando sin abrir sesión</h3>
+<div class="slide-copy"><p>Si después del destino va un comando, <code>ssh</code> lo ejecuta en el servidor, muestra la salida y vuelve. No queda una sesión abierta.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ssh rocky uptime
+ 00:13:30 up 33 min,  1 user,  load average: 0,00, 0,03, 0,06</code></pre>
+<div class="slide-copy"><p>Sirve para consultar algo rápido, o para repetir lo mismo en varios servidores desde un script.</p></div>
+<aside class="notes"><p>salida real del 2026-11-06, desde el anfitrión con el alias <code>linux410-lab-rocky</code>. En el laboratorio se usa para crear un archivo en Rocky sin entrar.</p>
+</aside>
+</section>
+
+<section id="la_salida_del_servidor_en_tu_equipo" data-state="no_footer"><h3>La salida del servidor, en tu equipo</h3>
+<div class="slide-copy"><p>La salida del comando remoto llega a tu terminal, así que se puede guardar o filtrar en tu equipo:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ssh rocky df -h / &gt; disco-rocky.txt
+$ cat disco-rocky.txt
+S.ficheros          Tamaño Usados  Disp Uso% Montado en
+/dev/mapper/rl-root    19G   2,2G   17G  12% /</code></pre>
+<div class="slide-copy"><ul>
+<li>La redirección <code>&gt;</code> la hace tu shell: <code>disco-rocky.txt</code> queda en Debian.</li>
+<li>Entre comillas, todo corre en el servidor: <code>ssh rocky 'df -h / &gt; disco.txt'</code> deja el archivo en Rocky.</li>
+</ul></div>
+<aside class="notes"><p>salidas reales del 2026-11-06 desde el anfitrión; Rocky está en español, por eso <code>S.ficheros</code>. Se probó también la versión con comillas: <code>disco.txt</code> quedó en el home de <code>usuario</code> en Rocky. <code>rpm -qa</code> en Rocky lista 402 paquetes y <code>grep openssh</code> deja 3. Las comillas son lo que más confunde: conviene mostrar los dos casos y preguntar dónde quedó el archivo.</p>
+</aside>
+</section>
+
+<section id="el_agente_de_claves" data-state="no_footer"><h3>El agente de claves</h3>
+<div class="slide-copy"><p><code>ssh-agent</code> es un programa que guarda en memoria las claves ya desbloqueadas.</p></div>
+<div class="slide-copy"><ul>
+<li>Se carga la clave una vez con <code>ssh-add</code> y se escribe la passphrase.</li>
+<li>Las conexiones siguientes ya no la piden.</li>
+<li>Cuando se cierra la sesión o se apaga, el agente se va con la memoria.</li>
+</ul></div>
+<div class="slide-copy"><p>Hoy solo lo nombramos, sin práctica.</p></div>
+<aside class="notes"><p>la demostración está en el apunte, en «Si preguntan». Muchos escritorios lo arrancan solos. Si preguntan por <code>ssh -A</code> (reenviar el agente): cómodo pero riesgoso con servidores ajenos.</p>
+</aside>
+</section>
+
+<section id="clave_perdida_o_filtrada" data-state="no_footer"><h3>Clave perdida o filtrada</h3>
+<div class="slide-copy"><p>Si se pierde la laptop o alguien copia la clave privada, esa clave sirve en todos los servidores donde esté la pública. Qué hacer:</p></div>
+<div class="slide-copy"><ol>
+<li>Entrar por otra vía (otra clave o la consola de VirtualBox).</li>
+<li>Quitar de <code>authorized_keys</code> la línea de esa clave. El comentario la identifica:</li>
+</ol></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sed -i '/ cristian@debian$/d' ~/.ssh/authorized_keys</code></pre>
+<div class="slide-copy"><ol start="3">
+<li>Generar una clave nueva y copiarla.</li>
+<li>Revisar el journal: <code>Accepted publickey ... SHA256:...</code> muestra la huella usada.</li>
+</ol></div>
+<aside class="notes"><p>probado en Rocky: de dos líneas a una, y la clave dejó de entrar con <code>Permission denied</code>. Se puede borrar la línea con un editor. <a href="https://manpages.debian.org/trixie/sed/sed.1.en.html" target="_blank" rel="noopener noreferrer"><code>sed</code></a> es más rápido, pero un patrón mal puesto borra de más: conviene hacer una copia antes. Si la clave tenía passphrase se gana tiempo, pero no hay que apoyarse en eso.</p>
+</aside>
+</section>
+
+<section id="una_clave_por_equipo" data-state="no_footer"><h3>Una clave por equipo</h3>
+<img src="img/c18/clave-por-equipo.svg" alt="Una clave por equipo: en authorized_keys de Rocky hay una línea por equipo; la de la notebook perdida se tacha y las del trabajo y Debian siguen entrando" class="diagrama tema-claro"><img src="img/c18/clave-por-equipo-oscuro.svg" alt="Una clave por equipo: en authorized_keys de Rocky hay una línea por equipo; la de la notebook perdida se tacha y las del trabajo y Debian siguen entrando" class="diagrama tema-oscuro">
+<div class="slide-copy"><p>Cada equipo genera su propio par. Si se pierde uno, se quita una sola línea y los demás siguen entrando.</p></div>
+<aside class="notes"><p>por eso el comentario de la clave lleva usuario y equipo (<code>cristian@notebook</code>): es lo que permite encontrar la línea para borrarla.</p>
+</aside>
+</section>
+
+<section id="consultas" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="copiar_archivos" data-state="customevent"><h2>Copiar archivos</h2>
+
+</section>
+
+<section id="ssh_tambien_copia_archivos" data-state="no_footer"><h3>SSH también copia archivos</h3>
+<div class="slide-copy"><p>Hasta ahora usamos SSH para abrir una terminal en el servidor. El mismo protocolo sirve para copiar archivos de forma segura, cifrados de punta a punta.</p></div>
+<div class="slide-copy"><ul>
+<li>Usa la misma conexión que <code>ssh</code>: el puerto 22, la misma clave o contraseña.</li>
+<li>Lo que viaja, el archivo y las credenciales, va cifrado.</li>
+<li>No hay que instalar nada en el servidor: viene con OpenSSH.</li>
+</ul></div>
+<div class="slide-copy"><p>Para eso hay dos comandos: <code>scp</code>, que copia como <code>cp</code> pero entre equipos, y <code>sftp</code>, que abre una sesión para explorar y mover archivos.</p></div>
+<aside class="notes"><p>lo que vimos de autenticación por clave vale igual para copiar. Si la clave entra con <code>ssh</code>, entra con <code>scp</code> y <code>sftp</code>, y el alias de <code>~/.ssh/config</code> también sirve.</p>
+</aside>
+</section>
+
+<section id="copiar_un_archivo" data-state="no_footer"><h3>Copiar un archivo</h3>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/openssh-client/scp.1.en.html" target="_blank" rel="noopener noreferrer"><code>scp</code></a> copia archivos por SSH, con la misma autenticación. Se escribe <code>scp origen destino</code>, y el lado remoto lleva <code>host:ruta</code>.</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>scp informe.txt rocky:/home/usuario/
+scp rocky:desde-rocky.txt ./traido.txt
+scp -r carpeta18 rocky:/home/usuario/</code></pre>
+<div class="slide-copy"><ul>
+<li>El primer comando sube un archivo, el segundo trae uno y <code>-r</code> copia carpetas.</li>
+<li>Si el servidor usa otro puerto, va con <code>-P</code> en mayúscula (<code>scp -P 2223 ...</code>). En <code>ssh</code> es <code>-p</code>.</li>
+<li>Sobrescribe el destino sin preguntar.</li>
+</ul></div>
+<aside class="notes"><p>probados los tres con el alias <code>rocky</code>, y también <code>scp -P 2223 informe.txt usuario@10.0.2.2:/tmp/informe-p.txt</code>. Sin terminal <code>scp</code> no imprime nada si anda bien. Con OpenSSH 9 en adelante usa SFTP por debajo (<code>scp -v</code> muestra <code>command sftp</code>).</p>
+</aside>
+</section>
+
+<section id="una_sesion_de_archivos" data-state="no_footer"><h3>Una sesión de archivos</h3>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/openssh-client/sftp.1.en.html" target="_blank" rel="noopener noreferrer"><code>sftp</code></a> abre una sesión para explorar el servidor y mover archivos.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sftp rocky
+sftp&gt; pwd
+Remote working directory: /home/usuario
+sftp&gt; put subir.txt
+sftp&gt; ls -l subir.txt
+-rw-r--r--    ? usuario  usuario        15 Nov  3 19:10 subir.txt
+sftp&gt; get desde-rocky.txt bajado.txt
+sftp&gt; bye</code></pre>
+<div class="slide-copy"><ul>
+<li><code>put</code> sube y <code>get</code> baja. <code>ls</code>, <code>cd</code> y <code>pwd</code> actúan en el servidor.</li>
+<li>Los mismos comandos con una <code>l</code> adelante (<code>lls</code>, <code>lcd</code>, <code>lpwd</code>) actúan en tu equipo.</li>
+<li><code>bye</code> cierra la sesión.</li>
+</ul></div>
+<aside class="notes"><p>salida real de una prueba con <code>sftp -b lote.sftp rocky</code>, que ejecuta los comandos de un archivo sin sesión interactiva. En clase se tipea a mano. En la sesión interactiva <code>put</code> muestra una línea <code>Uploading ...</code>; con <code>-b</code> no.</p>
+</aside>
+</section>
+
+<section id="sftp_desde_el_explorador_de_archivos" data-state="no_footer"><h3>SFTP en el explorador de archivos</h3>
+<img src="img/c18/sftp-nautilus.png" alt="Archivos de GNOME con la dirección sftp://linux410-lab-rocky/ muestra las carpetas de la raíz de Rocky, y el servidor aparece montado en la barra lateral" class="captura-ventana">
+<div class="slide-copy"><p>El explorador de archivos también habla SFTP. En la barra de direcciones se escribe <code>sftp://</code> y el alias, y el servidor se recorre como una carpeta más: arrastrar un archivo es copiarlo.</p><p>En clientes Windows, es posible usar aplicaciones como WinSCP o FileZilla para gestionar archivos por SFTP, con la dirección, el puerto y el usuario cargados a mano.</p></div>
+<aside class="notes"><p>captura del anfitrión del docente con Archivos de GNOME (Nautilus), que usa el mismo <code>~/.ssh/config</code>: alias, usuario y clave. En Windows hacen lo mismo WinSCP o FileZilla, con la dirección, el puerto y el usuario cargados a mano.</p>
+</aside>
+</section>
+</section>
+
+<section>
+<section id="hardening_de_sshd" data-state="customevent"><h2>Hardening de sshd</h2>
+
+</section>
+
+<section id="solo_con_clave_y_sin_root" data-state="no_footer"><h3>Solo con clave y sin root</h3>
+<div class="slide-copy"><p>Hardening es ajustar un servicio para que deje entrar solo lo necesario. En sshd, dos opciones hacen casi todo el trabajo:</p></div>
+<div class="slide-copy"><ul>
+<li><code>PermitRootLogin no</code>: root no entra por SSH. Se entra con un usuario común y se pasa a root con <code>sudo</code>.</li>
+<li><code>PasswordAuthentication no</code>: solo entra quien tiene una clave autorizada.</li>
+</ul></div>
+<div class="slide-copy"><p>La contraseña se apaga después de comprobar que la clave entra.</p></div>
+<aside class="notes"><p>valores de partida en las dos VM, con <code>sshd -T</code>: <code>permitrootlogin without-password</code> (el nombre viejo de <code>prohibit-password</code>, que ya pide clave para root), <code>passwordauthentication yes</code> y <code>pubkeyauthentication yes</code>. Si preguntan cómo limitar quién entra: <code>AllowUsers</code> y <code>AllowGroups</code>. Ojo que se acumulan entre archivos, y un <code>AllowUsers</code> olvidado en otro archivo amplía la lista sin avisar.</p>
+</aside>
+</section>
+
+<section id="un_archivo_propio" data-state="no_footer"><h3>Un archivo propio</h3>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/openssh-server/sshd_config.5.en.html" target="_blank" rel="noopener noreferrer"><code>sshd_config</code></a> incluye, al principio, los <code>.conf</code> de <code>/etc/ssh/sshd_config.d/</code>. Los cambios van en un archivo nuevo ahí:</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>sudo tee /etc/ssh/sshd_config.d/10-curso.conf &lt;&lt;EOF
+PermitRootLogin no
+PasswordAuthentication no
+EOF</code></pre>
+<div class="slide-copy"><ul>
+<li>En sshd vale el primer valor que se lee. Por eso el nombre empieza con un número bajo: se lee antes que los demás.</li>
+<li>En Rocky ya hay un <code>50-redhat.conf</code>, que no toca estas opciones. En Debian el directorio está vacío.</li>
+</ul></div>
+<aside class="notes"><p><a href="https://manpages.debian.org/trixie/coreutils/tee.1.en.html" target="_blank" rel="noopener noreferrer"><code>tee</code></a> con <code>sudo</code> escribe el archivo como root. Probado en Rocky solo con <code>sshd -T</code>: con <code>05-prueba.conf</code> (<code>PasswordAuthentication yes</code>) y <code>10-curso.conf</code> (<code>no</code>) gana <code>yes</code>; renombrado a <code>99-prueba.conf</code>, gana <code>no</code>. <code>50-redhat.conf</code> fija el registro, GSSAPI, PAM y X11. El <code>Include</code> está en la línea 15 en Rocky y en la 12 en Debian. No confundir con <code>ssh_config</code>, que es la del cliente.</p>
+</aside>
+</section>
+
+<section id="comprobar_y_recargar" data-state="no_footer"><h3>Comprobar y recargar</h3>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ sudo sshd -t
+$ sudo systemctl reload sshd
+$ sudo sshd -T | grep -Ei "permitrootlogin|passwordauthentication"
+permitrootlogin no
+passwordauthentication no</code></pre>
+<div class="slide-copy"><ul>
+<li><code>sshd -t</code> revisa la sintaxis. Si está bien, no imprime nada.</li>
+<li><code>reload</code> vuelve a leer la configuración sin cortar las sesiones abiertas. En Debian el servicio se llama <code>ssh</code>.</li>
+<li>Mientras probás, dejá una sesión abierta. Si igual te quedás afuera, la consola de VirtualBox no usa la red.</li>
+</ul></div>
+<aside class="notes"><p>con un error de escritura (<code>PermitRootLogn no</code>), <code>sshd -t</code> dice <code>Bad configuration option: PermitRootLogn</code> y termina con código 255. Probado: una sesión con <code>sleep 40</code> abierta antes del <code>reload</code> siguió viva, y el journal dice <code>Received SIGHUP; restarting.</code> Con <code>restart</code>, si hay un error sshd no vuelve a arrancar y nadie más puede entrar (<a href="clase10.html#/administrar_un_servicio">clase 10</a>). En un servidor real no hay consola de VirtualBox; muchos proveedores en la nube dan una consola web. La salida de <code>sshd -T</code> es la real, sin la línea de <code>allowusers</code> que tenía la prueba.</p>
+</aside>
+</section>
+
+<section id="probar_el_resultado" data-state="no_footer"><h3>Probar el resultado</h3>
+<div class="slide-copy"><p>Desde la anfitriona, que no tiene la clave. Antes del hardening, sshd pide la contraseña:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ssh -p 2223 usuario@localhost
+usuario@localhost's password:</code></pre>
+<div class="slide-copy"><p>Después, ni la pide:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ ssh -p 2223 usuario@localhost
+usuario@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).</code></pre>
+<div class="slide-copy"><p>Entre paréntesis están las formas de entrar que acepta el servidor: <code>password</code> ya no está. Desde Debian, con la clave, <code>ssh rocky</code> entra igual que antes.</p></div>
+<div class="slide-copy"><p>Cambiar el puerto (<code>Port</code>) solo saca el ruido de los escaneos automáticos al 22. No reemplaza a la clave, y en Rocky además hay que habilitar el puerto nuevo en SELinux y en el firewall.</p></div>
+<aside class="notes"><p>probado el 2026-11-06 en Rocky con <code>10-curso.conf</code> aplicado y deshecho después. Para simular un equipo sin la clave, desde el anfitrión del docente se usó <code>ssh</code> sin ofrecer ninguna clave (<code>-o IdentitiesOnly=yes</code>); la salida es la real. Antes del hardening, la lista del mensaje termina en <code>,password)</code> y <code>ssh</code> pide la contraseña con la línea de arriba. En el journal de Rocky el intento queda como <code>Connection closed by authenticating user usuario ... [preauth]</code>: con la contraseña apagada el servidor no la ofrece y el cliente se va sin probarla. Para el puerto, el comando de SELinux sería <code>semanage port -a -t ssh_port_t -p tcp 2222</code>; no se probó porque <code>semanage</code> no está en la OVA. Las cinco preguntas del programa aplicadas a sshd: corre como root y cada sesión pasa al usuario que entró; escucha en <code>0.0.0.0:22</code>; <code>~/.ssh</code> en <code>700</code> y <code>authorized_keys</code> en <code>600</code>; registra en el journal; quién llega lo deciden la clave, <code>PermitRootLogin</code> y, en la clase 22, el firewall.</p>
+</aside>
+</section>
+
+<section id="consultas_2" data-state="no_footer"><h3>Consultas</h3>
+
+</section>
+</section>
+
+<section>
+<section id="tuneles_ssh" data-state="customevent"><h2>Túneles SSH</h2>
+
+</section>
+
+<section id="un_servicio_que_no_se_ve_desde_afuera" data-state="no_footer"><h2>Otro servicio por ssh</h2>
+<div class="slide-copy"><p>Podemos tener en Rocky un servidor web, nginx, escuchando en el puerto 80. Desde Debian no llegamos: el firewall de Rocky solo deja pasar el 22.</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ curl -sS -m 5 http://192.168.50.20/
+curl: (7) Failed to connect to 192.168.50.20 port 80 after 1 ms: Could not connect to server</code></pre>
+<div class="slide-copy"><p>Al 22 sí llegamos, y SSH puede llevar otras conexiones dentro de la suya: eso se llama túnel.</p></div>
+<div class="slide-copy"><p>Lo mismo pasa con un servicio que escucha solo en <code>127.0.0.1</code>, como vimos en la <a href="clase17.html#/local_o_todas_las_interfaces">clase 17</a>: desde afuera no se ve, y por el túnel sí.</p></div>
+<aside class="notes"><p>probado desde Debian por la red interna, con nginx 1.20.1 en Rocky (<code>dnf install nginx</code>, 4 paquetes) y firewalld de fábrica. <code>enp0s8</code> queda en la zona <code>public</code>, que permite <code>cockpit</code>, <code>dhcpv6-client</code> y <code>ssh</code>, pero no <code>http</code>. El firewall rechaza la conexión (<code>reject with icmpx admin-prohibited</code>) y <code>curl</code> falla al instante; con <code>-v</code> dice <code>No route to host</code>. Debian no trae <code>curl</code>: se instala con <code>sudo apt install curl</code>, o se usa <code>wget -qO- URL</code>, que sí viene. Los firewalls se ven en la clase 22. Registros: <a href="validacion/tuneles-debian-2026-11-05.txt">desde Debian</a> y <a href="validacion/tuneles-2026-11-05.txt">desde el anfitrión</a>.</p>
+</aside>
+</section>
+
+<section id="el_tunel_local" data-state="no_footer"><h3>El túnel local</h3>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/openssh-client/ssh.1.en.html" target="_blank" rel="noopener noreferrer"><code>ssh -L</code></a> abre un puerto en tu equipo y lleva lo que llega ahí, por dentro de la conexión SSH, hasta una dirección que el servidor sí ve.</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ssh -N -L 8080:localhost:80 rocky</code></pre>
+<div class="slide-copy"><p>En otra terminal de Debian:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ curl -s http://localhost:8080/ | grep -i '&lt;title&gt;'
+&lt;title&gt;HTTP Server Test Page powered by: Rocky Linux&lt;/title&gt;</code></pre>
+<div class="slide-copy"><ul>
+<li><code>-L 8080:localhost:80</code>: lo que llegue al 8080 de Debian sale desde Rocky hacia <code>localhost:80</code>.</li>
+<li>Ese <code>localhost</code> se resuelve en el servidor, o sea en Rocky.</li>
+<li><code>-N</code> no abre una shell; solo mantiene el túnel. Se corta con <code>Ctrl+C</code>.</li>
+</ul></div>
+<aside class="notes"><p>se usa el 8080 local porque los puertos por debajo de 1024 piden root. Con el túnel, <code>ss -tlnp</code> muestra a <code>ssh</code> escuchando en <code>127.0.0.1:8080</code>. Probado desde Debian con estos mismos comandos (<code>ss</code> muestra <code>127.0.0.1:8080</code> y <code>[::1]:8080</code>); al cortar el túnel, <code>curl</code> falla con código 7.</p>
+</aside>
+</section>
+
+<section id="recorrido_del_tunel_local" data-state="no_footer"><h3>Recorrido del túnel local</h3>
+<img src="img/c18/tunel-local.svg" alt="Recorrido del túnel local: en Debian, el navegador o curl va a http://localhost:8080, el puerto local que abrió ssh -L; la conexión SSH cifrada va al puerto 22 de Rocky, el único que deja pasar el firewall; sshd la entrega a nginx en el puerto 80; sin túnel, el 80 no pasa el firewall" class="diagrama tema-claro"><img src="img/c18/tunel-local-oscuro.svg" alt="Recorrido del túnel local: en Debian, el navegador o curl va a http://localhost:8080, el puerto local que abrió ssh -L; la conexión SSH cifrada va al puerto 22 de Rocky, el único que deja pasar el firewall; sshd la entrega a nginx en el puerto 80; sin túnel, el 80 no pasa el firewall" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li>El navegador habla con el puerto local, sin saber del túnel.</li>
+<li>Entre Debian y Rocky todo viaja cifrado por SSH.</li>
+<li>La conexión a nginx la hace sshd desde adentro de Rocky, donde el firewall no la frena.</li>
+</ul></div>
+</section>
+
+<section id="el_tunel_remoto" data-state="no_footer"><h3>El túnel remoto</h3>
+<div class="slide-copy"><p><a href="https://manpages.debian.org/trixie/openssh-client/ssh.1.en.html" target="_blank" rel="noopener noreferrer"><code>ssh -R</code></a> hace lo contrario: abre un puerto en el servidor y lo trae hasta tu equipo. Sirve para que el servidor vea algo que corre en tu equipo.</p></div>
+<div class="slide-copy"><p>En Debian hay una página de prueba en <code>127.0.0.1:8000</code>:</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>python3 -m http.server 8000 --bind 127.0.0.1</code></pre>
+<div class="slide-copy"><p>En otra terminal de Debian, el túnel:</p></div>
+<pre class="codigo_shadow clipboard"><code class="bash codigo-redondo" data-trim>ssh -N -R 8000:localhost:8000 rocky</code></pre>
+<div class="slide-copy"><p>Y en Rocky:</p></div>
+<pre class="codigo_shadow"><code class="text codigo-redondo" data-trim>$ curl -s http://localhost:8000/
+&lt;h1&gt;Hola desde mi equipo&lt;/h1&gt;</code></pre>
+<aside class="notes"><p><code>python3 -m http.server</code> sirve los archivos de la carpeta donde se corre; para la prueba había un <code>index.html</code> con ese texto. En Rocky el 8000 queda en <code>127.0.0.1</code> y lo atiende <code>sshd-session</code>; por <code>10.0.2.15:8000</code> la conexión se rechaza. Es por <code>GatewayPorts no</code>, el valor de fábrica, y conviene dejarlo así. Probado desde Debian, que trae <code>python3</code> 3.13.</p>
+</aside>
+</section>
+
+<section id="recorrido_del_tunel_remoto" data-state="no_footer"><h3>Recorrido del túnel remoto</h3>
+<img src="img/c18/tunel-remoto.svg" alt="Recorrido del túnel remoto: en Rocky, curl va a http://localhost:8000, un puerto que abrió sshd solo en 127.0.0.1; por la conexión SSH que abrió Debian llega al cliente ssh -R, que lo entrega a la web de prueba en 127.0.0.1:8000 de Debian" class="diagrama tema-claro"><img src="img/c18/tunel-remoto-oscuro.svg" alt="Recorrido del túnel remoto: en Rocky, curl va a http://localhost:8000, un puerto que abrió sshd solo en 127.0.0.1; por la conexión SSH que abrió Debian llega al cliente ssh -R, que lo entrega a la web de prueba en 127.0.0.1:8000 de Debian" class="diagrama tema-oscuro">
+<div class="slide-copy"><ul>
+<li>La conexión la abre Debian, como siempre. El tráfico viaja de Rocky hacia Debian.</li>
+<li>El puerto 8000 de Rocky solo se ve desde la propia Rocky.</li>
+<li>Un uso común: mostrar en un servidor algo que todavía está en tu equipo.</li>
+</ul></div>
+</section>
+
+<section id="en_el_laboratorio_cockpit" data-state="no_footer"><h3>En el laboratorio: Cockpit</h3>
+<div class="slide-copy"><p>Cockpit es la consola de administración web de Rocky: servicios, almacenamiento, logs y una terminal, desde el navegador, en el puerto 9090.</p></div>
+<div class="slide-copy"><p>En el laboratorio lo dejamos escuchando solo en <code>127.0.0.1</code> y entramos desde el navegador del anfitrión con un túnel <code>ssh -L</code>, como el de nginx.</p></div>
+<aside class="notes"><p>probado el 2026-11-03 (<a href="validacion/cockpit-2026-11-03.txt">registro de Cockpit</a>). Se entra con usuario y contraseña del sistema, por PAM y no por sshd: el hardening no lo cambia, y eso puede generar preguntas. root está bloqueado de fábrica. El diagrama del recorrido con Cockpit quedó para el laboratorio (<code>imagenes/tunel-cockpit.svg</code>).</p>
+</aside>
+</section>
+
+<section id="resumen" data-state="no_footer"><h3>Resumen</h3>
+<div class="slide-copy"><ul>
+<li>La clave pública va al servidor y la privada no sale del equipo. <a href="https://manpages.debian.org/trixie/openssh-client/ssh-keygen.1.en.html" target="_blank" rel="noopener noreferrer"><code>ssh-keygen</code></a>, <a href="https://manpages.debian.org/trixie/openssh-client/ssh-copy-id.1.en.html" target="_blank" rel="noopener noreferrer"><code>ssh-copy-id</code></a> y <code>~/.ssh/authorized_keys</code>.</li>
+<li>Si una clave se pierde, se quita su línea de <code>authorized_keys</code>.</li>
+<li><a href="https://manpages.debian.org/trixie/openssh-client/scp.1.en.html" target="_blank" rel="noopener noreferrer"><code>scp</code></a> y <a href="https://manpages.debian.org/trixie/openssh-client/sftp.1.en.html" target="_blank" rel="noopener noreferrer"><code>sftp</code></a> copian archivos por SSH.</li>
+<li>Hardening de sshd: un archivo <code>10-curso.conf</code>, <code>sshd -t</code>, <code>reload</code> y una sesión abierta.</li>
+<li><a href="https://manpages.debian.org/trixie/openssh-client/ssh.1.en.html" target="_blank" rel="noopener noreferrer"><code>ssh -L</code></a> lleva un puerto de tu equipo hasta un servicio que el servidor ve y vos no. <code>ssh -R</code> hace el camino inverso.</li>
+</ul></div>
+</section>
+</section>
+
+<section>
+<!-- SECCIÓN LABS/PRÁCTICA -->
+
+<section id="labs" data-state="hide_footer" data-transition="slide" data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain"><h2>Actividades prácticas y laboratorios</h2></section>
+
+<section id="labs_clase" data-state="no_footer"><h3>Actividad práctica: Laboratorio 17</h3>
+<div class="slide-copy"><ul>
+<li>Armar la red interna de la clase 17 con el script y comprobar el <code>ping</code> entre las VM.</li>
+<li>Desde Debian: generar una clave, copiarla a Rocky con <code>ssh-copy-id</code> y entrar sin contraseña.</li>
+<li>Armar <code>~/.ssh/config</code> para entrar con <code>ssh rocky</code>.</li>
+<li>Copiar archivos con <code>scp</code> y ejecutar un comando en Rocky sin abrir sesión.</li>
+<li>Instalar Cockpit, dejarlo solo en <code>127.0.0.1</code> y entrar desde el navegador del anfitrión por un túnel <code>ssh -L</code>.</li>
+<li>Al final, deshacer todo.</li>
+</ul></div>
+<div class="slide-copy"><p><a href="https://github.com/kity-linuxero/linux410-labs/blob/main/lab17/lab17.md" target="_blank" rel="noopener noreferrer">Laboratorio 17: Acceso remoto seguro</a></p></div>
+<aside class="notes"><p>el laboratorio está escrito y probado en las VM el 2026-11-05, pero todavía no está publicado; la ruta es la prevista. Sin depender de laboratorios anteriores: solo Debian con SSH y la OVA de Rocky. El hardening se ve en la teoría y no está en el laboratorio. Cockpit trae 65 paquetes: avisar que tarda.</p>
+</aside>
+</section>
+
+<section id="referencias" data-state="no_footer"><h3>Referencias</h3>
+<div class="slide-copy"><ul>
+<li>Ayuda local: <a href="https://manpages.debian.org/trixie/openssh-client/ssh.1.en.html" target="_blank" rel="noopener noreferrer"><code>man ssh</code></a>, <a href="https://manpages.debian.org/trixie/openssh-server/sshd_config.5.en.html" target="_blank" rel="noopener noreferrer"><code>man sshd_config</code></a>, <a href="https://manpages.debian.org/trixie/openssh-client/ssh_config.5.en.html" target="_blank" rel="noopener noreferrer"><code>man ssh_config</code></a>, <a href="https://manpages.debian.org/trixie/openssh-client/ssh-keygen.1.en.html" target="_blank" rel="noopener noreferrer"><code>man ssh-keygen</code></a>, <a href="https://manpages.debian.org/trixie/openssh-client/scp.1.en.html" target="_blank" rel="noopener noreferrer"><code>man scp</code></a>, <a href="https://manpages.debian.org/trixie/openssh-client/sftp.1.en.html" target="_blank" rel="noopener noreferrer"><code>man sftp</code></a>.</li>
+<li>Cockpit: <a href="https://cockpit-project.org/documentation.html" target="_blank" rel="noopener noreferrer">documentación del proyecto</a> y <a href="https://manpages.debian.org/trixie/cockpit-ws/cockpit-ws.8.en.html" target="_blank" rel="noopener noreferrer"><code>man cockpit-ws</code></a>.</li>
+</ul></div>
+</section>
+</section>
+
+            <section id="fin" data-state="hide_footer" data-transition="slide"
+                data-background-gradient="radial-gradient(#ffffff, #dcffdc)" data-background-size="contain">
+                <a href="index.html"><img src="img/logos/idep_logo.png" width="40%" height="40%" alt="Volver al índice del curso"></a>
+            </section>
+
+        </div>
+    </div>
+
+    <footer>
+        <div id="logos-footer" class="footer">
+            <span class="element"><img src="img/logos/cfl_logo.png" class="foot-image" alt="CFL 410"></span>
+            <span class="element"><img src="img/logos/IDEPInformaticaLogo.png" class="foot-image-idep-info" alt="IDEP Informática"></span>
+            <span class="element"><img src="img/logos/ate_logo.svg" class="foot-image" alt="ATE"></span>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                var revealDiv = document.querySelector("body div.reveal");
+                var footer = document.getElementById("logos-footer");
+                revealDiv.appendChild(footer);
+            });
+        </script>
+    </footer>
+
+    <script src="dist/reveal.js"></script>
+    <script src="dist/plugin/notes.js"></script>
+    <script src="dist/plugin/markdown.js"></script>
+    <script src="dist/plugin/highlight.js"></script>
+    <script src="dist/plugin/zoom.js"></script>
+    <script src="dist/plugin/search.js"></script>
+    <script src="plugin/copycode/copycode.js"></script>
+    <script src="js/clipboard.js"></script>
+
+    <script src="https://multiplex.up.railway.app/socket.io/socket.io.js"></script>
+
+    <script>
+        Reveal.on('customevent', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "40%";
+        });
+
+        Reveal.on('hide_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.display = "table";
+            element.style.opacity = "0%";
+        });
+
+        Reveal.on('no_footer', function () {
+            var element = document.getElementById("logos-footer");
+            element.style.opacity = "15%";
+        });
+
+        Reveal.initialize({
+            hash: true,
+
+            copycode: {
+                button: "hover",
+                display: "icons",
+                text: {
+                    copy: "Copiar",
+                    copied: "¡Copiado!"
+                },
+                plaintextonly: true,
+                timeout: 1000,
+                style: {
+                    copybg: "gray",
+                    copiedbg: "green",
+                    copycolor: "black",
+                    copiedcolor: "white",
+                    copyborder: "",
+                    copiedborder: "",
+                    scale: 1,
+                    offset: 0,
+                    radius: 0.2
+                },
+                tooltip: true,
+                iconsvg: {
+                    copy: '',
+                    copied: ''
+                },
+                cssautoload: true,
+                csspath: "",
+                clipboardjspath: ""
+            },
+
+            multiplex: {
+                 secret: null,
+                 id: '8b1d92493d0c9afc5781252bb1e76a52d4f4145c49dbfd1ac71243f50b311a6e',
+                 url: 'https://multiplex.up.railway.app'
+            },
+
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom, RevealSearch, CopyCode]
+        });
+
+        (function () {
+            const toggle = document.getElementById('themeToggle');
+            const iconSun = document.getElementById('iconSun');
+            const iconMoon = document.getElementById('iconMoon');
+            const html = document.documentElement;
+            const lightGradient = 'radial-gradient(#ffffff, #dcffdc)';
+            const darkGradient = 'radial-gradient(#1a1a2e, #16213e)';
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark-theme');
+                    iconSun.classList.remove('visible');
+                    iconSun.classList.add('hidden');
+                    iconMoon.classList.remove('hidden');
+                    iconMoon.classList.add('visible');
+                } else {
+                    html.classList.remove('dark-theme');
+                    iconSun.classList.remove('hidden');
+                    iconSun.classList.add('visible');
+                    iconMoon.classList.remove('visible');
+                    iconMoon.classList.add('hidden');
+                }
+
+                document.querySelectorAll('.reveal .slides section[data-background-gradient]').forEach(function (section) {
+                    section.setAttribute('data-background-gradient', isDark ? darkGradient : lightGradient);
+                });
+
+                if (typeof Reveal !== 'undefined' && typeof Reveal.sync === 'function' && typeof Reveal.isReady === 'function' && Reveal.isReady()) {
+                    Reveal.sync();
+                }
+
+                localStorage.setItem('reveal-theme', isDark ? 'dark' : 'light');
+            }
+
+            var saved = localStorage.getItem('reveal-theme');
+            if (saved === 'dark') {
+                setTheme(true);
+            }
+
+            toggle.addEventListener('click', function () {
+                var isDark = !html.classList.contains('dark-theme');
+                setTheme(isDark);
+            });
+        })();
+    </script>
+
+    <script src="https://multiplex.up.railway.app/client.js"></script>
+</body>
+
+</html>

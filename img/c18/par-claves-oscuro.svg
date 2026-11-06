@@ -1,0 +1,30 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 350' width='800' height='350' font-family='Segoe UI, Helvetica, Arial, sans-serif'>
+<title>El par de claves</title>
+<defs><marker id='f' viewBox='0 0 10 10' refX='9' refY='5' markerUnits='userSpaceOnUse' markerWidth='14' markerHeight='14' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#adb5bd'/></marker><marker id='b' viewBox='0 0 10 10' refX='9' refY='5' markerUnits='userSpaceOnUse' markerWidth='16' markerHeight='16' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#74c0fc'/></marker><marker id='g' viewBox='0 0 10 10' refX='9' refY='5' markerUnits='userSpaceOnUse' markerWidth='14' markerHeight='14' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#69db7c'/></marker><marker id='r' viewBox='0 0 10 10' refX='9' refY='5' markerUnits='userSpaceOnUse' markerWidth='14' markerHeight='14' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#ff6b6b'/></marker></defs>
+<rect x='1' y='1' width='798' height='348' rx='18' fill='#1e2133' stroke='#3b3f58' stroke-width='2'/>
+<rect x='16' y='24' width='300' height='300' rx='14' fill='#262a40' stroke='#9aa1ab' stroke-width='2'/>
+<text x='166' y='56' text-anchor='middle' font-size='20' font-weight='700' fill='#e9ecef'>Debian (cliente)</text>
+<rect x='484' y='24' width='300' height='300' rx='14' fill='#262a40' stroke='#9aa1ab' stroke-width='2'/>
+<text x='634' y='56' text-anchor='middle' font-size='20' font-weight='700' fill='#e9ecef'>Rocky (servidor)</text>
+<rect x='30' y='74' width='272' height='84' rx='10' fill='#6b3a12' stroke='#ff922b' stroke-width='2'/>
+<circle cx='56' cy='116' r='10' fill='#6b3a12' stroke='#ff922b' stroke-width='3'/>
+<circle cx='56' cy='116' r='3' fill='#ff922b'/>
+<path d='M66,116 H88 M80,116 V124 M87,116 V122' fill='none' stroke='#ff922b' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/>
+<text x='100' y='108' text-anchor='start' font-size='15' font-weight='400' fill='#e9ecef' font-family='DejaVu Sans Mono, Consolas, monospace'>~/.ssh/id_ed25519</text>
+<text x='100' y='136' text-anchor='start' font-size='16' font-weight='400' fill='#adb5bd'>clave privada</text>
+<text x='166' y='186' text-anchor='middle' font-size='17' font-weight='700' fill='#ff6b6b'>no sale del equipo</text>
+<rect x='30' y='204' width='272' height='84' rx='10' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<path d='M52,244 V239 a8,8 0 0 1 16,0 V244' fill='none' stroke='#74c0fc' stroke-width='4' stroke-linecap='round'/>
+<rect x='46' y='243' width='28' height='20' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='3'/>
+<circle cx='60' cy='252' r='3' fill='#74c0fc'/><rect x='59' y='252' width='2' height='6' fill='#74c0fc'/>
+<text x='100' y='238' text-anchor='start' font-size='15' font-weight='400' fill='#e9ecef' font-family='DejaVu Sans Mono, Consolas, monospace'>~/.ssh/id_ed25519.pub</text>
+<text x='100' y='266' text-anchor='start' font-size='16' font-weight='400' fill='#adb5bd'>clave pública</text>
+<rect x='498' y='204' width='272' height='84' rx='10' fill='#1c4a75' stroke='#74c0fc' stroke-width='2'/>
+<path d='M520,244 V239 a8,8 0 0 1 16,0 V244' fill='none' stroke='#74c0fc' stroke-width='4' stroke-linecap='round'/>
+<rect x='514' y='243' width='28' height='20' rx='4' fill='#1c4a75' stroke='#74c0fc' stroke-width='3'/>
+<circle cx='528' cy='252' r='3' fill='#74c0fc'/><rect x='527' y='252' width='2' height='6' fill='#74c0fc'/>
+<text x='556' y='238' text-anchor='start' font-size='15' font-weight='400' fill='#e9ecef' font-family='DejaVu Sans Mono, Consolas, monospace'>~/.ssh/authorized_keys</text>
+<text x='556' y='266' text-anchor='start' font-size='16' font-weight='400' fill='#adb5bd'>copia de la pública</text>
+<line x1='302' y1='246' x2='498' y2='246' stroke='#69db7c' stroke-width='3' marker-end='url(#g)'/>
+<text x='400' y='230' text-anchor='middle' font-size='16' font-weight='600' fill='#69db7c' font-family='DejaVu Sans Mono, Consolas, monospace'>ssh-copy-id</text>
+</svg>
