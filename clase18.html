@@ -635,7 +635,7 @@ usuario@localhost: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).</
 curl: (7) Failed to connect to 192.168.50.20 port 80 after 1 ms: Could not connect to server</code></pre>
 <div class="slide-copy"><p>Al 22 sí llegamos, y SSH puede llevar otras conexiones dentro de la suya: eso se llama túnel.</p></div>
 <div class="slide-copy"><p>Lo mismo pasa con un servicio que escucha solo en <code>127.0.0.1</code>, como vimos en la <a href="clase17.html#/local_o_todas_las_interfaces">clase 17</a>: desde afuera no se ve, y por el túnel sí.</p></div>
-<aside class="notes"><p>probado desde Debian por la red interna, con nginx 1.20.1 en Rocky (<code>dnf install nginx</code>, 4 paquetes) y firewalld de fábrica. <code>enp0s8</code> queda en la zona <code>public</code>, que permite <code>cockpit</code>, <code>dhcpv6-client</code> y <code>ssh</code>, pero no <code>http</code>. El firewall rechaza la conexión (<code>reject with icmpx admin-prohibited</code>) y <code>curl</code> falla al instante; con <code>-v</code> dice <code>No route to host</code>. Debian no trae <code>curl</code>: se instala con <code>sudo apt install curl</code>, o se usa <code>wget -qO- URL</code>, que sí viene. Los firewalls se ven en la clase 22. Registros: <a href="validacion/tuneles-debian-2026-11-05.txt">desde Debian</a> y <a href="validacion/tuneles-2026-11-05.txt">desde el anfitrión</a>.</p>
+<aside class="notes"><p>probado desde Debian por la red interna, con nginx 1.20.1 en Rocky (<code>dnf install nginx</code>, 4 paquetes) y firewalld de fábrica. <code>enp0s8</code> queda en la zona <code>public</code>, que permite <code>cockpit</code>, <code>dhcpv6-client</code> y <code>ssh</code>, pero no <code>http</code>. El firewall rechaza la conexión (<code>reject with icmpx admin-prohibited</code>) y <code>curl</code> falla al instante; con <code>-v</code> dice <code>No route to host</code>. Debian no trae <code>curl</code>: se instala con <code>sudo apt install curl</code>, o se usa <code>wget -qO- URL</code>, que sí viene. Los firewalls se ven en la clase 22. Registros: desde Debian y desde el anfitrión.</p>
 </aside>
 </section>
 
@@ -688,7 +688,7 @@ curl: (7) Failed to connect to 192.168.50.20 port 80 after 1 ms: Could not conne
 <section id="en_el_laboratorio_cockpit" data-state="no_footer"><h3>En el laboratorio: Cockpit</h3>
 <div class="slide-copy"><p>Cockpit es la consola de administración web de Rocky: servicios, almacenamiento, logs y una terminal, desde el navegador, en el puerto 9090.</p></div>
 <div class="slide-copy"><p>En el laboratorio lo dejamos escuchando solo en <code>127.0.0.1</code> y entramos desde el navegador del anfitrión con un túnel <code>ssh -L</code>, como el de nginx.</p></div>
-<aside class="notes"><p>probado el 2026-11-03 (<a href="validacion/cockpit-2026-11-03.txt">registro de Cockpit</a>). Se entra con usuario y contraseña del sistema, por PAM y no por sshd: el hardening no lo cambia, y eso puede generar preguntas. root está bloqueado de fábrica. El diagrama del recorrido con Cockpit quedó para el laboratorio (<code>imagenes/tunel-cockpit.svg</code>).</p>
+<aside class="notes"><p>probado el 2026-11-03 (registro de Cockpit). Se entra con usuario y contraseña del sistema, por PAM y no por sshd: el hardening no lo cambia, y eso puede generar preguntas. root está bloqueado de fábrica. El diagrama del recorrido con Cockpit quedó para el laboratorio (<code>imagenes/tunel-cockpit.svg</code>).</p>
 </aside>
 </section>
 
